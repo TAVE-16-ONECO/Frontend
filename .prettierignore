@@ -1,0 +1,12 @@
+# prettier 적용하지 않을 폴더/파일
+node_modules
+dist
+build
+public
+eslint.config.js
+index.html
+package-lock.json
+package.json
+README.md
+tsconfig.json
+vite.config.ts
