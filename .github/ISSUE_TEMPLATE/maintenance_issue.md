@@ -16,7 +16,6 @@ title: "[MAINTENANCE] "
 
 - [ ] TODO
 - [ ] TODO
-- [ ] TODO
 
 ## 📎 참고 자료 (선택)
 
