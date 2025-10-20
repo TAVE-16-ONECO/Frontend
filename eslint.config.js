@@ -4,8 +4,9 @@ import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
 import { defineConfig, globalIgnores } from 'eslint/config'
-import eslintPluginPrettier from 'eslint-plugin-prettier'
 import pluginQuery from '@tanstack/eslint-plugin-query'
+import eslintConfigPrettier from 'eslint-config-prettier/flat'
+import plugin from 'eslint-plugin-react'
 
 export default defineConfig([
   globalIgnores(['dist']),
@@ -14,15 +15,15 @@ export default defineConfig([
     extends: [
       js.configs.recommended,
       tseslint.configs.recommended,
+      plugin.configs.flat['jsx-runtime'],
       reactHooks.configs['recommended-latest'],
       reactRefresh.configs.vite,
-      eslintPluginPrettier,
-
     ],
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
     },
   },
-  ...pluginQuery.configs['flat/recommended']
+  ...pluginQuery.configs['flat/recommended'],
+  eslintConfigPrettier
 ])
