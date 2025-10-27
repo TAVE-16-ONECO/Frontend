@@ -8,6 +8,5 @@ index.html
 package-lock.json
 package.json
 README.md
-tsconfig.json
-vite.config.ts
+vite.config.js
 .github
