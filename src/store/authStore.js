@@ -6,6 +6,7 @@ export const useAuthStore = create()(
     (set, get) => ({
       userData: null, // 유저 정보(ex 유저 이메일, 이름 등)
       authToken: null, // jwt 토큰값
+      mode: null, // user mode (student / parent)
       isAuthenticated: false,
       login: (userData, authToken) => {
         set({
@@ -14,6 +15,8 @@ export const useAuthStore = create()(
           isAuthenticated: true,
         })
       },
+      mode: null, //부모, 자식 선택
+
       logout: () => {
         set({
           userData: null,
