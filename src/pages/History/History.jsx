@@ -1,6 +1,6 @@
 const History = () => {
   return (
-    <div> history</div>
+    <div> 히스토리 페이지</div>
   );
     
 };

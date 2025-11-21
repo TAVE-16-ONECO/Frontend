@@ -1,6 +1,6 @@
 const Login = () => {   
     return (
-        <h1>login</h1>
+        <h1>로그인페이지</h1>
     );
 
 };

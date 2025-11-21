@@ -1,6 +1,6 @@
 const Members = () => {
 
-    return (<div> Members </div>
+    return (<div> 현재멤버 페이지 </div>
     )
 
 }

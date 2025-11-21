@@ -1,7 +1,7 @@
 const Quiz = () => {
     retrun (
 
-        <div>Quiz</div>
+        <div>퀴즈 페이지</div>
     )
 }
 

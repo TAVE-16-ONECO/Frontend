@@ -1,5 +1,7 @@
 const Alaram = () => {
-    return (<div> alaram </div>
+    return ( <h1>
+        알림설정 페이지
+        </h1> 
     )
 
 }
