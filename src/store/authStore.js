@@ -1,11 +1,12 @@
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 
+
 export const useAuthStore = create()(
   persist(
     (set, get) => ({
       userData: null, // 유저 정보(ex 유저 이메일, 이름 등)
-      authToken: null, // jwt 토큰값
+      authToken: null, // jwt 토큰값s
       mode: null, // user mode (student / parent)
       isAuthenticated: false,
       login: (userData, authToken) => {
@@ -15,8 +16,12 @@ export const useAuthStore = create()(
           isAuthenticated: true,
         })
       },
-      mode: null, //부모, 자식 선택
+      selectmode: (mode) => {  // user mode 선택
+        set({ mode })
 
+        mode === 'parent' ? console.log("parent mode") : console.log("student mode")
+
+      },
       logout: () => {
         set({
           userData: null,

@@ -32,7 +32,7 @@ export const router = createBrowserRouter([
         // 홈
         children: [
           { path: "/", element: <Home /> },
-          { path: "/index", element: <Index /> },
+          { path: "/index", element: <My /> },
           { path: "/history", element: <History /> },
 
           // 멤버 선택 및 관리
