@@ -5,7 +5,7 @@ import Login from "@/pages/Login/Login";
 import History from "@/pages/History/History";
 
 import Members from "../pages/My/Members";
-import Index from "../pages/My";
+import My from "../pages/My/";
 
 import Current from "../pages/Mission/Current";
 import Make from "../pages/Mission/Make";
@@ -32,12 +32,15 @@ export const router = createBrowserRouter([
         // 홈
         children: [
           { path: "/", element: <Home /> },
-          { path: "/my", element: <My /> },
+          { path: "/roleselect", element: <RoleSelect /> },
+
+          //히스토리 페이지
           { path: "/history", element: <History /> },
 
           // 멤버 선택 및 관리
-          { path: "/roleselect", element: <RoleSelect /> },
           { path: "/my/members", element: <Members /> },
+          { path: "/my", element: <My /> },
+
 
           // mission
           { path: "/mission/current", element: <Current /> },
