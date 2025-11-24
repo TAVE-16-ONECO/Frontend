@@ -16,7 +16,7 @@ export const useAuthStore = create()(
           isAuthenticated: true,
         })
       },
-      selectmode: (mode) => {  // user mode 선택
+      selectMode: (mode) => {  // user mode 선택
         set({ mode })
 
         mode === 'parent' ? console.log("parent mode") : console.log("student mode")
