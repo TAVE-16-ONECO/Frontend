@@ -1,1 +1,11 @@
 @import 'tailwindcss';
+
+@layer utilities {
+  .font-body {
+    font-family: 'Pretendard Variable', sans-serif;
+  }
+
+  .font-header {
+    font-family: 'BM Hanna Pro', sans-serif;
+  }
+}

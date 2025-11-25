@@ -1,14 +1,13 @@
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 
-
 export const useAuthStore = create()(
   persist(
     (set, get) => ({
       userData: null, // 유저 정보(ex 유저 이메일, 이름 등)
-      authToken: null, // jwt 토큰값s
-      mode: null, // user mode (student / parent)
-      isAuthenticated: false,
+      authToken: null, // jwt 토큰값
+      role: null, // 부모/자녀 역할 정보
+      isAuthenticated: false, // 로그인 여부
       login: (userData, authToken) => {
         set({
           userData,
@@ -16,16 +15,15 @@ export const useAuthStore = create()(
           isAuthenticated: true,
         })
       },
-      selectMode: (mode) => {  // user mode 선택
-        set({ mode })
-
-        mode === 'parent' ? console.log("parent mode") : console.log("student mode")
-
+      selectRole: (role) => {
+        // 부모/자녀 선택
+        set({ role })
       },
       logout: () => {
         set({
           userData: null,
           authToken: null,
+          role: null,
           isAuthenticated: false,
         })
         get().persist.clearStorage() // localStorage에 저장된 유저 정보 제거

@@ -22,13 +22,12 @@ import KeyWordExplain from '@/pages/KeyWordExplain'
 // url 작명 규칙은 케밥 케이스를 사용
 // 케밥 케이스: 단어와 단어를 하이픈(-)으로 구분
 export const router = createBrowserRouter([
-  { path: '/login', element: <Login /> },
-
   {
-    element: <ProtectedRoute />, //로그인 후
+    element: <DefaultLayout />, // 기본 레이아웃
     children: [
+      { path: '/login', element: <Login /> },
       {
-        element: <DefaultLayout />,
+        element: <ProtectedRoute />,
         // 홈
         children: [
           { path: '/', element: <Home /> },

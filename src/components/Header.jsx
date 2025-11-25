@@ -1,5 +1,9 @@
 const Header = () => {
-  return <div>Header</div>
+  return (
+    <div className='h-[100px] flex items-end'>
+      <p className='ms-[20px] text-[28px] font-header'>ONECO</p>
+    </div>
+  )
 }
 
 export default Header
