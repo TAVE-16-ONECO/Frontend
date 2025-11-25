@@ -1,13 +1,28 @@
+import { Outlet } from 'react-router-dom'
 import Header from '@/components/Header'
 import NavigationBar from '@/components/NavigationBar'
-import { Outlet } from 'react-router-dom'
+import { useUIOptionStore } from '@/store/uiOptionStore'
+import clsx from 'clsx'
 
-export default function DefaultLayout() {
+export const DefaultLayout = () => {
+  const showNavigationBar = useUIOptionStore((state) => state.showNavigationBar)
+  const showHeader = useUIOptionStore((state) => state.showHeader)
   return (
-    <>
-      <Header />
-      <Outlet />
-      <NavigationBar />
-    </>
+    <div className='w-full flex justify-center bg-[#f1f1f1] font-body'>
+      <div
+        className={clsx(
+          'w-full min-w-[360px] max-w-[600px] min-h-screen flex flex-col bg-white',
+          showNavigationBar ? 'pb-[86px]' : '',
+        )}
+      >
+        {showHeader && <Header />}
+        <Outlet />
+      </div>
+      <div className='fixed left-1/2 bottom-0 -translate-x-1/2 w-full h-[86px] min-w-[360px] max-w-[600px]'>
+        {showNavigationBar && <NavigationBar />}
+      </div>
+    </div>
   )
 }
+
+export default DefaultLayout
