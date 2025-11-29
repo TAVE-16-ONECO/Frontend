@@ -110,25 +110,34 @@ const RoleSelect = () => {
         </div>
 
         {/* 안내 메시지 */}
-        <div className='mb-[69px] flex flex-col gap-[19px]'>
-          <div className='flex items-start gap-2'>
-            <span className='text-[12px]'>•</span>
-            <p className='text-[16px] text-[#919191]'>보상을 받을 수 있어요.</p>
+        {selectedRole ?
+          <div className='mb-[42px] flex flex-col gap-[19px] text-[#919191]'>
+            <div className='flex items-start gap-2'>
+              <span className='text-[12px]'>•</span>
+              {selectedRole === 'parent' ?
+                <p className='text-[16px]'>보상을 줄 수 있어요.</p>
+              : <p className='text-[16px]'>보상을 받을 수 있어요.</p>}
+            </div>
+            <div className='flex items-start gap-2'>
+              <span className='text-[12px]'>•</span>
+              {selectedRole === 'parent' ?
+                <p className='text-[16px]'>
+                  내 아이의 금융지식 학습 활동을 공유 받아 함께 볼 수 있어요.
+                </p>
+              : <p className='text-[16px]'>
+                  금융지식을 하루에 하나씩 학습할 수 있어요.
+                </p>
+              }
+            </div>
           </div>
-          <div className='flex items-start gap-2'>
-            <span className='text-[12px]'>•</span>
-            <p className='text-[16px] text-[#919191]'>
-              금융지식을 하루에 하나씩 학습할 수 있어요.
-            </p>
-          </div>
-        </div>
+        : null}
 
         {/* 정보 박스 */}
-        <div className='h-[90px] mb-[69px] bg-[#f4f4f4] rounded-2xl p-4 flex justify-center items-center text-[16px] font-semibold text-[#919191] leading-[130%]'>
+        <div className='h-[90px] mb-[60px] bg-[#f4f4f4] rounded-2xl p-4 flex justify-center items-center text-[16px] font-medium text-[#919191] leading-[130%]'>
           <div>
             <p>이용방법을 정한 후 변경을 원하시면 </p>
             <p>
-              <span className='text-[#4A90E2] font-bold'>
+              <span className='text-[#4A90E2] font-semibold'>
                 회원 해지 후 다시 가입{' '}
               </span>
               <span>해야 합니다.</span>
@@ -140,13 +149,13 @@ const RoleSelect = () => {
           onClick={handleNext}
           disabled={!selectedRole}
           className={clsx(
-            'w-full h-[56px] rounded-xl text-[16px] font-medium transition-colors',
+            'w-full h-[56px] rounded-xl text-[16px] font-medium transition-colors [box-shadow:0px_4px_0px_0px_rgba(0,0,0,0.25)]',
             selectedRole ?
               'bg-[#6FAEFF] text-white hover:bg-[#5188fb]'
             : 'bg-gray-200 text-gray-400 cursor-not-allowed',
           )}
         >
-          다음
+          확인
         </button>
       </div>
     </div>
