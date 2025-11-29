@@ -2,9 +2,10 @@ import { useEffect } from 'react'
 import { useUIOptionStore } from '@/store/uiOptionStore'
 
 const Login = () => {
-  const { setShowNavigation } = useUIOptionStore()
+  const { setShowHeader, setShowNavigation } = useUIOptionStore()
 
   useEffect(() => {
+    setShowHeader(true)
     setShowNavigation(false)
     return () => {
       setShowNavigation(true)
@@ -29,22 +30,20 @@ const Login = () => {
   }
 
   return (
-    <div className='flex flex-col items-center min-h-screen bg-white px-6'>
+    <div className='flex flex-col items-center bg-white px-6'>
       {/* ONECO 타이틀 */}
       <h1 className='text-[43px] font-header text-black mt-[100px]'>ONECO</h1>
 
       {/* 설명 텍스트 2줄 */}
       <div className='text-center mb-[32px] text-[12px] mt-[4px] opacity-[70%]'>
-        <p className='font-body leading-relaxed'>
-          매일 한 발자국씩 가까워지는 경제 소식,
-        </p>
-        <p className='font-body leading-relaxed'>원코와 함께 만나보세요</p>
+        <p className='leading-[130%]'>매일 한 발자국씩 가까워지는 경제 소식,</p>
+        <p className='leading-[130%]'>원코와 함께 만나보세요</p>
       </div>
 
       {/* 카카오 로그인 버튼 */}
       <button
         onClick={handleKakaoLogin}
-        className='w-full max-w-[360px] h-[52px] bg-[#FDEE4B] hover:bg-[#E6CF00] transition-colors rounded-xl flex items-center justify-center gap-2 shadow-sm'
+        className='w-[282px] h-[40px] bg-[#FDEE4B] hover:bg-[#E6CF00] transition-colors rounded-xl flex items-center justify-center gap-2 shadow-sm'
       >
         {/* 카카오 아이콘 (SVG) */}
         <svg
@@ -59,7 +58,7 @@ const Login = () => {
             fill='#3C1E1E'
           />
         </svg>
-        <span className='text-[16px] font-body text-[#3C1E1E] font-medium'>
+        <span className='text-[15px] text-[#3C1E1E] font-medium'>
           카카오로 3초 만에 시작하기
         </span>
       </button>
