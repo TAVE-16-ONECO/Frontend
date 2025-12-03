@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import PlusIcon from '@/components/icons/PlusIcon'
-import SpeechBubble from '@/components/icons/SpeechBubble'
+import SpeechBubble from '@/components/SpeechBubble'
 import { useUIOptionStore } from '../store/uiOptionStore'
 import { useAuthStore } from '../store/authStore'
 import { useEffect } from 'react'

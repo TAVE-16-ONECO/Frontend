@@ -1,4 +1,4 @@
-export const BackArrow = ({
+export const BackArrowIcon = ({
   width = 10,
   height = 17,
   color = 'currentColor',

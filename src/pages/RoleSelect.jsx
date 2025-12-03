@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import clsx from 'clsx'
 import { useAuthStore } from '@/store/authStore'
 import { useUIOptionStore } from '@/store/uiOptionStore'
-import { BackArrow } from '@/components/icons/BackArrow'
+import { BackArrowIcon } from '../components/icons/BackArrowIcon'
 
 const RoleSelect = () => {
   const [selectedRole, setSelectedRole] = useState(null)
@@ -44,7 +44,7 @@ const RoleSelect = () => {
           className='text-[24px] text-[#2c2c2c] hover:opacity-70 transition-opacity'
           aria-label='뒤로가기'
         >
-          <BackArrow />
+          <BackArrowIcon />
         </button>
 
         {/* 취소 버튼 */}
