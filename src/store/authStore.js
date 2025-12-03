@@ -7,7 +7,8 @@ export const useAuthStore = create()(
       userData: null, // 유저 정보(ex 유저 이메일, 이름 등)
       authToken: null, // jwt 토큰값
       role: null, // 부모/자녀 역할 정보
-      isAuthenticated: false, // 로그인 여부
+      isAuthenticated: true, // 로그인 여부
+      hasMembers: false, // 구성원 존재 여부
       login: (userData, authToken) => {
         set({
           userData,
@@ -19,12 +20,21 @@ export const useAuthStore = create()(
         // 부모/자녀 선택
         set({ role })
       },
+      fetchMemberStatus: async () => {
+        // TODO: 백엔드 API 연결 후 구성원 존재 여부 조회
+        // const response = await api.get('/members/status')
+        // set({ hasMembers: response.data.hasMembers })
+
+        // 임시: 기본값 false 유지
+        set({ hasMembers: false })
+      },
       logout: () => {
         set({
           userData: null,
           authToken: null,
           role: null,
           isAuthenticated: false,
+          hasMembers: false,
         })
         get().persist.clearStorage() // localStorage에 저장된 유저 정보 제거
       },
