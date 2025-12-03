@@ -58,7 +58,7 @@ const Home = () => {
 
         {/* 말풍선 */}
         <div className='relative mt-8'>
-          <SpeechBubble className='w-full min-w-[200px] max-w-[220px]' />
+          <SpeechBubble className='w-full min-w-[180px] max-w-[220px]' />
           <p className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-5/9 text-[16px] text-[#000000] font-medium leading-[130%] whitespace-nowrap text-center'>
             원코아, 이 힘난한 세상에
             <br />
