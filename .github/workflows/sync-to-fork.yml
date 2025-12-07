@@ -1,56 +1,32 @@
-name: Sync to Personal Fork
-
+name: Synchronize to forked repo
 on:
   push:
     branches:
       - main
 
-permissions:
-  contents: read
-
 jobs:
-  sync-fork:
+  sync:
+    name: Sync forked repo
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout organization repository
+      - name: Checkout main
         uses: actions/checkout@v4
-        with:
-          ref: main
+        with: 
+          token: ${{ secrets.FORKED_REPO_TOKEN }}
           fetch-depth: 0
+          ref: main
 
-      - name: Configure Git
+      - name: Add remote-url
         run: |
-          git config --global user.name "GitHub Actions Bot"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Add fork as remote
+          git remote add forked-repo https://Juice-Han:${{ secrets.FORK_SYNC_TOKEN }}@github.com/Juice-Han/Oneco-Frontend
+          git config user.name Juice-Han
+          git config user.email iiiamst16@gmail.com
+      
+      - name: Push changes to forked-repo 
         run: |
-          git remote add fork https://x-access-token:${{ secrets.FORK_SYNC_TOKEN }}@github.com/Juice-Han/Oneco-Frontend.git
-
-      - name: Fetch fork branches
+          git push -f forked-repo main
+      
+      - name: Clean up
         run: |
-          git fetch fork
-
-      - name: Push to fork main branch
-        id: push
-        run: |
-          git push fork main:main --force
-        continue-on-error: true
-
-      - name: Check push status
-        if: steps.push.outcome == 'failure'
-        run: |
-          echo "::error::Failed to push to fork. This might be due to:"
-          echo "::error::1. Invalid or expired Personal Access Token"
-          echo "::error::2. Insufficient permissions on the token"
-          echo "::error::3. Fork repository doesn't exist or is inaccessible"
-          echo "::error::Please check the FORK_SYNC_TOKEN secret and fork repository settings"
-          exit 1
-
-      - name: Verify sync
-        if: steps.push.outcome == 'success'
-        run: |
-          echo "✅ Successfully synced to fork: Juice-Han/Oneco-Frontend"
-          echo "📦 Commit: ${{ github.sha }}"
-          echo "💬 Message: ${{ github.event.head_commit.message }}"
+          git remote remove forked-repo
