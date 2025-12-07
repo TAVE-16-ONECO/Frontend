@@ -12,7 +12,7 @@ import Make from '@/pages/Mission/Make'
 import Details from '@/pages/Mission/Details'
 
 import Alarm from '@/pages/Alarm'
-import Quiz from '@/pages/quiz'
+import Quiz from '@/pages/Quiz'
 import RoleSelect from '@/pages/RoleSelect'
 
 import ProtectedRoute from '@/router/ProtectedRoute'
