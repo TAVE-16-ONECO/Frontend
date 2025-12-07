@@ -1,0 +1,27 @@
+name: Sync to fork
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source repo
+        uses: actions/checkout@v3
+
+      - name: Add fork remote
+        run: |
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Action"
+          git remote add fork https://github.com/Juice-Han/Oneco-Frontend.git
+          git fetch fork
+
+      - name: Push changes to fork repo
+        env:
+          TOKEN: ${{ secrets.PERSONAL_TOKEN }}
+        run: |
+          git push https://${TOKEN}@github.com/Juice-Han/Oneco-Frontend.git main
