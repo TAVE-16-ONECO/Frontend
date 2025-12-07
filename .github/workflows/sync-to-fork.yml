@@ -24,4 +24,5 @@ jobs:
         env:
           TOKEN: ${{ secrets.PERSONAL_TOKEN }}
         run: |
-          git push https://${TOKEN}@github.com/Juice-Han/Oneco-Frontend.git main
+          git remote add fork https://Juice-Han:${TOKEN}@github.com/Juice-Han/Oneco-Frontend.git
+          git push fork main
