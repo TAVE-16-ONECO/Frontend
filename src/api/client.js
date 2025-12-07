@@ -13,7 +13,7 @@ const apiClient = axios.create({
 // 요청 인터셉터: 토큰 자동 첨부
 apiClient.interceptors.request.use(
   (config) => {
-    const token = useAuthStore.getState().authToken
+    const token = useAuthStore.getState().accessToken
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }

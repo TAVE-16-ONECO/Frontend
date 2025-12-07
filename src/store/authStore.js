@@ -5,15 +5,27 @@ export const useAuthStore = create()(
   persist(
     (set, get) => ({
       userData: null, // 유저 정보(ex 유저 이메일, 이름 등)
-      authToken: null, // jwt 토큰값
       role: null, // 부모/자녀 역할 정보
       isAuthenticated: false, // 로그인 여부
       hasMembers: false, // 구성원 존재 여부
-      login: (userData, authToken) => {
+      isNew: false,
+      accessToken: null,
+      refreshToken: null,
+      onboardingToken: null,
+      newUserLogin: (onboardingToken) => {
+        set({ onboardingToken, isNew: true })
+      },
+      existUserLogin: (accessToken, refreshToken) => {
         set({
-          userData,
-          authToken,
+          accessToken,
+          refreshToken,
           isAuthenticated: true,
+        })
+      },
+      setIsNew: (bool) => {
+        set({
+          isNew: bool,
+          onboardingToken: bool ? get().onboardingToken : null,
         })
       },
       selectRole: (role) => {
@@ -31,10 +43,13 @@ export const useAuthStore = create()(
       logout: () => {
         set({
           userData: null,
-          authToken: null,
           role: null,
           isAuthenticated: false,
           hasMembers: false,
+          isNew: false,
+          accessToken: null,
+          refreshToken: null,
+          onboardingToken: null,
         })
         get().persist.clearStorage() // localStorage에 저장된 유저 정보 제거
       },

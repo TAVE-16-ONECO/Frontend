@@ -18,6 +18,7 @@ import RoleSelect from '@/pages/RoleSelect'
 import ProtectedRoute from '@/router/ProtectedRoute'
 import DefaultLayout from '@/layouts/DefaultLayout'
 import KeyWordExplain from '@/pages/KeyWordExplain'
+import LoginBridge from '../pages/LoginBridge'
 
 // url 작명 규칙은 케밥 케이스를 사용
 // 케밥 케이스: 단어와 단어를 하이픈(-)으로 구분
@@ -26,12 +27,13 @@ export const router = createBrowserRouter([
     element: <DefaultLayout />, // 기본 레이아웃
     children: [
       { path: '/login', element: <Login /> },
+      { path: '/login-bridge', element: <LoginBridge /> },
+      { path: '/role-select', element: <RoleSelect /> },
       {
         element: <ProtectedRoute />,
         // 홈
         children: [
           { path: '/', element: <Home /> },
-          { path: '/role-select', element: <RoleSelect /> },
           { path: '/alarm', element: <Alarm /> },
           { path: '/history', element: <History /> },
 

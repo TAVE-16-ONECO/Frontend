@@ -4,29 +4,73 @@ import clsx from 'clsx'
 import { useAuthStore } from '@/store/authStore'
 import { useUIOptionStore } from '@/store/uiOptionStore'
 import { BackArrowIcon } from '../components/icons/BackArrowIcon'
+import apiClient from '../api/client'
 
 const RoleSelect = () => {
   const [selectedRole, setSelectedRole] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
-  const { selectRole } = useAuthStore()
+  const { selectRole, existUserLogin } = useAuthStore()
   const { setShowHeader, setShowNavigation } = useUIOptionStore()
+  const isNew = useAuthStore((state) => state.isNew)
+  const setIsNew = useAuthStore((state) => state.setIsNew)
+  const onboardingToken = useAuthStore((state) => state.onboardingToken)
 
   useEffect(() => {
+    if (!isNew) {
+      navigate('/', { replace: true })
+      return
+    }
     setShowHeader(false)
     setShowNavigation(false)
     return () => {
       setShowNavigation(true)
     }
-  }, [])
+  }, [isNew, navigate, setShowHeader, setShowNavigation])
 
   const handleBack = () => {
+    setIsNew(false)
     navigate('/login')
   }
 
-  const handleNext = () => {
-    if (selectedRole) {
-      selectRole(selectedRole)
-      navigate('/')
+  const handleNext = async () => {
+    if (!selectedRole) return
+
+    setIsLoading(true)
+
+    try {
+      // 역할 선택 API 호출 (onboardingToken을 accessToken/refreshToken으로 교환)
+      const response = await apiClient.post(
+        '/api/onboarding/complete',
+        {
+          familyRole: selectedRole,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${onboardingToken}`,
+          },
+        },
+      )
+
+      // accessToken, refreshToken 받아오기
+      const { accessToken, refreshToken } = response.data.data
+
+      if (accessToken && refreshToken) {
+        selectRole(selectedRole)
+        existUserLogin(accessToken, refreshToken) // isAuthenticated: true 설정
+        setIsNew(false)
+        navigate('/')
+      } else {
+        // 토큰이 없으면 로그인으로 리다이렉트
+        navigate('/login', { replace: true })
+      }
+    } catch (error) {
+      console.error('역할 선택 실패:', error)
+      // 실패 시 로그인 페이지로 리다이렉트
+      setIsNew(false)
+      navigate('/login', { replace: true })
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -147,15 +191,15 @@ const RoleSelect = () => {
         {/* 다음 버튼 */}
         <button
           onClick={handleNext}
-          disabled={!selectedRole}
+          disabled={!selectedRole || isLoading}
           className={clsx(
             'w-full h-[56px] rounded-xl text-[16px] font-medium transition-colors [box-shadow:0px_4px_0px_0px_rgba(0,0,0,0.25)]',
-            selectedRole ?
+            selectedRole && !isLoading ?
               'bg-[#6FAEFF] text-white hover:bg-[#5188fb]'
             : 'bg-gray-200 text-gray-400 cursor-not-allowed',
           )}
         >
-          확인
+          {isLoading ? '처리 중' : '확인'}
         </button>
       </div>
     </div>
