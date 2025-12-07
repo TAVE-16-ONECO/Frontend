@@ -46,19 +46,21 @@ const Login = () => {
         className='w-[282px] h-[40px] bg-[#FDEE4B] hover:bg-[#E6CF00] transition-colors rounded-xl flex items-center justify-center gap-2 shadow-sm'
       >
         {/* 카카오 아이콘 (SVG) */}
-        <svg
-          width='20'
-          height='20'
-          viewBox='0 0 20 20'
-          fill='none'
-          xmlns='http://www.w3.org/2000/svg'
-        >
-          <path
-            d='M10 0C4.477 0 0 3.846 0 8.571c0 3.034 2.016 5.695 5.033 7.18-.207.758-.673 2.515-.764 2.91-.11.482.177.475.374.346.155-.102 2.495-1.653 3.466-2.306.594.082 1.2.126 1.817.126 5.523 0 10-3.846 10-8.571S15.523 0 10 0z'
-            fill='#3C1E1E'
-          />
-        </svg>
-        <span className='text-[15px] text-[#3C1E1E] font-medium'>
+        <div className='pt-0.5'>
+          <svg
+            width='20'
+            height='20'
+            viewBox='0 0 20 20'
+            fill='none'
+            xmlns='http://www.w3.org/2000/svg'
+          >
+            <path
+              d='M10 0C4.477 0 0 3.846 0 8.571c0 3.034 2.016 5.695 5.033 7.18-.207.758-.673 2.515-.764 2.91-.11.482.177.475.374.346.155-.102 2.495-1.653 3.466-2.306.594.082 1.2.126 1.817.126 5.523 0 10-3.846 10-8.571S15.523 0 10 0z'
+              fill='#3C1E1E'
+            />
+          </svg>
+        </div>
+        <span className='text-[15px] text-[#000000] font-medium leading-[130%] pt-1'>
           카카오로 3초 만에 시작하기
         </span>
       </button>

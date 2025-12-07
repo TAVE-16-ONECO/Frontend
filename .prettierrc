@@ -10,5 +10,6 @@
   "trailingComma": "all",
   "useTabs": false,
   "printWidth": 80,
-  "experimentalTernaries": true
+  "experimentalTernaries": true,
+  "endOfLine": "auto"
 }
