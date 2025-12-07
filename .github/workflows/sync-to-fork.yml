@@ -1,28 +1,56 @@
-name: Sync to fork
+name: Sync to Personal Fork
 
 on:
   push:
     branches:
       - main
 
+permissions:
+  contents: read
+
 jobs:
-  sync:
+  sync-fork:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Checkout organization repository
+        uses: actions/checkout@v4
         with:
+          ref: main
           fetch-depth: 0
 
-      - name: Set git user
+      - name: Configure Git
         run: |
-          git config --global user.email "action@github.com"
-          git config --global user.name "GitHub Action"
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Push changes to fork repo
-        env:
-          TOKEN: ${{ secrets.PERSONAL_TOKEN }}
+      - name: Add fork as remote
         run: |
-          git remote add fork https://Juice-Han:${TOKEN}@github.com/Juice-Han/Oneco-Frontend.git
-          git push fork main
+          git remote add fork https://x-access-token:${{ secrets.FORK_SYNC_TOKEN }}@github.com/Juice-Han/Oneco-Frontend.git
+
+      - name: Fetch fork branches
+        run: |
+          git fetch fork
+
+      - name: Push to fork main branch
+        id: push
+        run: |
+          git push fork main:main --force
+        continue-on-error: true
+
+      - name: Check push status
+        if: steps.push.outcome == 'failure'
+        run: |
+          echo "::error::Failed to push to fork. This might be due to:"
+          echo "::error::1. Invalid or expired Personal Access Token"
+          echo "::error::2. Insufficient permissions on the token"
+          echo "::error::3. Fork repository doesn't exist or is inaccessible"
+          echo "::error::Please check the FORK_SYNC_TOKEN secret and fork repository settings"
+          exit 1
+
+      - name: Verify sync
+        if: steps.push.outcome == 'success'
+        run: |
+          echo "✅ Successfully synced to fork: Juice-Han/Oneco-Frontend"
+          echo "📦 Commit: ${{ github.sha }}"
+          echo "💬 Message: ${{ github.event.head_commit.message }}"
