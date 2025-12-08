@@ -2,8 +2,11 @@ import { useEffect } from 'react'
 import { useUIOptionStore } from '../store/uiOptionStore'
 import { BackArrowIcon } from '../components/icons/BackArrowIcon'
 import clsx from 'clsx'
+import { useNavigate } from 'react-router-dom'
 
 const Alarm = () => {
+  const navigate = useNavigate()
+
   const setShowHeader = useUIOptionStore((state) => state.setShowHeader)
   const setShowNavigation = useUIOptionStore((state) => state.setShowNavigation)
 
@@ -15,12 +18,18 @@ const Alarm = () => {
     }
   })
 
+  const handleBack = () => {
+    navigate('/')
+  }
+
   return (
     <>
       {/* 상단 바 */}
       <div className='w-full h-[30px] flex relative'>
         <div className='absolute left-4 top-1'>
-          <BackArrowIcon color='#404040' />
+          <button onClick={handleBack}>
+            <BackArrowIcon color='#404040' />
+          </button>
         </div>
         <p className='w-full text-center text-[18px] font-medium leading-[130%]'>
           알림
