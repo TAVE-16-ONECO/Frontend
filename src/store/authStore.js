@@ -6,7 +6,7 @@ export const useAuthStore = create()(
     (set, get) => ({
       userData: null, // 유저 정보(ex 유저 이메일, 이름 등)
       role: null, // 부모/자녀 역할 정보
-      isAuthenticated: false, // 로그인 여부
+      isAuthenticated: true, // 로그인 여부
       hasMembers: false, // 구성원 존재 여부
       isNew: false,
       accessToken: null,
