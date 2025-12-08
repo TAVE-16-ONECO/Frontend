@@ -43,7 +43,7 @@ const RoleSelect = () => {
       const response = await apiClient.post(
         '/api/onboarding/complete',
         {
-          familyRole: selectedRole,
+          familyRole: selectedRole.toUpperCase(),
         },
         {
           headers: {
@@ -116,7 +116,7 @@ const RoleSelect = () => {
         <div className='flex gap-[15px] justify-center mb-[42px]'>
           {/* 부모 카드 */}
           <button
-            onClick={() => handleRoleSelect('PARENT')}
+            onClick={() => handleRoleSelect('parent')}
             className={clsx(
               'w-full max-w-[200px] h-[180px] rounded-2xl flex flex-col items-center justify-center gap-[20px] transition-all',
               '[box-shadow:0px_1px_5px_0px_rgba(0,0,0,0.15)]',
@@ -135,7 +135,7 @@ const RoleSelect = () => {
 
           {/* 자녀 카드 */}
           <button
-            onClick={() => handleRoleSelect('CHILD')}
+            onClick={() => handleRoleSelect('child')}
             className={clsx(
               'w-full max-w-[200px] h-[180px] rounded-2xl flex flex-col items-center justify-center gap-[20px] transition-all',
               '[box-shadow:0px_1px_5px_0px_rgba(0,0,0,0.15)]',
