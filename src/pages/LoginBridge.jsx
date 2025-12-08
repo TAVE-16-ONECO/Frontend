@@ -36,7 +36,7 @@ export default function LoginBridge() {
     const getLoginResult = async () => {
       try {
         const response = await apiClient.get(
-          `/api/auth/login-result/key=${encodeURIComponent(key)}`,
+          `/api/auth/login-result?key=${encodeURIComponent(key)}`,
         )
 
         const data = response.data.data
