@@ -116,7 +116,7 @@ const RoleSelect = () => {
         <div className='flex gap-[15px] justify-center mb-[42px]'>
           {/* 부모 카드 */}
           <button
-            onClick={() => handleRoleSelect('parent')}
+            onClick={() => handleRoleSelect('PARENT')}
             className={clsx(
               'w-full max-w-[200px] h-[180px] rounded-2xl flex flex-col items-center justify-center gap-[20px] transition-all',
               '[box-shadow:0px_1px_5px_0px_rgba(0,0,0,0.15)]',
@@ -135,7 +135,7 @@ const RoleSelect = () => {
 
           {/* 자녀 카드 */}
           <button
-            onClick={() => handleRoleSelect('child')}
+            onClick={() => handleRoleSelect('CHILD')}
             className={clsx(
               'w-full max-w-[200px] h-[180px] rounded-2xl flex flex-col items-center justify-center gap-[20px] transition-all',
               '[box-shadow:0px_1px_5px_0px_rgba(0,0,0,0.15)]',
