@@ -140,19 +140,18 @@ const KeyWordExplain = () => {
           마스터하기
         </p>
       </div>
-      {/* 키워드 설명 */}
-      <div className='flex-1 overflow-y-auto pb-5'>
-        <div className='px-6 py-4'>
-          {/* 키워드 헤더 */}
-          <div className='mb-6 flex items-center gap-1'>
-            <div className='px-[10px] py-[2px] border-1 border-[#2c2c2c] rounded-2xl text-[14px] font-medium'>
-              {keywordExplanationMockData.dayCount}일차
-            </div>
-            <h1 className='text-[22px] font-bold text-[#000000]'>
-              {keywordExplanationMockData.keyword}
-            </h1>
+      <div className='px-6 py-4'>
+        {/* 키워드 헤더 */}
+        <div className='mb-6 flex items-center gap-1'>
+          <div className='px-[10px] py-[2px] border-1 border-[#2c2c2c] rounded-2xl text-[14px] font-medium'>
+            {keywordExplanationMockData.dayCount}일차
           </div>
-
+          <h1 className='text-[22px] font-bold text-[#000000]'>
+            {keywordExplanationMockData.keyword}
+          </h1>
+        </div>
+        {/* 키워드 설명 */}
+        <div className='pb-5'>
           {/* 마크다운 콘텐츠 */}
           <div className='markdown-content'>
             <ReactMarkdown
@@ -164,7 +163,7 @@ const KeyWordExplain = () => {
           </div>
         </div>
       </div>
-      <div className='flex justify-center items-center'>
+      <div className='flex justify-center'>
         <button
           className='text-[18px] text-[#fdfdfd] bg-[#91c4ff] px-9 py-4 rounded-2xl hover:bg-[#3b96ff] hover:cursor-pointer'
           onClick={goToQuiz}
