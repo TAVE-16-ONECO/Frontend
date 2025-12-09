@@ -19,6 +19,7 @@ import ProtectedRoute from '@/router/ProtectedRoute'
 import DefaultLayout from '@/layouts/DefaultLayout'
 import KeyWordExplain from '@/pages/KeyWordExplain'
 import LoginBridge from '../pages/LoginBridge'
+import QuizLayout from '../layouts/QuizLayout'
 
 // url 작명 규칙은 케밥 케이스를 사용
 // 케밥 케이스: 단어와 단어를 하이픈(-)으로 구분
@@ -47,8 +48,7 @@ export const router = createBrowserRouter([
           { path: '/mission/details', element: <Details /> },
 
           // 퀴즈
-          { path: '/keyword-explain', element: <KeyWordExplain /> },
-          { path: '/quiz', element: <Quiz /> },
+          { path: '/quiz', element: <QuizLayout /> },
         ],
       },
     ],
