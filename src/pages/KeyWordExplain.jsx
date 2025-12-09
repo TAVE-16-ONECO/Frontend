@@ -140,16 +140,16 @@ const KeyWordExplain = () => {
           마스터하기
         </p>
       </div>
-      <div className='px-6 py-4'>
-        {/* 키워드 헤더 */}
-        <div className='mb-6 flex items-center gap-1'>
-          <div className='px-[10px] py-[2px] border-1 border-[#2c2c2c] rounded-2xl text-[14px] font-medium'>
-            {keywordExplanationMockData.dayCount}일차
-          </div>
-          <h1 className='text-[22px] font-bold text-[#000000]'>
-            {keywordExplanationMockData.keyword}
-          </h1>
+      {/* 키워드 헤더 */}
+      <div className='flex items-center gap-1 px-[16px] pt-6'>
+        <div className='px-[10px] py-[2px] border-1 border-[#2c2c2c] rounded-2xl text-[14px] font-medium'>
+          {keywordExplanationMockData.dayCount}일차
         </div>
+        <h1 className='text-[22px] font-bold text-[#000000]'>
+          {keywordExplanationMockData.keyword}
+        </h1>
+      </div>
+      <div className='px-[16px] py-7'>
         {/* 키워드 설명 */}
         <div className='pb-5'>
           {/* 마크다운 콘텐츠 */}
