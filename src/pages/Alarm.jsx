@@ -13,9 +13,6 @@ const Alarm = () => {
   useEffect(() => {
     setShowHeader(false)
     setShowNavigation(false)
-    return () => {
-      setShowNavigation(true)
-    }
   })
 
   const handleBack = () => {
