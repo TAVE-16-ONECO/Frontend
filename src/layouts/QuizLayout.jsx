@@ -141,7 +141,7 @@ const QuizLayout = () => {
           </button>
         </div>
         <p className='w-full text-center text-[18px] font-medium leading-[130%]'>
-          마스터하기
+          {isStudyCompleted ? '마스터 퀴즈' : '마스터하기'}
         </p>
       </div>
       {/* 키워드 헤더 */}
