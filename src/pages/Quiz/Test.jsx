@@ -1,34 +1,37 @@
 import clsx from 'clsx'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const quizMockData = [
   {
     quiz: '실질소득은 물가를 고려해 실제 체감되는 소득이다.',
     imageSrc: '#',
-    answerOption: ['A번', 'B번'],
+    answerOption: ['O', 'X'],
   },
   {
     quiz: '물가 상승률이 소득 증가율보다 더 크면 실질소득은 감소한다.',
     imageSrc: '#',
-    answerOption: ['A번', 'B번'],
+    answerOption: ['O', 'X'],
   },
   {
     quiz: '실질소득은 명목소득과 반드시 같은 방향으로 움직인다.',
     imageSrc: '#',
-    answerOption: ['A번', 'B번'],
+    answerOption: ['O', 'X'],
   },
 ]
 const Quiz = () => {
   const [answerNumber, setAnswerNumber] = useState(null) // 답변 선택하지 않으면 null, 선택하면 0 또는 1
   const [quizCount, setQuizCount] = useState(0) // 0은 첫 번째를 의미
 
+  const navigate = useNavigate()
   const handleAnswerSelect = (answer) => {
     setAnswerNumber(answer)
   }
 
   const handleNextQuiz = () => {
     if (quizCount === 2) {
-      // 마지막 문제
+      // 마지막 퀴즈일 때
+      navigate('/quiz/result')
       return
     }
     setAnswerNumber(null)
