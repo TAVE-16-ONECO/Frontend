@@ -2,8 +2,9 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeHighlight from 'rehype-highlight'
 import { useAuthStore } from '@/store/authStore'
-import { useQuizStore } from '../../store/quizStore'
+import { useQuizStore } from '@/store/quizStore'
 import { useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
 
 const explanation = `
 얘야, 우리가 돈을 벌고 쓰면서 제일 중요한 게 하나 있어.
@@ -107,10 +108,14 @@ const KeyWordExplain = () => {
   const navigate = useNavigate()
 
   const role = useAuthStore((state) => state.role)
-  const setStudyCompleted = useQuizStore((state) => state.setIsStudyCompleted)
+  const setQuizLevel = useQuizStore((state) => state.setQuizLevel)
+
+  useEffect(() => {
+    setQuizLevel('keyword-explain')
+  }, [])
 
   const handleStudyCompleted = () => {
-    setStudyCompleted(true)
+    setQuizLevel('test')
     navigate('/quiz/test')
   }
 

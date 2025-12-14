@@ -1,6 +1,7 @@
 import clsx from 'clsx'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useQuizStore } from '@/store/quizStore'
 
 const quizMockData = [
   {
@@ -24,6 +25,9 @@ const Quiz = () => {
   const [quizCount, setQuizCount] = useState(0) // 0은 첫 번째를 의미
 
   const navigate = useNavigate()
+
+  const setQuizLevel = useQuizStore((state) => state.setQuizLevel)
+
   const handleAnswerSelect = (answer) => {
     setAnswerNumber(answer)
   }
@@ -31,6 +35,7 @@ const Quiz = () => {
   const handleNextQuiz = () => {
     if (quizCount === 2) {
       // 마지막 퀴즈일 때
+      setQuizLevel('result')
       navigate('/quiz/result')
       return
     }
