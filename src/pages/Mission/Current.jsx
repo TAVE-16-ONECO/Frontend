@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useUIOptionStore } from '@/store/uiOptionStore'
 import { BackArrowIcon } from '../../components/icons/BackArrowIcon'
 import MissionCard from '@/components/Mission/MissionCard'
@@ -7,9 +7,11 @@ import RewardRequestModal from '@/components/Mission/RewardRequestModal'
 
 const Current = () => {
   const navigate = useNavigate()
+  const location = useLocation()
   const setShowHeader = useUIOptionStore((state) => state.setShowHeader)
   const setShowNavigation = useUIOptionStore((state) => state.setShowNavigation)
-  const [activeTab, setActiveTab] = useState('ongoing') // 'ongoing' 또는 'completed'
+  // location.state에서 이전 탭 정보를 가져오거나, 없으면 'ongoing'을 기본값으로 사용
+  const [activeTab, setActiveTab] = useState(location.state?.activeTab || 'ongoing')
   const [isRewardModalOpen, setIsRewardModalOpen] = useState(false)
 
   // 더미 데이터 - 나중에 API로 교체, 내용은 상의하고 어디까지 필터링할건지 의논해볼게 지금은 그냥 ongoing이랑 complet에 id로 묶어놨어
@@ -110,7 +112,8 @@ const Current = () => {
   }
 
   const handleMissionClick = (missionId) => {
-    navigate(`/mission/details/${missionId}`)
+    // 현재 activeTab 정보를 state로 전달
+    navigate(`/mission/details/${missionId}`, { state: { activeTab } })
   }
 
   return (

@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import { useUIOptionStore } from '@/store/uiOptionStore'
 import { BackArrowIcon } from '../../components/icons/BackArrowIcon'
 
 const Details = () => {
   const navigate = useNavigate()
   const { id } = useParams()
+  const location = useLocation()
   const setShowHeader = useUIOptionStore((state) => state.setShowHeader)
   const setShowNavigation = useUIOptionStore((state) => state.setShowNavigation)
   const [mission, setMission] = useState(null)
@@ -152,7 +153,10 @@ const Details = () => {
   }, [id, setShowHeader, setShowNavigation])
 
   const handleBack = () => {
-    navigate('/mission/current')
+    // 이전 페이지에서 받은 activeTab 정보를 다시 전달
+    navigate('/mission/current', {
+      state: { activeTab: location.state?.activeTab },
+    })
   }
 
   // 미션 상태에 따른 메시지 반환
