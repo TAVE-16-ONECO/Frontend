@@ -53,7 +53,7 @@ const getStatusStyle = (status) => {
   return styles[status] || styles['진행 중']
 }
 
-const MissionCard = ({ mission }) => {
+const MissionCard = ({ mission, onClick }) => {
   const statusStyle = getStatusStyle(mission.status)
 
   // 미션 종료까지 남은 일수 계산 (진행 중 상태일 때만)
@@ -70,7 +70,8 @@ const MissionCard = ({ mission }) => {
 
   return (
     <div
-      className={`${statusStyle.cardBg} border ${statusStyle.border} rounded-lg p-4 mb-4 shadow-sm hover:shadow-md transition-shadow`}
+      onClick={() => onClick?.(mission.id)}
+      className={`${statusStyle.cardBg} border ${statusStyle.border} rounded-lg p-4 mb-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer`}
     >
       {/* 상단: 상태 배지와 마감일 */}
       <div className='flex justify-between items-center mb-3'>

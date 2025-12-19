@@ -109,6 +109,10 @@ const Current = () => {
     navigate('/')
   }
 
+  const handleMissionClick = (missionId) => {
+    navigate(`/mission/details/${missionId}`)
+  }
+
   return (
     <div>
       <div className='flex flex-col'>
@@ -164,6 +168,7 @@ const Current = () => {
                   <MissionCard
                     key={mission.id}
                     mission={mission}
+                    onClick={handleMissionClick}
                   />
                 ))
               : <p className='text-gray-400 text-center py-8'>
@@ -178,6 +183,7 @@ const Current = () => {
                   <MissionCard
                     key={mission.id}
                     mission={mission}
+                    onClick={handleMissionClick}
                   />
                 ))
               : <p className='text-gray-400 text-center py-8'>
