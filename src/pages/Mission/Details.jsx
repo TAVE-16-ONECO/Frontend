@@ -11,6 +11,10 @@ const Details = () => {
   const setShowNavigation = useUIOptionStore((state) => state.setShowNavigation)
   const [mission, setMission] = useState(null)
 
+  //id(아이디), title(미션 제목), status(미션상태),
+  //reward(미션보상), startDate(시작날짜), dueDate(마감날짜),
+  //autoCancelDate(자동취소날짜), description(미션설명)
+
   const allMissions = [
     {
       id: 1,
@@ -24,115 +28,116 @@ const Details = () => {
     },
     {
       id: 2,
-      title: 'React 기초 강의 완강하기',
+      title: '은행 업무 이해하기',
       status: '승인 요청',
       reward: '15,000원',
       startDate: '2025-12-05',
       dueDate: '2025-12-31',
       autoCancelDate: '2026-01-07',
-      description: 'React의 기초부터 중급까지 강의를 완강하는 미션입니다.',
+      description: '은행에서 할 수 있는 다양한 업무를 이해하는 미션입니다.',
     },
     {
       id: 3,
-      title: 'TypeScript 프로젝트 완성하기',
+      title: '투자 포트폴리오 구성하기',
       status: '승인 수락',
       reward: '20,000원',
       startDate: '2025-12-10',
       dueDate: '2026-01-15',
       autoCancelDate: '2026-01-22',
-      description: 'TypeScript를 사용한 프로젝트를 완성하는 미션입니다.',
+      description:
+        '투자 포트폴리오를 효과적으로 구성하는 방법을 배우는 미션입니다.',
     },
     {
       id: 4,
-      title: '알고리즘 문제 10개 풀기',
+      title: '관세 이해하기',
       status: '승인 거절',
       reward: '5,000원',
       startDate: '2025-12-08',
       dueDate: '2025-01-25',
       autoCancelDate: '2026-02-01',
-      description: '알고리즘 문제를 풀어 실력을 향상시키는 미션입니다.',
+      description: '관세 개념을 이해하는 미션입니다.',
     },
     {
       id: 5,
-      title: 'UI/UX 디자인 기초 학습',
+      title: '경제인물 공부하기',
       status: '진행 중',
       reward: '12,000원',
       startDate: '2025-12-12',
       dueDate: '2025-01-25',
       autoCancelDate: '2026-02-01',
-      description: 'UI/UX 디자인의 기본 원칙을 학습하는 미션입니다.',
+      description: '경제인 관련 인물들을 공부하는 미션입니다.',
     },
     {
       id: 6,
-      title: 'Git 협업 워크플로우 익히기',
+      title: '재테크 part1 이해하기',
       status: '진행 중',
       reward: '8,000원',
       startDate: '2025-12-15',
       dueDate: '2025-01-18',
       autoCancelDate: '2026-01-25',
-      description: 'Git을 사용한 효율적인 협업 방법을 익히는 미션입니다.',
+      description: '재테크에 대해 이해하는 미션입니다.',
     },
     {
       id: 7,
-      title: 'REST API 설계 및 구현',
+      title: '적금이해하기',
       status: '승인 요청',
       reward: '25,000원',
       startDate: '2025-12-18',
       dueDate: '2026-01-30',
       autoCancelDate: '2026-02-06',
-      description: 'RESTful API를 설계하고 구현하는 미션입니다.',
+      description: '적금내용 을 이해하는 미션입니다.',
     },
   ]
   const [completedMissions] = useState([
     {
       id: 8,
-      title: 'JavaScript 기초 완성하기',
+      title: '저축 습관 들이기',
       status: '보상완료',
       reward: '10,000원',
       startDate: '2025-11-01',
       dueDate: '2025-11-30',
       autoCancelDate: '2025-12-07',
-      description: 'JavaScript의 기본 문법과 개념을 완성한 미션입니다.',
+      description: '저축내용 기록하고 습관화하는 미션입니다.',
     },
     {
       id: 9,
-      title: 'CSS Flexbox 마스터하기',
+      title: '비트코인 기초 이해하기',
       status: '보상요청',
       reward: '7,000원',
       startDate: '2025-11-05',
       dueDate: '2025-11-25',
       autoCancelDate: '2025-12-02',
-      description: 'CSS Flexbox를 활용한 레이아웃 구성을 마스터한 미션입니다.',
+      description: '비트코인 기초를 이해하는 미션입니다.',
     },
     {
       id: 10,
-      title: 'Node.js 서버 구축하기',
+      title: '주식 시장 Part 3 마스터하기',
       status: '보상완료',
       reward: '15,000원',
       startDate: '2025-10-15',
       dueDate: '2025-11-15',
       autoCancelDate: '2025-11-22',
-      description: 'Node.js를 사용하여 서버를 구축한 미션입니다.',
+      description: '주식 시장의 기본 개념과 투자 전략을 학습하는 미션입니다.',
     },
     {
       id: 11,
-      title: 'MongoDB 기초 학습',
+      title: '화폐 가치 이해하기',
       status: '미션실패',
       reward: '0원',
       startDate: '2025-10-20',
       dueDate: '2025-11-10',
       autoCancelDate: '2025-11-17',
-      description: 'MongoDB의 기초를 학습하는 미션이었습니다.',
+      description: '화폐가치를 이해하는 미션입니다.',
     },
     {
       id: 12,
-      title: '데이터베이스 설계 이해하기',
+      title: '인플레이션 이해하기',
       status: '미션완료',
       reward: '18,000원',
       startDate: '2025-10-01',
       dueDate: '2025-10-31',
       autoCancelDate: '2025-11-07',
-      description: '데이터베이스 설계 원칙과 방법론을 이해한 미션입니다.',
+      description: '인플레이션을 이해하는 미션입니다.',
     },
   ])
 
@@ -210,7 +215,7 @@ const Details = () => {
               }
             </h1>
             {/*상세 카드구역 */}
-            <div className='flex flex-col items-center mt-30 gap-4 mb-10 border-1 rounded-2xl p-[5px] hover:shadow-md transition-shadow'>
+            <div className='flex flex-col items-center mt-20 gap-4 mb-10 border border-gray-200/50 rounded-2xl p-[5px] shadow-md hover:shadow-lg transition-shadow'>
               {/* Status 배지 - 상단 중앙 */}
               <div className='flex justify-center w-full pt-4'>
                 <span
@@ -235,11 +240,9 @@ const Details = () => {
               </div>
 
               {/* 미션 제목 및 보상 */}
-              <div className='flex flex-col items-center bg-[#E2EFFF] rounded-lg p-6 mb-[34px] mt-[20px] ml-[24px] mr-[24px] w-full'>
+              <div className='flex flex-col items-center bg-[#E2EFFF] rounded-2xl p-6 mb-[34px] mt-[20px] ml-[24px] mr-[24px] w-full'>
                 <p className='text-gray-700'>{mission.title}</p>
-                <p className='text-2xl font-bold text-blue-600'>
-                  {mission.reward}
-                </p>
+                <p className='text-2xl font-bold'>{mission.reward}</p>
               </div>
 
               {/* 날짜 정보 - border-bottom 아래 */}
@@ -281,6 +284,19 @@ const Details = () => {
           </div>
         </div>
       </div>
+
+      {/* 승인 거절된 미션일 때 플로팅 버튼 */}
+      {mission.status === '승인 거절' && (
+        <button
+          className='fixed bottom-8 left-1/2 -translate-x-1/2 bg-[#6FAEFF] hover:bg-[#5188FB] text-white px-8 py-4 rounded-2xl shadow-lg transition-colors font-bold'
+          onClick={() => {
+            // 미션 만들기
+            navigate('/mission/create')
+          }}
+        >
+          + 미션만들기
+        </button>
+      )}
     </div>
   )
 }
