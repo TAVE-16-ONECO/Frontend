@@ -64,31 +64,31 @@ const Current = () => {
 
   const [completedMissions] = useState([
     {
-      id: 1,
+      id: 8,
       title: 'JavaScript 기초 완성하기',
       status: '보상완료',
       reward: '10,000원',
     },
     {
-      id: 2,
+      id: 9,
       title: 'CSS Flexbox 마스터하기',
       status: '보상요청',
       reward: '7,000원',
     },
     {
-      id: 3,
+      id: 10,
       title: 'Node.js 서버 구축하기',
       status: '보상완료',
       reward: '15,000원',
     },
     {
-      id: 4,
+      id: 11,
       title: 'MongoDB 기초 학습',
       status: '미션실패',
       reward: '0원',
     },
     {
-      id: 5,
+      id: 12,
       title: '데이터베이스 설계 이해하기',
       status: '미션완료',
       reward: '18,000원',
