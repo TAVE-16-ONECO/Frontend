@@ -189,9 +189,9 @@ const Details = () => {
 
   return (
     <div>
-      <div className='flex flex-col'>
+      <div className='flex flex-col relative'>
         {/* 헤더 영역 */}
-        <div className='flex justify-between items-center h-[60px] px-6'>
+        <div className='flex justify-between items-center h-[60px] px-6 w-full relative'>
           {/* 뒤로가기 버튼 */}
           <button
             onClick={handleBack}
@@ -204,7 +204,7 @@ const Details = () => {
           <div className='w-[24px]'></div>
         </div>
 
-        {/* 미션 상세 내용 */}
+        {/* 미션 상세 윗부분 */}
         <div className='mt-[38px] px-6 pb-24'>
           <div className='mb-6'>
             <h1 className='text-2xl font-bold mb-4'>
@@ -215,7 +215,7 @@ const Details = () => {
               }
             </h1>
             {/*상세 카드구역 */}
-            <div className='flex flex-col items-center mt-20 gap-4 mb-10 border border-gray-200/50 rounded-2xl p-[5px] shadow-md hover:shadow-lg transition-shadow'>
+            <div className='flex flex-col items-center mt-20 pt-9 w-full gap-4 mb-10 border border-gray-200/50 rounded-2xl p-[5px] shadow-md hover:shadow-lg transition-shadow'>
               {/* Status 배지 - 상단 중앙 */}
               <div className='flex justify-center w-full pt-4'>
                 <span
@@ -240,13 +240,13 @@ const Details = () => {
               </div>
 
               {/* 미션 제목 및 보상 */}
-              <div className='flex flex-col items-center bg-[#E2EFFF] rounded-2xl p-6 mb-[34px] mt-[20px] ml-[24px] mr-[24px] w-full'>
+              <div className='flex flex-col items-center bg-[#E2EFFF] rounded-2xl p-6 mb-[34px] mt-[10px] ml-[24px] mr-[24px] w-full'>
                 <p className='text-gray-700'>{mission.title}</p>
                 <p className='text-2xl font-bold'>{mission.reward}</p>
               </div>
 
               {/* 날짜 정보 - border-bottom 아래 */}
-              <div className='w-full px-6 pb-6 border-t-2'>
+              <div className='w-full px-6 pb-6 border-t'>
                 <div className='flex flex-col gap-2 mt-4'>
                   {mission.startDate && (
                     <div className='flex justify-between'>
