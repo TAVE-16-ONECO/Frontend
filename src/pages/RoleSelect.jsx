@@ -193,13 +193,13 @@ const RoleSelect = () => {
           onClick={handleNext}
           disabled={!selectedRole || isLoading}
           className={clsx(
-            'w-full h-[56px] rounded-xl text-[16px] font-medium transition-colors [box-shadow:0px_4px_0px_0px_rgba(0,0,0,0.25)]',
+            'w-full h-[56px] rounded-xl text-[16px] font-medium transition-colors',
             selectedRole && !isLoading ?
               'bg-[#6FAEFF] text-white hover:bg-[#5188fb]'
             : 'bg-gray-200 text-gray-400 cursor-not-allowed',
           )}
         >
-          {isLoading ? '처리 중' : '확인'}
+          {isLoading ? '처리 중' : '다음'}
         </button>
       </div>
     </div>
