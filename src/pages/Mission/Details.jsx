@@ -208,11 +208,9 @@ const Details = () => {
         <div className='mt-[38px] px-6 pb-24'>
           <div className='mb-6'>
             <h1 className='text-2xl font-bold mb-4'>
-              {
-                <h1 className='text-2xl font-bold mb-4'>
+              
                   {getStatusMessage(mission.status)}
-                </h1>
-              }
+              
             </h1>
             {/*상세 카드구역 */}
             <div className='flex flex-col items-center mt-20 pt-9 w-full gap-4 mb-10 border border-gray-200/50 rounded-2xl p-[5px] shadow-md hover:shadow-lg transition-shadow'>
