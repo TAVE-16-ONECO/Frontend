@@ -57,7 +57,7 @@ const Home = () => {
         <div className='relative mt-8'>
           <SpeechBubble className='w-full min-w-[180px] max-w-[220px]' />
           <p className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-5/9 text-[16px] text-[#000000] font-medium leading-[130%] whitespace-nowrap text-center'>
-            얘야, 이 힘난한 세상에
+            얘야, 이 험난한 세상에
             <br />
             경제를 모르면 되겠니
           </p>
