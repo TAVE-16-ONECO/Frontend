@@ -48,7 +48,7 @@ export const router = createBrowserRouter([
           // 미션
           { path: '/mission/current', element: <Current /> },
           { path: '/mission/make', element: <Make /> },
-          { path: '/mission/details', element: <Details /> },
+          { path: '/mission/details/:id', element: <Details /> },
 
           // 퀴즈
           {
