@@ -7,9 +7,6 @@ const Login = () => {
   useEffect(() => {
     setShowHeader(true)
     setShowNavigation(false)
-    return () => {
-      setShowNavigation(true)
-    }
   }, [])
 
   // TODO: 백엔드에서 리다이렉트 된 경우 로직 처리

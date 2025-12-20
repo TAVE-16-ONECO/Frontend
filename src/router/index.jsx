@@ -12,13 +12,17 @@ import Make from '@/pages/Mission/Make'
 import Details from '@/pages/Mission/Details'
 
 import Alarm from '@/pages/Alarm'
-import Quiz from '@/pages/Quiz'
 import RoleSelect from '@/pages/RoleSelect'
 
 import ProtectedRoute from '@/router/ProtectedRoute'
 import DefaultLayout from '@/layouts/DefaultLayout'
-import KeyWordExplain from '@/pages/KeyWordExplain'
 import LoginBridge from '../pages/LoginBridge'
+import QuizLayout from '../layouts/QuizLayout'
+
+// Quiz
+import KeyWordExplain from '@/pages/Quiz/KeyWordExplain'
+import Test from '@/pages/Quiz/Test'
+import Result from '@/pages/Quiz/Result'
 
 // url 작명 규칙은 케밥 케이스를 사용
 // 케밥 케이스: 단어와 단어를 하이픈(-)으로 구분
@@ -46,8 +50,15 @@ export const router = createBrowserRouter([
           { path: '/mission/details/:id', element: <Details /> },
 
           // 퀴즈
-          { path: '/keyword-explain', element: <KeyWordExplain /> },
-          { path: '/quiz', element: <Quiz /> },
+          {
+            path: '/quiz',
+            element: <QuizLayout />,
+            children: [
+              { path: 'keyword-explain', element: <KeyWordExplain /> },
+              { path: 'test', element: <Test /> },
+              { path: 'result', element: <Result /> },
+            ],
+          },
         ],
       },
     ],

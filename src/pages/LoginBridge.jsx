@@ -17,10 +17,7 @@ export default function LoginBridge() {
   useEffect(() => {
     setShowHeader(false)
     setShowNavigation(false)
-    return () => {
-      setShowNavigation(true)
-    }
-  })
+  }, [])
 
   // 리다이렉트 후 쿼리 파라미터에서 key 추출 및 로그인 결과 API 호출
   useEffect(() => {
