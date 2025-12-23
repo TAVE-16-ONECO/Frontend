@@ -9,9 +9,9 @@ import eslintConfigPrettier from 'eslint-config-prettier/flat'
 import plugin from 'eslint-plugin-react'
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  globalIgnores(['dist', 'dev-dist']),
   {
-    files: ['**/*.{ts,tsx}'],
+    files: ['**/*.{js,jsx}'],
     extends: [
       js.configs.recommended,
       plugin.configs.flat['jsx-runtime'],
