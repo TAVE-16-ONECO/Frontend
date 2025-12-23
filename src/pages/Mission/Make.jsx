@@ -1,5 +1,4 @@
-const Make = () => {
-  return <div>미션 만들기 페이지</div>
+const make = () => {
+  return <div>Make Mission Page</div>
 }
-
-export default Make
+export default make
