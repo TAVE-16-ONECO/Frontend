@@ -44,31 +44,46 @@ const PWAInstallModal = ({
 
         {/* 안내 텍스트 */}
         <p className='text-center text-[18px] text-[#000000] font-medium leading-[150%] mb-4'>
-          홈 화면에 원코 앱을 추가하고
+          홈 화면에 원코 앱을 추가해서
           <br />
-          원코를 더 빠르게 편하게 이용해보세요.
+          원코를 더 빠르고 편하게 이용해보세요.
         </p>
 
         {/* iOS 안내 메시지 (조건부) */}
         {isIOS && (
-          <div className='bg-blue-50 rounded-lg p-4 mb-4'>
-            <p className='text-sm text-[#000000] leading-[150%]'>
-              Safari에서 <span className='font-semibold'>공유 버튼</span>을 누른
-              후
-              <br />
+          <div className='bg-blue-50 rounded-lg p-4 mb-4 flex flex-col justify-center items-center'>
+            <div>
+              <span className='font-semibold inline-flex items-center gap-1'>
+                공유 버튼 (
+                <svg
+                  width='16'
+                  height='20'
+                  viewBox='0 0 24 24'
+                  fill='currentColor'
+                  className='inline-block'
+                >
+                  <path d='M16 5l-1.42 1.42-1.59-1.59V16h-1.98V4.83L9.42 6.42 8 5l4-4 4 4zm4 5v11c0 1.1-.9 2-2 2H6c-1.11 0-2-.9-2-2V10c0-1.11.89-2 2-2h3v2H6v11h12V10h-3V8h3c1.1 0 2 .89 2 2z' />
+                </svg>
+                )
+              </span>
+              을 누른 후
+            </div>
+            <div>
               <span className='font-semibold'>"홈 화면에 추가"</span>를
               선택해주세요.
-            </p>
+            </div>
           </div>
         )}
 
         {/* 설치 버튼 */}
-        <button
-          onClick={onInstall}
-          className='w-full py-2 bg-[#6FAEFF] text-white rounded-2xl font-normal text-[16px] hover:bg-[#5188FB] transition-colors mb-4'
-        >
-          간편하게 원코 앱 추가하기
-        </button>
+        {!isIOS && (
+          <button
+            onClick={onInstall}
+            className='w-full py-2 bg-[#6FAEFF] text-white rounded-2xl font-normal text-[16px] hover:bg-[#5188FB] transition-colors mb-4'
+          >
+            간편하게 원코 앱 추가하기
+          </button>
+        )}
 
         {/* 오늘은 그만 보기 링크 */}
         <button

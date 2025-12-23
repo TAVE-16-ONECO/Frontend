@@ -4,7 +4,23 @@ const PWA_DISMISS_KEY = 'pwa-install-dismiss-date'
 // iOS 플랫폼 감지
 export const isIOS = () => {
   const userAgent = window.navigator.userAgent.toLowerCase()
-  return /iphone|ipad|ipod/.test(userAgent)
+
+  // 기본적인 iOS 디바이스 감지
+  if (/iphone|ipad|ipod/.test(userAgent)) {
+    return true
+  }
+
+  // iPadOS 13+ 감지: iPad가 데스크톱 모드에서 Macintosh로 표시되는 경우
+  // Macintosh이면서 터치 포인트가 있으면 iPad
+  if (
+    /macintosh/.test(userAgent) &&
+    navigator.maxTouchPoints &&
+    navigator.maxTouchPoints > 1
+  ) {
+    return true
+  }
+
+  return false
 }
 
 // PWA 설치 여부 확인
