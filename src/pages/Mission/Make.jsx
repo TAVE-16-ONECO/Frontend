@@ -683,7 +683,7 @@ const Make = () => {
           (currentStep === 4 && selectedMembers.length === 0) ||
           (currentStep === 5 && !message.trim() && !noMessage)
         }
-        className={`fixed bottom-3 left-1/2 -translate-x-1/2 px-14 py-3 rounded-2xl shadow-lg text-[15px] font-bold transition-all ${
+        className={`fixed bottom-3 left-1/2 -translate-x-1/2 px-14 py-3 rounded-2xl shadow-lg text-[15px] font-bold transition-all z-50 ${
           (
             (currentStep === 1 && !selectedMission) ||
             (currentStep === 3 && !reward.trim()) ||
