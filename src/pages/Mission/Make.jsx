@@ -10,6 +10,20 @@ const Make = () => {
 
   const [currentStep, setCurrentStep] = useState(1)
   const [selectedMission, setSelectedMission] = useState(null)
+  const [reward, setReward] = useState('')
+  const [selectedMembers, setSelectedMembers] = useState([])
+  const [message, setMessage] = useState('')
+  const [noMessage, setNoMessage] = useState(false)
+
+  // 멤버 데이터
+  const familyMembers = [
+    { id: 1, name: '엄마', avatar: '👩' },
+    { id: 2, name: '아빠', avatar: '👨' },
+    { id: 3, name: '언니', avatar: '👧' },
+    { id: 4, name: '형', avatar: '👦' },
+    { id: 5, name: '할머니', avatar: '👵' },
+    { id: 6, name: '할아버지', avatar: '👴' },
+  ]
 
   // 미션 템플릿 데이터
   const missionTemplates = [
@@ -63,7 +77,7 @@ const Make = () => {
     },
   ]
 
-  // 날짜 계산 함수
+  // 날짜 계산 함수 (주말 제외)
   const calculateDates = () => {
     if (!selectedMission) return null
 
@@ -72,7 +86,22 @@ const Make = () => {
 
     const today = new Date()
     const endDate = new Date(today)
-    endDate.setDate(endDate.getDate() + mission.durationDays)
+
+    // 주말을 제외하고 영업일만 카운트
+    let daysAdded = 0
+    let currentDate = new Date(today)
+
+    while (daysAdded < mission.durationDays) {
+      currentDate.setDate(currentDate.getDate() + 1)
+      const dayOfWeek = currentDate.getDay()
+      // 0(일요일), 6(토요일)이 아니면 카운트
+      if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+        daysAdded++
+      }
+    }
+
+    endDate.setTime(currentDate.getTime())
+
     //시작일, 종료일, 기간일수
     return {
       startDate: today,
@@ -111,17 +140,46 @@ const Make = () => {
     setSelectedMission(missionId)
   }
 
+  const handleMemberToggle = (memberId) => {
+    setSelectedMembers((prev) =>
+      prev.includes(memberId) ?
+        prev.filter((id) => id !== memberId)
+      : [...prev, memberId],
+    )
+  }
+
   const handleNext = () => {
     if (currentStep < 5) {
       setCurrentStep((prev) => prev + 1)
     }
   }
 
+  const handleCancel = () => {
+    navigate('/mission/current')
+  }
+
+  // 진행 표시 바 컴포넌트
+  const renderProgressBar = () => (
+    <div className='flex gap-2 mb-6'>
+      {[1, 2, 3, 4, 5].map((step) => (
+        <div
+          key={step}
+          className={`flex-1 h-1 rounded-full transition-all duration-300 ${
+            step <= currentStep ? 'bg-black' : 'bg-gray-200'
+          }`}
+        ></div>
+      ))}
+    </div>
+  )
+
+  //------------------1페이지---------------------------------------
   const renderStep1 = () => (
     <div className='flex-1 px-6 py-6 overflow-y-auto pb-24'>
-      <h2 className='text-xl font-bold mb-6'>
+      <h2 className='text-xl font-bold mb-4'>
         너가 원하는 학습 목표를 설정하고<br></br> 내게 보상을 제안해보렴.
       </h2>
+      {renderProgressBar()}
+
       <div className='grid grid-cols-2 gap-4'>
         {missionTemplates.map((mission) => (
           <button
@@ -223,7 +281,7 @@ const Make = () => {
   const isSameDate = (date1, date2) => {
     return date1.toDateString() === date2.toDateString()
   }
-
+  //------------------------2페이지-------------------------------------
   const renderStep2 = () => {
     const dates = calculateDates()
     if (!dates) return null
@@ -348,6 +406,8 @@ const Make = () => {
           {formatDate(dates.endDate)}이란다.{' '}
         </h2>
 
+        {renderProgressBar()}
+
         {/* 날짜 정보 요약 */}
         <div className='mb-6 p-4 bg-[#F0F7FF] rounded-xl'>
           <div className='flex justify-between items-center text-sm'>
@@ -407,27 +467,181 @@ const Make = () => {
       </div>
     )
   }
-
+  //--------------3페이지--------------------------------------
   const renderStep3 = () => (
     <div className='flex-1 px-6 py-6 overflow-y-auto pb-24'>
-      <h2 className='text-xl font-bold mb-6'>3단계 페이지</h2>
-      <p className='text-gray-500'>3단계 내용이 여기에 표시됩니다.</p>
-    </div>
-  )
+      <h2 className='text-xl font-bold mb-4'>
+        보상은<br></br>무엇으로 정할거니?
+      </h2>
 
-  const renderStep4 = () => (
-    <div className='flex-1 px-6 py-6 overflow-y-auto pb-24'>
-      <h2 className='text-xl font-bold mb-6'>4단계 페이지</h2>
-      <p className='text-gray-500'>4단계 내용이 여기에 표시됩니다.</p>
-    </div>
-  )
+      {renderProgressBar()}
 
-  const renderStep5 = () => (
-    <div className='flex-1 px-6 py-6 overflow-y-auto pb-24'>
-      <h2 className='text-xl font-bold mb-6'>5단계 페이지</h2>
-      <p className='text-gray-500'>5단계 내용이 여기에 표시됩니다.</p>
+      <div className='mt-2'>
+        <label className='block text-sm font-medium text-gray-700 mb-4'>
+          보상 내용을 입력해주세요
+        </label>
+        <div className='relative'>
+          <input
+            type='text'
+            value={reward}
+            onChange={(e) => setReward(e.target.value)}
+            placeholder='예: 좋아하는 간식 사기, 게임 1시간 하기'
+            className='w-full px-1 py-2 border-b-2 border-gray-300 focus:border-[#6FAEFF] focus:outline-none'
+          />
+          <span className='absolute right-0 bottom-2 text-xs text-gray-400'>
+            {reward.length}
+          </span>
+        </div>
+        <p className='mt-3 text-xs text-gray-500'>
+          미션을 완료했을 때 받고 싶은 보상을 자유롭게 적어보세요.
+        </p>
+      </div>
     </div>
   )
+  //------------------4페이지------------------
+  const renderStep4 = () => {
+    const selectedMissionData = missionTemplates.find(
+      (m) => m.id === selectedMission,
+    )
+    if (!selectedMissionData) return null
+
+    const dates = calculateDates()
+    if (!dates) return null
+
+    return (
+      <div className='flex-1 px-6 py-6 overflow-y-auto pb-24'>
+        <h2 className='text-xl font-bold mb-4'>
+          이 미션을<br></br>누구에게 보낼거니?
+        </h2>
+
+        {renderProgressBar()}
+
+        {/* 선택된 미션 카드 */}
+        <div className='flex justify-center mb-11'>
+          <div className='bg-white rounded-3xl shadow-lg w-[353px] h-[275px] pt-[18px] px-[24px] pb-8'>
+            {/* 제목과 보상 영역 */}
+            <div className='bg-[#E2EFFF] rounded-2xl w-[305px] h-[140px] p-3 mb-[17.63px] flex flex-col items-center'>
+              <p className='text-sm text-gray-700 mb-2'>
+                {selectedMissionData.title}
+              </p>
+              <p className='text-xs font-bold'>{reward}</p>
+            </div>
+
+            {/* 구분선 */}
+            <div className='border-b border-gray-300 mb-3'></div>
+
+            {/* 날짜 정보 */}
+            <div className='flex-col text-xs'>
+              <div className='flex justify-between mb-2'>
+                <p className='text-gray-600'>시작일</p>
+                <p className='font-medium'>{formatDate(dates.startDate)}</p>
+              </div>
+              <div className='flex justify-between'>
+                <p className='text-gray-600'>완료일</p>
+                <p className='font-medium'>{formatDate(dates.endDate)}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 멤버 선택 영역 */}
+        <div>
+          <p className='text-sm font-bold text-gray-700 mb-4'>멤버</p>
+          <div className='grid grid-cols-3 gap-4'>
+            {familyMembers.map((member) => (
+              <button
+                key={member.id}
+                onClick={() => handleMemberToggle(member.id)}
+                className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${
+                  selectedMembers.includes(member.id) ?
+                    'border-[#6FAEFF] bg-[#E2EFFF]'
+                  : 'border-gray-200 bg-white hover:border-gray-300'
+                }`}
+              >
+                <div className='text-3xl'>{member.avatar}</div>
+                <p className='text-sm font-medium'>{member.name}</p>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    )
+  }
+  //--------------------------------5페이지-----------------------------------------------
+
+  const renderStep5 = () => {
+    const selectedMemberNames = familyMembers
+      .filter((member) => selectedMembers.includes(member.id))
+      .map((member) => member.name)
+      .join(', ')
+
+    return (
+      <div className='flex-1 px-6 py-6 overflow-y-auto pb-24'>
+        <h2 className='text-xl font-bold mb-4'>
+          하고 싶은 말과 함께<br></br>미션 제안서를 보내주렴.
+        </h2>
+
+        {renderProgressBar()}
+
+        {/* 메시지 입력 영역 */}
+        <div className='bg-white rounded-3xl shadow-lg w-[353px] h-[275px] pt-[18px] px-[24px] pb-8 flex flex-col items-center'>
+          {/* 선택된 멤버 아바타 */}
+          <div className='flex gap-4 mb-10 mt-[33px] '>
+            {familyMembers
+              .filter((member) => selectedMembers.includes(member.id))
+              .map((member) => (
+                <div
+                  key={member.id}
+                  className='flex flex-col items-center'
+                >
+                  <div className='text-3xl mb-1'>{member.avatar}</div>
+                  <p className='text-sm font-medium text-gray-700'>
+                    {member.name}
+                  </p>
+                </div>
+              ))}
+          </div>
+
+          <div className='relative w-full mt-11'>
+            <input
+              type='text'
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              placeholder='하고 싶은 말을 입력해주세요'
+              disabled={noMessage}
+              className='w-full px-1 py-2 border-b-2 border-gray-300 focus:border-[#6FAEFF] focus:outline-none disabled:bg-gray-50 disabled:text-gray-400'
+            />
+            <span className='absolute right-0 bottom-2 text-xs text-gray-400'>
+              {message.length}
+            </span>
+          </div>
+        </div>
+
+        {/* 메세지 없음 옵션 */}
+        <div className='flex items-center gap-2 mt-4'>
+          <input
+            type='checkbox'
+            id='noMessage'
+            checked={noMessage}
+            onChange={(e) => {
+              setNoMessage(e.target.checked)
+              if (e.target.checked) {
+                setMessage('')
+              }
+            }}
+            className='appearance-none w-4 h-4 border-2 border-gray-300 rounded-full checked:bg-[#6FAEFF] focus:outline-none cursor-pointer'
+          />
+          <label
+            htmlFor='noMessage'
+            className='text-sm text-gray-700 cursor-pointer'
+          >
+            메세지 없음
+          </label>
+        </div>
+      </div>
+    )
+  }
+  //--------------------------
 
   return (
     <div className='flex flex-col h-screen'>
@@ -443,15 +657,14 @@ const Make = () => {
         <p className='absolute left-1/2 -translate-x-1/2'>
           미션만들기 ({currentStep}/5)
         </p>
-        <div className='w-[24px]'></div>
-      </div>
-
-      {/* 진행 표시 바 */}
-      <div className='w-full h-1 bg-gray-200'>
-        <div
-          className='h-full bg-[#6FAEFF] transition-all duration-300'
-          style={{ width: `${(currentStep / 5) * 100}%` }}
-        ></div>
+        {currentStep >= 3 ?
+          <button
+            onClick={handleCancel}
+            className='text-sm text-gray-600 hover:text-gray-800 transition-colors'
+          >
+            취소
+          </button>
+        : <div className='w-[24px]'></div>}
       </div>
 
       {/* 단계별 콘텐츠 */}
@@ -461,12 +674,22 @@ const Make = () => {
       {currentStep === 4 && renderStep4()}
       {currentStep === 5 && renderStep5()}
 
-      {/* 다음 버튼 (플로팅) */}
+      {/* 다음 버튼 (플로팅) 로직구현필요 */}
       <button
         onClick={handleNext}
-        disabled={currentStep === 1 && !selectedMission}
-        className={`fixed bottom-3 left-1/2 -translate-x-1/2 px-20 py-3 rounded-2xl shadow-lg text-[15px] font-bold transition-all ${
-          currentStep === 1 && !selectedMission ?
+        disabled={
+          (currentStep === 1 && !selectedMission) ||
+          (currentStep === 3 && !reward.trim()) ||
+          (currentStep === 4 && selectedMembers.length === 0) ||
+          (currentStep === 5 && !message.trim() && !noMessage)
+        }
+        className={`fixed bottom-3 left-1/2 -translate-x-1/2 px-14 py-3 rounded-2xl shadow-lg text-[15px] font-bold transition-all ${
+          (
+            (currentStep === 1 && !selectedMission) ||
+            (currentStep === 3 && !reward.trim()) ||
+            (currentStep === 4 && selectedMembers.length === 0) ||
+            (currentStep === 5 && !message.trim() && !noMessage)
+          ) ?
             'bg-gray-300 text-gray-500 cursor-not-allowed'
           : 'bg-[#6FAEFF] hover:bg-[#5188FB] text-white'
         }`}
