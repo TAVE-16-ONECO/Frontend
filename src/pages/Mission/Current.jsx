@@ -247,9 +247,7 @@ const Current = () => {
       {activeTab === 'ongoing' ?
         <button
           className='fixed bottom-8 left-1/2 -translate-x-1/2 bg-[#6FAEFF] hover:bg-[#5188FB] text-white px-8 py-4 rounded-2xl shadow-lg transition-colors font-bold'
-          onClick={() => {
-            // 미션 만들기
-          }}
+          onClick={() => navigate('/mission/make')}
         >
           + 미션만들기
         </button>
