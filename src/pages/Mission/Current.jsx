@@ -5,6 +5,80 @@ import { BackArrowIcon } from '../../components/icons/BackArrowIcon'
 import MissionCard from '@/components/Mission/MissionCard'
 import RewardRequestModal from '@/components/Mission/RewardRequestModal'
 
+export const ongoingMissions = [
+  {
+    id: 1,
+    title: '주식 시장 Part 1 마스터하기',
+    status: '진행 중',
+    reward: '10,000원',
+    startDate: '2025-12-01',
+    dueDate: '2026-01-20',
+    autoCancelDate: '2026-01-27',
+    description: '주식 시장의 기본 개념과 투자 전략을 학습하는 미션입니다.',
+  },
+  {
+    id: 2,
+    title: '은행 업무 이해하기',
+    status: '승인 요청',
+    reward: '15,000원',
+    startDate: '2025-12-05',
+    dueDate: '2025-12-31',
+    autoCancelDate: '2026-01-07',
+    description: '은행에서 할 수 있는 다양한 업무를 이해하는 미션입니다.',
+  },
+  {
+    id: 3,
+    title: '투자 포트폴리오 구성하기',
+    status: '승인 수락',
+    reward: '20,000원',
+    startDate: '2025-12-10',
+    dueDate: '2026-01-15',
+    autoCancelDate: '2026-01-22',
+    description:
+      '투자 포트폴리오를 효과적으로 구성하는 방법을 배우는 미션입니다.',
+  },
+  {
+    id: 4,
+    title: '관세 이해하기',
+    status: '승인 거절',
+    reward: '5,000원',
+    startDate: '2025-12-08',
+    dueDate: '2025-01-25',
+    autoCancelDate: '2026-02-01',
+    description: '관세 개념을 이해하는 미션입니다.',
+  },
+  {
+    id: 5,
+    title: '경제인물 공부하기',
+    status: '진행 중',
+    reward: '12,000원',
+    startDate: '2025-12-12',
+    dueDate: '2025-01-25',
+    autoCancelDate: '2026-02-01',
+    description: '경제인 관련 인물들을 공부하는 미션입니다.',
+  },
+  {
+    id: 6,
+    title: '재테크 part1 이해하기',
+    status: '진행 중',
+    reward: '8,000원',
+    startDate: '2025-12-15',
+    dueDate: '2025-01-18',
+    autoCancelDate: '2026-01-25',
+    description: '재테크에 대해 이해하는 미션입니다.',
+  },
+  {
+    id: 7,
+    title: '적금이해하기',
+    status: '승인 요청',
+    reward: '25,000원',
+    startDate: '2025-12-18',
+    dueDate: '2026-01-30',
+    autoCancelDate: '2026-02-06',
+    description: '적금내용 을 이해하는 미션입니다.',
+  },
+]
+
 const Current = () => {
   const navigate = useNavigate()
   const location = useLocation()
@@ -16,79 +90,6 @@ const Current = () => {
   )
   const [isRewardModalOpen, setIsRewardModalOpen] = useState(false)
 
-  const ongoingMissions = [
-    {
-      id: 1,
-      title: '주식 시장 Part 1 마스터하기',
-      status: '진행 중',
-      reward: '10,000원',
-      startDate: '2025-12-01',
-      dueDate: '2026-01-20',
-      autoCancelDate: '2026-01-27',
-      description: '주식 시장의 기본 개념과 투자 전략을 학습하는 미션입니다.',
-    },
-    {
-      id: 2,
-      title: '은행 업무 이해하기',
-      status: '승인 요청',
-      reward: '15,000원',
-      startDate: '2025-12-05',
-      dueDate: '2025-12-31',
-      autoCancelDate: '2026-01-07',
-      description: '은행에서 할 수 있는 다양한 업무를 이해하는 미션입니다.',
-    },
-    {
-      id: 3,
-      title: '투자 포트폴리오 구성하기',
-      status: '승인 수락',
-      reward: '20,000원',
-      startDate: '2025-12-10',
-      dueDate: '2026-01-15',
-      autoCancelDate: '2026-01-22',
-      description:
-        '투자 포트폴리오를 효과적으로 구성하는 방법을 배우는 미션입니다.',
-    },
-    {
-      id: 4,
-      title: '관세 이해하기',
-      status: '승인 거절',
-      reward: '5,000원',
-      startDate: '2025-12-08',
-      dueDate: '2025-01-25',
-      autoCancelDate: '2026-02-01',
-      description: '관세 개념을 이해하는 미션입니다.',
-    },
-    {
-      id: 5,
-      title: '경제인물 공부하기',
-      status: '진행 중',
-      reward: '12,000원',
-      startDate: '2025-12-12',
-      dueDate: '2025-01-25',
-      autoCancelDate: '2026-02-01',
-      description: '경제인 관련 인물들을 공부하는 미션입니다.',
-    },
-    {
-      id: 6,
-      title: '재테크 part1 이해하기',
-      status: '진행 중',
-      reward: '8,000원',
-      startDate: '2025-12-15',
-      dueDate: '2025-01-18',
-      autoCancelDate: '2026-01-25',
-      description: '재테크에 대해 이해하는 미션입니다.',
-    },
-    {
-      id: 7,
-      title: '적금이해하기',
-      status: '승인 요청',
-      reward: '25,000원',
-      startDate: '2025-12-18',
-      dueDate: '2026-01-30',
-      autoCancelDate: '2026-02-06',
-      description: '적금내용 을 이해하는 미션입니다.',
-    },
-  ]
   const [completedMissions] = useState([
     {
       id: 8,
@@ -180,7 +181,9 @@ const Current = () => {
         {/*중간 내용 영역*/}
         <div className='mt-[38px] ml-[21px] font-bold'>
           <p>김원코의 미션현황</p>
-          <p className='flex text-gray-400 text-[14px]'>보상 대기 중 N건</p>
+          <p className='flex text-gray-400 text-[14px]'>
+            보상 대기 중 {ongoingMissions.length}건
+          </p>
         </div>
         {/*탭 영역*/}
         <div className='flex items-center justify-center gap-23 mt-[26px] font-bold border-b'>
@@ -192,7 +195,7 @@ const Current = () => {
               : 'text-gray-400'
             }`}
           >
-            진행중인 미션 N
+            진행중인 미션 {ongoingMissions.length}
           </button>
           <button
             onClick={() => setActiveTab('completed')}
