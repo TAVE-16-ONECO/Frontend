@@ -85,7 +85,7 @@ const FilterButtons = () => {
     <>
       <button
         onClick={() => setActiveFilter('latest')}
-        className={`w-[92px] p-[10px] h-[35px] rounded-[30px] text-[13px] font-bold gap-[10px]
+        className={`w-[92px] h-[35px] rounded-[30px] text-[13px] font-bold flex items-center justify-center
           ${activeFilter === 'latest' ? 'bg-[#5188FB] text-white' : 'bg-white border'}`}
       >
         최신 순
@@ -93,7 +93,7 @@ const FilterButtons = () => {
 
       <button
         onClick={() => setActiveFilter('bookmark')}
-        className={`w-[92px] p-[10px] h-[35px] rounded-[30px] text-[13px] font-bold items-center gap-[5px]
+        className={`w-[92px] h-[35px] rounded-[30px] text-[13px] font-bold flex items-center justify-center
           ${activeFilter === 'bookmark' ? 'bg-[#5188FB] text-white' : 'bg-white border'}`}
       >
         북마크
