@@ -11,15 +11,15 @@ export const DefaultLayout = () => {
     <div className='w-full flex justify-center bg-[#f1f1f1] font-body'>
       <div
         className={clsx(
-          'w-full min-w-[360px] max-w-[600px] min-h-screen flex flex-col bg-white pt-safe-top pb-safe-bottom',
-          showNavigationBar ? 'pb-[calc(86px+env(safe-area-inset-bottom,0px))]' : '',
+          'w-full min-w-[360px] max-w-[600px] min-h-screen flex flex-col bg-white pt-safe-top',
+          showNavigationBar ? 'pb-[86px]' : 'pb-safe-bottom',
         )}
       >
         {showHeader && <Header />}
         <Outlet />
       </div>
       {showNavigationBar && (
-        <div className='fixed left-1/2 bottom-safe-bottom -translate-x-1/2 w-full h-[86px] min-w-[360px] max-w-[600px]'>
+        <div className='fixed left-1/2 bottom-0 -translate-x-1/2 w-full min-w-[360px] max-w-[600px] pb-safe-bottom'>
           <NavigationBar />
         </div>
       )}
