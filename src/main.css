@@ -1,6 +1,13 @@
 @import 'tailwindcss';
 @import 'highlight.js/styles/atom-one-dark.css';
 
+@theme {
+  --spacing-safe-top: env(safe-area-inset-top, 20px);
+  --spacing-safe-bottom: env(safe-area-inset-bottom, 34px);
+  --spacing-safe-left: env(safe-area-inset-left, 0px);
+  --spacing-safe-right: env(safe-area-inset-right, 0px);
+}
+
 @layer utilities {
   .font-body {
     font-family: 'Pretendard Variable', sans-serif;
