@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUIOptionStore } from '../../store/uiOptionStore'
 import PlusIcon from '../../components/icons/PlusIcon'
+import { ongoingMissions } from '../Mission/Current'
 
 const My = () => {
   const navigate = useNavigate()
@@ -53,29 +54,29 @@ const My = () => {
   }
 
   return (
-    <div className='flex flex-col bg-white min-h-screen px-6'>
-      {/* 상단 아이콘 영역 */}
-      <div className='flex items-center justify-center relative pt-4 pb-6'>
-        <h1 className='text-[20px] font-bold text-[#2c2c2c]'>
-          마이
-        </h1>
-        {/* 알람 아이콘 */}
-        <button
-          onClick={handleAlarmClick}
-          className='absolute right-0 p-2 hover:opacity-70 transition-opacity'
-          aria-label='알림'
-        >
-          <img
-            src='/images/AlarmIcon.png'
-            alt='alarm icon'
-            width={16}
-            height={20}
-          />
-        </button>
+    <div className='flex flex-col bg-white min-h-screen'>
+      {/* ========== 상단 영역 ========== */}
+      <div className='px-6'>
+        <div className='flex items-center justify-center relative pt-4 pb-4'>
+          <h1 className='text-[20px] font-bold text-[#2c2c2c]'>마이</h1>
+          {/* 알람 아이콘 */}
+          <button
+            onClick={handleAlarmClick}
+            className='absolute right-0 p-2 hover:opacity-70 transition-opacity'
+            aria-label='알림'
+          >
+            <img
+              src='/images/AlarmIcon.png'
+              alt='alarm icon'
+              width={16}
+              height={20}
+            />
+          </button>
+        </div>
       </div>
 
-      {/* 메뉴 리스트 */}
-      <div className='flex flex-col gap-1'>
+      {/* ========== 중간 프로필 영역 ========== */}
+      <div className='px-6 py-6 bg-[#f8f9fa]'>
         {/* 플러스 아이콘 */}
         <button
           onClick={handlePlusClick}
@@ -83,22 +84,51 @@ const My = () => {
           aria-label='추가'
         >
           <PlusIcon
-            className='w-5 h-5'
-            color='#2c2c2c'
+            className='w-[14px] h-[14]'
+            color='#BABABA'
           />
         </button>
-        {/* 나의 활동 */}
-        <MenuItem
-          label='나의 활동'
-          onClick={handleMyActivity}
-        />
+        <div className='flex items-center gap-5 justify-center mb-4'>
+          {/* 멤버 연동 여부 카톡프사 영역 */}
+          <div className='w-[60px] h-[60px] rounded-full bg-gray-200'>
+            {/* 프로필 이미지 플레이스홀더 */}
+          </div>
+          {/*인원들 사이에 물방울표시*/}
+          <div className='flex gap-[7px]'>
+            <div className='w-[2px] h-[2px] rounded-full bg-[#E2EFFF]'></div>
+            <div className='w-[4px] h-[4px] rounded-full bg-[#E2EFFF]'></div>
+            <div className='w-[6px] h-[6px] rounded-full bg-[#E2EFFF]'></div>
+            <div className='w-[8px] h-[8px] rounded-full bg-[#E2EFFF]'></div>
+          </div>
+          <div className='w-[60px] h-[60px] rounded-full bg-gray-200'>
+            {/* 프로필 이미지 플레이스홀더 */}
+          </div>
+        </div>
 
-        {/* 미션현황 */}
-        <MenuItem
-          label='미션현황'
-          onClick={handleMissionStatus}
-        />
+        {/* 나의 활동 & 미션현황 */}
+        <div className='flex items-center justify-between'>
+          <p>나의 활동 {ongoingMissions.length}개</p>
+          <button
+            className='w-[60px] h-[22px] text-[12px]'
+            label='미션현황'
+            onClick={handleMissionStatus}
+          >
+            미션현황 &gt;
+          </button>
+        </div>
+        <div className='flex items-center justify-center mt-[25px] w-[353px] h-[104px]'>
+          <div className='flex flex-col justify-center items-center border-2 w-[170px] h-[104px]'>
+            <p className='mb-[21.5px]'>미션진행 중</p>
+            {ongoingMissions.length}건
+          </div>
+          <div className='flex items-center justify-center mt-[25px] w-[170px] h-[104px]'>
+            <p>지난 미션</p>
+          </div>
+        </div>
+      </div>
 
+      {/* ========== 메뉴 영역 ========== */}
+      <div className='px-6 py-6 flex flex-col gap-1'>
         {/* 계정정보 */}
         <MenuItem
           label='계정정보'
@@ -136,7 +166,7 @@ const MenuItem = ({ label, onClick }) => {
   return (
     <button
       onClick={onClick}
-      className='flex justify-between items-center py-4 px-2 hover:bg-gray-50 transition-colors rounded-lg'
+      className='flex gap-[10px] items-center py-4 px-2 hover:bg-gray-50 transition-colors rounded-lg'
     >
       <span className='text-[16px] text-[#2c2c2c] font-medium'>{label}</span>
       <span className='text-[#919191] text-[14px]'>&gt;</span>
