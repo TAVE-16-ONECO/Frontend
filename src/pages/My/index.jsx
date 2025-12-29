@@ -21,8 +21,7 @@ const My = () => {
   }
 
   const handlePlusClick = () => {
-    // 플러스 버튼 클릭 시 동작 (예: 미션 생성 등)
-    console.log('플러스 버튼 클릭')
+    navigate('/my/members')
   }
 
   const handleMyActivity = () => {
@@ -119,14 +118,14 @@ const My = () => {
             미션현황 &gt;
           </button>
         </div>
-        <div className='flex items-center justify-between gap-[13px] mt-[25px] h-[104px]'>
+        <div className='flex items-center justify-between gap-[13px] mt-[25px] h-[104px] font-bold'>
           <div className='flex flex-col justify-center items-center border-2 rounded-3xl border-gray-100 shadow flex-1 h-[104px]'>
             <p className='mb-[21.5px]'>미션진행 중</p>
-            {ongoingMissions.length}건
+            <p className='text-[#919191]'>{ongoingMissions.length}건</p>
           </div>
           <div className='flex flex-col justify-center items-center border-2 rounded-3xl border-gray-100 shadow flex-1 h-[104px]'>
             <p className='mb-[21.5px]'>지난 미션</p>
-            {completedMissions.length}건
+            <p className='text-[#919191]'>{completedMissions.length}건</p>
           </div>
         </div>
       </div>
@@ -138,8 +137,8 @@ const My = () => {
           onClick={handleAccountInfo}
           className='flex flex-col h-[80px] rounded-lg overflow-hidden border-gray-100 border-1 shadow'
         >
-          {/* 왼쪽 3/5 - 회색 배경 */}
-          <div className='h-3/5 bg-gray-100 flex px-4 items-center gap-2'>
+          {/* 위 3/5 - 회색 배경 */}
+          <div className='h-3/5 bg-[#EDEDED] flex px-[10px] items-center gap-2'>
             <p className='text-[14px] text-[#2c2c2c] font-medium text-left'>
               계정 정보
             </p>
@@ -147,9 +146,9 @@ const My = () => {
               카카오 로그인
             </div>
           </div>
-          {/* 오른쪽 2/5 - 하얀색 배경 */}
-          <div className='h-2/5 bg-white flex items-center px-2'>
-            <p className='text-[14px] text-[#2c2c2c]'>user123</p>
+          {/* 아래 2/5 - 하얀색 배경 */}
+          <div className='h-2/5 bg-white flex items-center px-[10px]'>
+            <p className='text-[10px] text-[#2c2c2c]'>아이디 {}</p>
           </div>
         </button>
 
