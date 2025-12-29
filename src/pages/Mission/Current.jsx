@@ -79,6 +79,59 @@ export const ongoingMissions = [
   },
 ]
 
+export const completedMissions = [
+  {
+    id: 8,
+    title: '저축 습관 들이기',
+    status: '보상완료',
+    reward: '10,000원',
+    startDate: '2025-11-01',
+    dueDate: '2025-11-30',
+    autoCancelDate: '2025-12-07',
+    description: '저축내용 기록하고 습관화하는 미션입니다.',
+  },
+  {
+    id: 9,
+    title: '비트코인 기초 이해하기',
+    status: '보상요청',
+    reward: '7,000원',
+    startDate: '2025-11-05',
+    dueDate: '2025-11-25',
+    autoCancelDate: '2025-12-02',
+    description: '비트코인 기초를 이해하는 미션입니다.',
+  },
+  {
+    id: 10,
+    title: '주식 시장 Part 3 마스터하기',
+    status: '보상완료',
+    reward: '15,000원',
+    startDate: '2025-10-15',
+    dueDate: '2025-11-15',
+    autoCancelDate: '2025-11-22',
+    description: '주식 시장의 기본 개념과 투자 전략을 학습하는 미션입니다.',
+  },
+  {
+    id: 11,
+    title: '화폐 가치 이해하기',
+    status: '미션실패',
+    reward: '0원',
+    startDate: '2025-10-20',
+    dueDate: '2025-11-10',
+    autoCancelDate: '2025-11-17',
+    description: '화폐가치를 이해하는 미션입니다.',
+  },
+  {
+    id: 12,
+    title: '인플레이션 이해하기',
+    status: '미션완료',
+    reward: '18,000원',
+    startDate: '2025-10-01',
+    dueDate: '2025-10-31',
+    autoCancelDate: '2025-11-07',
+    description: '인플레이션을 이해하는 미션입니다.',
+  },
+]
+
 const Current = () => {
   const navigate = useNavigate()
   const location = useLocation()
@@ -89,59 +142,6 @@ const Current = () => {
     location.state?.activeTab || 'ongoing',
   )
   const [isRewardModalOpen, setIsRewardModalOpen] = useState(false)
-
-  const [completedMissions] = useState([
-    {
-      id: 8,
-      title: '저축 습관 들이기',
-      status: '보상완료',
-      reward: '10,000원',
-      startDate: '2025-11-01',
-      dueDate: '2025-11-30',
-      autoCancelDate: '2025-12-07',
-      description: '저축내용 기록하고 습관화하는 미션입니다.',
-    },
-    {
-      id: 9,
-      title: '비트코인 기초 이해하기',
-      status: '보상요청',
-      reward: '7,000원',
-      startDate: '2025-11-05',
-      dueDate: '2025-11-25',
-      autoCancelDate: '2025-12-02',
-      description: '비트코인 기초를 이해하는 미션입니다.',
-    },
-    {
-      id: 10,
-      title: '주식 시장 Part 3 마스터하기',
-      status: '보상완료',
-      reward: '15,000원',
-      startDate: '2025-10-15',
-      dueDate: '2025-11-15',
-      autoCancelDate: '2025-11-22',
-      description: '주식 시장의 기본 개념과 투자 전략을 학습하는 미션입니다.',
-    },
-    {
-      id: 11,
-      title: '화폐 가치 이해하기',
-      status: '미션실패',
-      reward: '0원',
-      startDate: '2025-10-20',
-      dueDate: '2025-11-10',
-      autoCancelDate: '2025-11-17',
-      description: '화폐가치를 이해하는 미션입니다.',
-    },
-    {
-      id: 12,
-      title: '인플레이션 이해하기',
-      status: '미션완료',
-      reward: '18,000원',
-      startDate: '2025-10-01',
-      dueDate: '2025-10-31',
-      autoCancelDate: '2025-11-07',
-      description: '인플레이션을 이해하는 미션입니다.',
-    },
-  ])
 
   useEffect(() => {
     setShowHeader(false)
