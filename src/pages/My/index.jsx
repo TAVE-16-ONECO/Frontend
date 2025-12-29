@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUIOptionStore } from '../../store/uiOptionStore'
 import PlusIcon from '../../components/icons/PlusIcon'
-import { ongoingMissions } from '../Mission/Current'
+import { ongoingMissions, completedMissions } from '../Mission/Current'
 
 const My = () => {
   const navigate = useNavigate()
@@ -76,7 +76,7 @@ const My = () => {
       </div>
 
       {/* ========== 중간 프로필 영역 ========== */}
-      <div className='px-6 py-6 bg-[#f8f9fa]'>
+      <div className='px-6 py-6'>
         {/* 플러스 아이콘 */}
         <button
           onClick={handlePlusClick}
@@ -90,7 +90,7 @@ const My = () => {
         </button>
         <div className='flex items-center gap-5 justify-center mb-4'>
           {/* 멤버 연동 여부 카톡프사 영역 */}
-          <div className='w-[60px] h-[60px] rounded-full bg-gray-200'>
+          <div className='w-[80px] h-[80px] rounded-full bg-gray-200'>
             {/* 프로필 이미지 플레이스홀더 */}
           </div>
           {/*인원들 사이에 물방울표시*/}
@@ -100,13 +100,16 @@ const My = () => {
             <div className='w-[6px] h-[6px] rounded-full bg-[#E2EFFF]'></div>
             <div className='w-[8px] h-[8px] rounded-full bg-[#E2EFFF]'></div>
           </div>
-          <div className='w-[60px] h-[60px] rounded-full bg-gray-200'>
+          <div className='w-[80px] h-[80px] rounded-full bg-gray-200'>
             {/* 프로필 이미지 플레이스홀더 */}
           </div>
         </div>
+      </div>
 
+      {/* ========== 나의 활동 & 미션현황 영역 ========== */}
+      <div className='px-5'>
         {/* 나의 활동 & 미션현황 */}
-        <div className='flex items-center justify-between'>
+        <div className='flex items-center justify-between mt-[44.95px]'>
           <p>나의 활동 {ongoingMissions.length}개</p>
           <button
             className='w-[60px] h-[22px] text-[12px]'
@@ -116,24 +119,39 @@ const My = () => {
             미션현황 &gt;
           </button>
         </div>
-        <div className='flex items-center justify-center mt-[25px] w-[353px] h-[104px]'>
-          <div className='flex flex-col justify-center items-center border-2 w-[170px] h-[104px]'>
+        <div className='flex items-center justify-between gap-[13px] mt-[25px] h-[104px]'>
+          <div className='flex flex-col justify-center items-center border-2 rounded-3xl border-gray-100 shadow flex-1 h-[104px]'>
             <p className='mb-[21.5px]'>미션진행 중</p>
             {ongoingMissions.length}건
           </div>
-          <div className='flex items-center justify-center mt-[25px] w-[170px] h-[104px]'>
-            <p>지난 미션</p>
+          <div className='flex flex-col justify-center items-center border-2 rounded-3xl border-gray-100 shadow flex-1 h-[104px]'>
+            <p className='mb-[21.5px]'>지난 미션</p>
+            {completedMissions.length}건
           </div>
         </div>
       </div>
 
       {/* ========== 메뉴 영역 ========== */}
-      <div className='px-6 py-6 flex flex-col gap-1'>
+      <div className='px-5 py-6 flex flex-col gap-[13px]'>
         {/* 계정정보 */}
-        <MenuItem
-          label='계정정보'
+        <button
           onClick={handleAccountInfo}
-        />
+          className='flex flex-col h-[80px] rounded-lg overflow-hidden border-gray-100 border-1 shadow'
+        >
+          {/* 왼쪽 3/5 - 회색 배경 */}
+          <div className='h-3/5 bg-gray-100 flex px-4 items-center gap-2'>
+            <p className='text-[14px] text-[#2c2c2c] font-medium text-left'>
+              계정 정보
+            </p>
+            <div className='bg-[#FDEE4B] rounded-full inline-flex px-3 py-1 text-[8px] '>
+              카카오 로그인
+            </div>
+          </div>
+          {/* 오른쪽 2/5 - 하얀색 배경 */}
+          <div className='h-2/5 bg-white flex items-center px-2'>
+            <p className='text-[14px] text-[#2c2c2c]'>user123</p>
+          </div>
+        </button>
 
         {/* 키워드 알림 (토글) */}
         <MenuItemWithToggle
@@ -141,9 +159,6 @@ const My = () => {
           enabled={keywordAlarmEnabled}
           onToggle={toggleKeywordAlarm}
         />
-
-        {/* 구분선 */}
-        <div className='h-[1px] bg-[#e5e5e5] my-4' />
 
         {/* 고객센터 */}
         <MenuItem
@@ -166,9 +181,9 @@ const MenuItem = ({ label, onClick }) => {
   return (
     <button
       onClick={onClick}
-      className='flex gap-[10px] items-center py-4 px-2 hover:bg-gray-50 transition-colors rounded-lg'
+      className='flex gap-[10px] bg-[#EDEDED] items-center py-4 px-2 hover:bg-gray-50 transition-colors rounded-lg border-gray-100 border-1 shadow'
     >
-      <span className='text-[16px] text-[#2c2c2c] font-medium'>{label}</span>
+      <span className='text-[14px] text-[black] font-medium'>{label}</span>
       <span className='text-[#919191] text-[14px]'>&gt;</span>
     </button>
   )
@@ -177,18 +192,18 @@ const MenuItem = ({ label, onClick }) => {
 // 토글 스위치가 있는 메뉴 아이템 컴포넌트
 const MenuItemWithToggle = ({ label, enabled, onToggle }) => {
   return (
-    <div className='flex justify-between items-center py-4 px-2'>
-      <span className='text-[16px] text-[#2c2c2c] font-medium'>{label}</span>
+    <div className='flex gap-[10px] bg-[#EDEDED] items-center py-4 px-2 rounded-lg border-gray-100 border-1 shadow'>
+      <span className='text-[14px] text-[black] font-medium'>{label}</span>
       <button
         onClick={onToggle}
-        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-          enabled ? 'bg-[#5188fb]' : 'bg-gray-300'
+        className={`relative inline-flex h-[14px] w-[34px] items-center rounded-full transition-colors shadow shadow-inner ${
+          enabled ? 'bg-[#6FAEFF]' : 'bg-gray-300'
         }`}
         aria-label={`${label} ${enabled ? '켜기' : '끄기'}`}
       >
         <span
-          className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-            enabled ? 'translate-x-6' : 'translate-x-1'
+          className={`inline-block h-[11px] w-[11px] transform rounded-full bg-white transition-transform ${
+            enabled ? 'translate-x-[22px]' : 'translate-x-[2px]'
           }`}
         />
       </button>
