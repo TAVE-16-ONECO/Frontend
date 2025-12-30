@@ -53,7 +53,7 @@ const My = () => {
   }
 
   return (
-    <div className='flex flex-col bg-white min-h-screen'>
+    <div className='flex flex-col bg-white'>
       {/* ========== 상단 영역 ========== */}
       <div className='px-6'>
         <div className='flex items-center justify-center relative pt-4 pb-4'>
