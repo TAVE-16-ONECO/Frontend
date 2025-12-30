@@ -1,12 +1,17 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { BackArrowIcon } from '../../components/icons/BackArrowIcon'
 import { useAuthStore } from '../../store/authStore'
+import { useUIOptionStore } from '@/store/uiOptionStore'
 
 const Members = () => {
   const navigate = useNavigate()
   const [showModal, setShowModal] = useState(false)
   const [inviteType, setInviteType] = useState('') // 'parent' or 'child'
+
+  useEffect(() => {
+    useUIOptionStore.setState({ showHeader: false })
+  }, [])
 
   // authStore에서 role과 hasMembers 가져오기
   const role = useAuthStore((state) => state.role)
@@ -44,7 +49,7 @@ const Members = () => {
   }
 
   return (
-    <div className='flex flex-col bg-white min-h-screen'>
+    <div className='flex flex-col bg-white'>
       {/* 헤더 */}
       <div className='px-5 py-4 flex items-center justify-between border-gray-200'>
         <button
