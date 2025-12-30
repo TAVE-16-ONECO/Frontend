@@ -49,9 +49,9 @@ const History = () => {
   }, [])
 
   return (
-    <div className='w-full bg-white -mt-[50px]'>
+    <div className='w-full bg-white'>
       {/* 필터 버튼 UI */}
-      <div className='flex flex-row w-full h-[57px] mt-[59px] border-b-[0.7px] border-[#D9D9D9] px-[18px] gap-[5px]'>
+      <div className='flex flex-row w-full h-[57px] mt-[30px] border-b-[0.7px] border-[#D9D9D9] px-[18px] gap-[5px]'>
         <FilterButtons />
       </div>
 
