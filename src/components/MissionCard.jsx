@@ -29,9 +29,56 @@ const missionMockData = [
       },
     },
   },
+  {
+    missionTheme: 'part.2 금융상품',
+    progress: 45,
+    keyword: '이자율',
+    remainingDays: 12,
+    studyPeriod: {
+      startDate: '2025-12-15',
+      endDate: '2025-12-30',
+    },
+    calendarData: {
+      dailyRecords: {
+        '2025-12-15': { studyStatus: 'studied' },
+        '2025-12-16': { studyStatus: 'studied' },
+        '2025-12-17': { studyStatus: 'studied' },
+        '2025-12-18': { studyStatus: 'not-studied' },
+        '2025-12-19': { studyStatus: 'studied' },
+        '2025-12-20': { studyStatus: 'not-studied' },
+        '2025-12-21': { studyStatus: 'not-studied' },
+        '2025-12-22': { studyStatus: 'not-studied' },
+        '2025-12-23': { studyStatus: 'studied' },
+        '2025-12-24': { studyStatus: 'studied' },
+        '2025-12-25': { studyStatus: 'not-studied' },
+        '2025-12-26': { studyStatus: 'studied' },
+        '2025-12-27': { studyStatus: 'studied' },
+        '2025-12-28': { studyStatus: 'not-studied' },
+        '2025-12-29': { studyStatus: 'studied' },
+        '2025-12-30': { studyStatus: 'studied' },
+      },
+    },
+  },
+  {
+    missionTheme: 'part.3 투자의 기초',
+    progress: 15,
+    keyword: '주식시장',
+    remainingDays: 25,
+    studyPeriod: {
+      startDate: '2025-12-28',
+      endDate: '2026-1-15',
+    },
+    calendarData: {
+      dailyRecords: {
+        '2025-12-28': { studyStatus: 'studied' },
+        '2025-12-29': { studyStatus: 'not-studied' },
+        '2025-12-30': { studyStatus: 'studied' },
+      },
+    },
+  },
 ]
 
-const MissionCard = () => {
+const MissionCard = ({ mission, index }) => {
   const [currentDate, setCurrentDate] = useState(new Date())
 
   // 공부 시작 일차 계산
@@ -51,12 +98,9 @@ const MissionCard = () => {
         <div className='pb-[10px] border-b-1 border-[#dbdbdb]'>
           <div className='flex flex-col gap-1'>
             <p className='text-[10px] font-normal leading-[130%] text-[#717171]'>
-              시작한 지{' '}
-              {calculateStudyDay(missionMockData[0].studyPeriod.startDate)}일차
+              시작한 지 {calculateStudyDay(mission.studyPeriod.startDate)}일차
             </p>
-            <p className='text-[14px] font-medium'>
-              {missionMockData[0].missionTheme}
-            </p>
+            <p className='text-[14px] font-medium'>{mission.missionTheme}</p>
             <div className='flex items-center gap-2'>
               <div className='flex-1 relative pt-[10px]'>
                 {/* 80% 지점 마커 */}
@@ -77,13 +121,13 @@ const MissionCard = () => {
                 <div className='h-[13px] bg-[#f4f4f4] rounded-full overflow-hidden relative'>
                   <div
                     className='h-full bg-[#6FAEFF] rounded-full transition-all duration-300'
-                    style={{ width: `${missionMockData[0].progress}%` }}
+                    style={{ width: `${mission.progress}%` }}
                   />
                 </div>
               </div>
             </div>
             <span className='text-[10px] text-[#bababa] min-w-[35px] text-right'>
-              전체 정답률 {missionMockData[0].progress}%
+              전체 정답률 {mission.progress}%
             </span>
           </div>
         </div>
@@ -100,7 +144,7 @@ const MissionCard = () => {
               {/* 키워드 및 디데이 */}
               <div className='flex items-center mb-[10px]'>
                 <p className='text-[16px] text-[#000000] font-semibold'>
-                  {missionMockData[0].keyword}
+                  {mission.keyword}
                 </p>
               </div>
 
@@ -114,8 +158,8 @@ const MissionCard = () => {
         {/* 캘린더 섹션 */}
         <div className='mb-3'>
           <Calendar
-            studyPeriod={missionMockData[0].studyPeriod}
-            calendarData={missionMockData[0].calendarData}
+            studyPeriod={mission.studyPeriod}
+            calendarData={mission.calendarData}
             currentDate={currentDate}
             setCurrentDate={setCurrentDate}
           />
@@ -125,4 +169,5 @@ const MissionCard = () => {
   )
 }
 
+export { missionMockData }
 export default MissionCard

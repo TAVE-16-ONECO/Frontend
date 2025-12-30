@@ -317,7 +317,7 @@ const Calendar = ({
                     <button
                       key={dateIdx}
                       className={clsx(
-                        'flex flex-col items-center w-full mt-[13px]',
+                        'flex flex-col items-center w-fit mt-[13px]',
                         todayHighlight && 'bg-[#f4f4f4] rounded-xl',
                       )}
                     >

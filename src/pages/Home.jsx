@@ -2,12 +2,14 @@ import { useNavigate } from 'react-router-dom'
 import SpeechBubble from '@/components/SpeechBubble'
 import { useUIOptionStore } from '../store/uiOptionStore'
 import { useAuthStore } from '../store/authStore'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useMissionStore } from '../store/missionStore'
-import MissionCard from '../components/MissionCard'
+import MissionCard, { missionMockData } from '../components/MissionCard'
 import MissionCreateCard from '../components/MissionCreateCard'
 import PWAInstallModal from '@/components/PWAInstallModal'
 import { usePWAInstall } from '@/hooks/usePWAInstall'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import 'swiper/css'
 
 const Home = () => {
   const navigate = useNavigate()
@@ -16,6 +18,7 @@ const Home = () => {
   const setShowNavigation = useUIOptionStore((state) => state.setShowNavigation)
   const role = useAuthStore((state) => state.role)
   const isMissionCreated = useMissionStore((state) => state.isMissionCreated)
+  const [activeMissionIndex, setActiveMissionIndex] = useState(0)
 
   // PWA 설치 훅 사용
   const {
@@ -41,9 +44,9 @@ const Home = () => {
 
   return (
     <>
-      <div className='flex flex-col bg-white px-6'>
+      <div className='flex flex-col bg-white'>
         {/* 알림 아이콘 */}
-        <div className='flex justify-end pt-4 pb-[10px]'>
+        <div className='flex justify-end pt-4 pb-[10px] px-6'>
           <button
             onClick={handleAlarmClick}
             className='p-2 hover:opacity-70 transition-opacity'
@@ -59,7 +62,7 @@ const Home = () => {
         </div>
 
         {/* 아빠 이미지 및 인사말 섹션 */}
-        <div className='flex items-start gap-[11px] mb-[46px]'>
+        <div className='flex items-start gap-[11px] mb-[46px] px-6'>
           {/* 아빠 이미지 */}
           <div className='w-[134px] h-[134px] flex-shrink-0'>
             <img
@@ -82,20 +85,67 @@ const Home = () => {
         {/* 나의 진행중인 미션 섹션 */}
         <div className='mb-4'>
           <div className='flex justify-between items-center mb-4'>
-            <h2 className='text-[16px] font-semibold text-[#000000]'>
-              {role === 'parent' ?
-                '내 아이의 진행중인 미션'
-              : '나의 진행중인 미션'}
-            </h2>
+            <div className='flex items-center gap-2' style={{ paddingLeft: 'calc((100% - 100% / 1.13) / 2 + 24px)' }}>
+              <h2 className='text-[16px] font-semibold text-[#000000]'>
+                {role === 'parent' ?
+                  '내 아이의 진행중인 미션'
+                : '나의 진행중인 미션'}
+              </h2>
+              {/* 페이지네이션 인디케이터 */}
+              {isMissionCreated && missionMockData.length > 1 && (
+                <div className='flex gap-1'>
+                  {missionMockData.map((_, index) => (
+                    <div
+                      key={index}
+                      className={`w-[6px] h-[6px] rounded-full transition-colors ${
+                        index === activeMissionIndex ? 'bg-[#919191]' : (
+                          'bg-[#d9d9d9]'
+                        )
+                      }`}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
             <button
               onClick={handleMissionStatus}
-              className='text-[12px] text-[#000000] opacity-70 hover:text-[#2c2c2c] transition-colors'
+              className='text-[12px] text-[#000000] opacity-70 hover:text-[#2c2c2c] transition-colors pr-6'
             >
               미션현황 &gt;
             </button>
           </div>
           {isMissionCreated ?
-            <MissionCard />
+            missionMockData.length === 1 ?
+              <MissionCard
+                mission={missionMockData[0]}
+                index={0}
+              />
+            : <Swiper
+                spaceBetween={13}
+                slidesPerView={1.13}
+                centeredSlides={true}
+                slideToClickedSlide={true}
+                threshold={10}
+                longSwipesRatio={0.3}
+                longSwipes={true}
+                resistance={true}
+                resistanceRatio={0.5}
+                speed={300}
+                keyboard={false}
+                onSlideChange={(swiper) =>
+                  setActiveMissionIndex(swiper.activeIndex)
+                }
+              >
+                {missionMockData.map((mission, index) => (
+                  <SwiperSlide key={index}>
+                    <MissionCard
+                      mission={mission}
+                      index={index}
+                    />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+
           : <MissionCreateCard />}
         </div>
       </div>
