@@ -49,9 +49,9 @@ const History = () => {
   }, [])
 
   return (
-    <div className='w-full bg-white -mt-[50px]'>
+    <div className='w-full bg-white'>
       {/* 필터 버튼 UI */}
-      <div className='flex flex-row w-full h-[57px] mt-[59px] border-b-[0.7px] border-[#D9D9D9] px-[18px] gap-[5px]'>
+      <div className='flex flex-row w-full h-[57px] mt-[30px] border-b-[0.7px] border-[#D9D9D9] px-[18px] gap-[5px]'>
         <FilterButtons />
       </div>
 
@@ -85,7 +85,7 @@ const FilterButtons = () => {
     <>
       <button
         onClick={() => setActiveFilter('latest')}
-        className={`w-[92px] p-[10px] h-[35px] rounded-[30px] text-[13px] font-bold gap-[10px]
+        className={`w-[92px] h-[35px] rounded-[30px] text-[13px] font-bold flex items-center justify-center
           ${activeFilter === 'latest' ? 'bg-[#5188FB] text-white' : 'bg-white border'}`}
       >
         최신 순
@@ -93,7 +93,7 @@ const FilterButtons = () => {
 
       <button
         onClick={() => setActiveFilter('bookmark')}
-        className={`w-[92px] p-[10px] h-[35px] rounded-[30px] text-[13px] font-bold items-center gap-[5px]
+        className={`w-[92px] h-[35px] rounded-[30px] text-[13px] font-bold flex items-center justify-center
           ${activeFilter === 'bookmark' ? 'bg-[#5188FB] text-white' : 'bg-white border'}`}
       >
         북마크
