@@ -19,7 +19,7 @@ export const DefaultLayout = () => {
         <Outlet />
       </div>
       {showNavigationBar && (
-        <div className='fixed left-1/2 bottom-0 -translate-x-1/2 w-full min-w-[360px] max-w-[600px] pb-safe-bottom'>
+        <div className='fixed left-1/2 bottom-0 -translate-x-1/2 w-full h-[86px] min-w-[360px] max-w-[600px] pb-safe-bottom'>
           <NavigationBar />
         </div>
       )}
