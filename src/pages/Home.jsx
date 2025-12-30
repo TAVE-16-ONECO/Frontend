@@ -61,8 +61,11 @@ const Home = () => {
         {/* 아빠 이미지 및 인사말 섹션 */}
         <div className='flex items-start gap-[11px] mb-[46px]'>
           {/* 아빠 이미지 */}
-          <div className='w-[134px] h-[134px] rounded-full bg-gray-200 flex-shrink-0'>
-            {/* 아빠 이미지 플레이스홀더 */}
+          <div className='w-[134px] h-[134px] flex-shrink-0'>
+            <img
+              src='/images/MainCharacter.png'
+              alt='메인 캐릭터'
+            />
           </div>
 
           {/* 말풍선 */}
