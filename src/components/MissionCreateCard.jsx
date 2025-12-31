@@ -15,7 +15,7 @@ const MissionCreateCard = () => {
     navigate('/mission/make')
   }
   return (
-    <>
+    <div className='px-6'>
       {/* 미션 생성 카드 */}
       <button
         onClick={() => (hasMembers ? handleCreateMission() : handleAddMember())}
@@ -31,7 +31,7 @@ const MissionCreateCard = () => {
           : '구성원을 추가하고 미션을 만들어보세요'}
         </p>
       </button>
-    </>
+    </div>
   )
 }
 
