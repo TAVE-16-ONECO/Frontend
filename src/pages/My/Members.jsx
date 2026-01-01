@@ -137,7 +137,7 @@ const Members = () => {
           onClick={handleCloseModal}
         >
           <div
-            className='bg-white rounded-3xl w-[321px] h-[302px] p-6 pb-8'
+            className='[box-shadow:0px_1px_5px_0px_rgba(0,0,0,0.15)] bg-white rounded-3xl w-[330px] h-[302px] px-[22px] py-[20px] [box_shadow'
             onClick={(e) => e.stopPropagation()}
           >
             <div className='flex justify-end items-center mb-6'>
@@ -149,7 +149,7 @@ const Members = () => {
               </button>
             </div>
 
-            <p className='text-[black] mb-[80px] font-semibold text-[20px]'>
+            <p className='text-[black] mb-[80px] font-semibold text-[20px] leading-[132%]'>
               초대 링크를 공유해 가족을 초대하고 <br></br> 원코 활동을 함께해
               보세요!
             </p>
