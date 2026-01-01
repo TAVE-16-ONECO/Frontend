@@ -56,7 +56,7 @@ export const router = createBrowserRouter([
             element: <QuizLayout />,
             children: [
               { path: 'keyword-explain', element: <KeyWordExplain /> },
-              { path: 'test', element: <Test /> },
+              { path: 'test/:id', element: <Test /> },
               { path: 'result', element: <Result /> },
             ],
           },

@@ -22,7 +22,13 @@ const QuizLayout = () => {
       case '/quiz/keyword-explain':
         navigate('/')
         break
-      case '/quiz/test':
+      case '/quiz/test/1':
+        navigate('/quiz/keyword-explain')
+        break
+      case '/quiz/test/2':
+      case '/quiz/test/3':
+        navigate(-1)
+        break
       case '/quiz/result':
         navigate('/quiz/keyword-explain')
         break
@@ -56,7 +62,7 @@ const QuizLayout = () => {
             <BackArrowIcon color='#404040' />
           </button>
         </div>
-        <p className='w-full text-center text-[18px] font-semibold leading-[130%]'>
+        <p className='w-full text-center text-[18px] font-semibold leading-[130%] text-[#2c2c2c]'>
           {keywordHeader}
         </p>
         {quizLevel === 'result' && (

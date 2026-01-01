@@ -8,18 +8,18 @@ export const DefaultLayout = () => {
   const showNavigationBar = useUIOptionStore((state) => state.showNavigationBar)
   const showHeader = useUIOptionStore((state) => state.showHeader)
   return (
-    <div className='w-full flex justify-center bg-[#f1f1f1] font-body'>
+    <div className='w-full flex justify-center bg-[#f1f1f1] font-body pt-safe-top pb-safe-bottom'>
       <div
         className={clsx(
-          'w-full min-w-[360px] max-w-[600px] min-h-screen flex flex-col bg-white pt-safe-top',
-          showNavigationBar ? 'pb-[86px]' : 'pb-safe-bottom',
+          'w-full min-w-[360px] max-w-[600px] min-h-screen flex flex-col bg-white pt-[60px]',
+          showNavigationBar && 'pb-[86px]',
         )}
       >
         {showHeader && <Header />}
         <Outlet />
       </div>
       {showNavigationBar && (
-        <div className='fixed left-1/2 bottom-0 -translate-x-1/2 w-full h-[86px] min-w-[360px] max-w-[600px] pb-safe-bottom'>
+        <div className='fixed left-1/2 bottom-0 -translate-x-1/2 w-full h-[86px] min-w-[360px] max-w-[600px] z-50'>
           <NavigationBar />
         </div>
       )}

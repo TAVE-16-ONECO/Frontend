@@ -1,6 +1,6 @@
 import clsx from 'clsx'
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useQuizStore } from '@/store/quizStore'
 
 const quizMockData = [
@@ -21,6 +21,7 @@ const quizMockData = [
   },
 ]
 const Quiz = () => {
+  const urlParams = useLocation()
   const [answerNumber, setAnswerNumber] = useState(null) // 답변 선택하지 않으면 null, 선택하면 0 또는 1
   const [quizCount, setQuizCount] = useState(0) // 0은 첫 번째를 의미
 
@@ -32,8 +33,17 @@ const Quiz = () => {
     setAnswerNumber(answer)
   }
 
+  useEffect(() => {
+    const quizNumber = urlParams.pathname.split('/')[3]
+    console.log(quizNumber)
+    if (!['1', '2', '3'].includes(quizNumber)) {
+      navigate('/') // 잘못된 퀴즈 번호 입력시 홈 화면으로 이동
+      return
+    }
+    setQuizCount(quizNumber - 1)
+  }, [urlParams])
   const handleNextQuiz = () => {
-    if (quizCount === 2) {
+    if (urlParams.pathname === '/quiz/test/3') {
       // 마지막 퀴즈일 때
       setQuizLevel('result')
       navigate('/quiz/result')
@@ -41,6 +51,7 @@ const Quiz = () => {
     }
     setAnswerNumber(null)
     setQuizCount((prev) => prev + 1)
+    navigate(`/quiz/test/${quizCount + 2}`)
   }
   return (
     <div className='flex flex-col px-[16px] items-center'>

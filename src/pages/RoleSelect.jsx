@@ -17,10 +17,10 @@ const RoleSelect = () => {
   const onboardingToken = useAuthStore((state) => state.onboardingToken)
 
   useEffect(() => {
-    if (!isNew) {
-      navigate('/', { replace: true })
-      return
-    }
+    // if (!isNew) {
+    //   navigate('/', { replace: true })
+    //   return
+    // }
     setShowHeader(false)
     setShowNavigation(false)
     return () => {
