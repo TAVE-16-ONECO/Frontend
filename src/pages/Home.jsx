@@ -85,7 +85,10 @@ const Home = () => {
         {/* 나의 진행중인 미션 섹션 */}
         <div className='mb-4'>
           <div className='flex justify-between items-center mb-4'>
-            <div className='flex items-center gap-2' style={{ paddingLeft: 'calc((100% - 100% / 1.13) / 2 + 24px)' }}>
+            <div
+              className='flex items-center gap-2'
+              style={{ paddingLeft: 'calc((100% - 100% / 1.13) / 2 + 24px)' }}
+            >
               <h2 className='text-[16px] font-semibold text-[#000000]'>
                 {role === 'parent' ?
                   '내 아이의 진행중인 미션'

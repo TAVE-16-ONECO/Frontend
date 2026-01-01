@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Calendar from './Calendar'
+import { useNavigate } from 'react-router-dom'
 
 // 퍼블리싱 용 미션 mock 데이터
 const missionMockData = [
@@ -79,6 +80,7 @@ const missionMockData = [
 ]
 
 const MissionCard = ({ mission, index }) => {
+  const navigate = useNavigate()
   const [currentDate, setCurrentDate] = useState(new Date())
 
   // 공부 시작 일차 계산
@@ -88,6 +90,10 @@ const MissionCard = ({ mission, index }) => {
     const diffTime = today - start
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
     return diffDays + 1 // 1일차부터 시작
+  }
+
+  const handleQuizStart = () => {
+    navigate('/quiz/keyword-explain')
   }
 
   return (
@@ -149,7 +155,10 @@ const MissionCard = ({ mission, index }) => {
               </div>
 
               {/* 마스터하기 버튼 */}
-              <button className='w-full h-[50px] bg-[#5188fb] rounded-[16px] text-[16px] text-white font-medium hover:bg-[#1b4ebd] transition-colors'>
+              <button
+                className='w-full h-[50px] bg-[#5188fb] rounded-[16px] text-[16px] text-white font-medium hover:bg-[#1b4ebd] transition-colors'
+                onClick={handleQuizStart}
+              >
                 조개 모으기
               </button>
             </div>

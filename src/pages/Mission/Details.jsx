@@ -159,9 +159,10 @@ const Details = () => {
 
   const handleBack = () => {
     // 이전 페이지에서 받은 activeTab 정보를 다시 전달
-    navigate('/mission/current', {
-      state: { activeTab: location.state?.activeTab },
-    })
+    // navigate('/mission/current', {
+    //   state: { activeTab: location.state?.activeTab },
+    // })
+    navigate(-1)
   }
 
   // 미션 상태에 따른 메시지 반환
@@ -200,7 +201,9 @@ const Details = () => {
           >
             <BackArrowIcon />
           </button>
-          <p className='absolute left-1/2 -translate-x-1/2'>미션 상세</p>
+          <p className='text-[18px] font-semibold text-[#404040] absolute left-1/2 -translate-x-1/2'>
+            미션 상세
+          </p>
           <div className='w-[24px]'></div>
         </div>
 

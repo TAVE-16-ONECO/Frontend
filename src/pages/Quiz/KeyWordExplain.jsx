@@ -116,11 +116,11 @@ const KeyWordExplain = () => {
 
   const handleStudyCompleted = () => {
     setQuizLevel('test')
-    navigate('/quiz/test')
+    navigate('/quiz/test/1')
   }
 
   return (
-    <>
+    <div className='pb-[30px]'>
       <div className='px-[16px] py-7'>
         {/* 키워드 설명 */}
         <div className='pb-5'>
@@ -138,14 +138,14 @@ const KeyWordExplain = () => {
       {role === 'child' && (
         <div className='flex justify-center'>
           <button
-            className='text-[18px] text-[#fdfdfd] bg-[#91c4ff] px-9 py-4 rounded-2xl hover:bg-[#3b96ff] hover:cursor-pointer'
+            className='text-[18px] text-[#fdfdfd] bg-[#5188fb] px-9 py-4 rounded-2xl hover:cursor-pointer'
             onClick={handleStudyCompleted}
           >
             퀴즈 도전하기
           </button>
         </div>
       )}
-    </>
+    </div>
   )
 }
 

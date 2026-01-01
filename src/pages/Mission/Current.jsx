@@ -154,7 +154,7 @@ const Current = () => {
   }, [setShowHeader, setShowNavigation])
 
   const handleBack = () => {
-    navigate('/')
+    navigate(-1)
   }
 
   const handleMissionClick = (missionId) => {
@@ -175,7 +175,9 @@ const Current = () => {
           >
             <BackArrowIcon />
           </button>
-          <p className='absolute left-1/2 -translate-x-1/2'>미션현황</p>
+          <p className='text-[18px] font-semibold text-[#404040] absolute left-1/2 -translate-x-1/2'>
+            미션현황
+          </p>
           <div className='w-[24px]'></div>
         </div>
         {/*중간 내용 영역*/}
@@ -189,20 +191,20 @@ const Current = () => {
         <div className='flex items-center justify-center gap-23 mt-[26px] font-bold border-b'>
           <button
             onClick={() => setActiveTab('ongoing')}
-            className={`pb-2 px-4 transition-all ${
+            className={`pb-2 px-4 transition-all border-b-2 ${
               activeTab === 'ongoing' ?
-                'border-b-2 border-black text-black'
-              : 'text-gray-400'
+                'border-black text-black'
+              : 'border-transparent text-gray-400'
             }`}
           >
             진행중인 미션 {ongoingMissions.length}
           </button>
           <button
             onClick={() => setActiveTab('completed')}
-            className={`pb-2 px-4 transition-all ${
+            className={`pb-2 px-4 transition-all border-b-2 ${
               activeTab === 'completed' ?
-                'border-b-2 border-black text-black'
-              : 'text-gray-400'
+                'border-black text-black'
+              : 'border-transparent text-gray-400'
             }`}
           >
             종료된 미션

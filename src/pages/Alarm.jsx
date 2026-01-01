@@ -28,7 +28,7 @@ const Alarm = () => {
             <BackArrowIcon color='#404040' />
           </button>
         </div>
-        <p className='w-full text-center text-[18px] font-medium leading-[130%]'>
+        <p className='w-full text-center text-[18px] font-medium leading-[130%] text-[#2c2c2c]'>
           알림
         </p>
       </div>
