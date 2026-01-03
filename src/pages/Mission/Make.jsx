@@ -84,12 +84,19 @@ const Make = () => {
     const mission = missionTemplates.find((m) => m.id === selectedMission)
     if (!mission) return null
 
-    const today = new Date()
-    const endDate = new Date(today)
+    let today = new Date(2026, 0, 29) // 테스트: 2026년 1월 30일
+
+    // 시작일이 주말이면 다음 평일로 조정
+    let startDate = new Date(today)
+    while (startDate.getDay() === 0 || startDate.getDay() === 6) {
+      startDate.setDate(startDate.getDate() + 1)
+    }
+
+    const endDate = new Date(startDate)
 
     // 주말을 제외하고 영업일만 카운트
     let daysAdded = 0
-    let currentDate = new Date(today)
+    let currentDate = new Date(startDate)
 
     while (daysAdded < mission.durationDays) {
       currentDate.setDate(currentDate.getDate() + 1)
@@ -104,7 +111,7 @@ const Make = () => {
 
     //시작일, 종료일, 기간일수
     return {
-      startDate: today,
+      startDate: startDate,
       endDate: endDate,
       durationDays: mission.durationDays,
     }
@@ -290,7 +297,7 @@ const Make = () => {
     const dates = calculateDates()
     if (!dates) return null
 
-    const weekDays = ['일', '월', '화', '수', '목', '금', '토']
+    const weekDays = ['월', '화', '수', '목', '금']
 
     // 시작일과 종료일의 월이 다른지 확인
     const startMonth = dates.startDate.getMonth()
@@ -302,103 +309,215 @@ const Make = () => {
     // 캘린더 렌더링 함수 (border 없이)
     const renderCalendar = (year, month, isFirst = false, isLast = false) => {
       const calendarDays = getCalendarDays(year, month)
+      // 주말(일요일=0, 토요일=6) 제외
+      const weekdayOnly = calendarDays.filter((day) => {
+        const dayOfWeek = day.fullDate.getDay()
+        return dayOfWeek !== 0 && dayOfWeek !== 6
+      })
+
+      // 월별로 그룹화
+      const groupedByMonth = []
+      let currentGroup = []
+      let currentMonth = null
+
+      weekdayOnly.forEach((day) => {
+        const dayMonth = day.fullDate.getMonth()
+        if (currentMonth === null || currentMonth === dayMonth) {
+          currentGroup.push(day)
+          currentMonth = dayMonth
+        } else {
+          groupedByMonth.push({ month: currentMonth, days: currentGroup })
+          currentGroup = [day]
+          currentMonth = dayMonth
+        }
+      })
+      if (currentGroup.length > 0) {
+        groupedByMonth.push({ month: currentMonth, days: currentGroup })
+      }
 
       return (
         <div key={`${year}-${month}`}>
-          {/* 월 표시 */}
-          <div className={`text-center ${isFirst ? 'mb-2' : 'my-4'}`}>
-            <h3 className='text-base font-bold'>
-              {year}년 {month + 1}월
-            </h3>
-          </div>
+          {/* 첫 번째 월 표시 */}
+          {isFirst && groupedByMonth.length > 0 && (
+            <div className='mb-2 text-left'>
+              <span className='text-sm font-semibold text-gray-600'>
+                {groupedByMonth[0].month + 1}월
+              </span>
+            </div>
+          )}
 
-          {/* 날짜 그리드 */}
-          <div className='grid grid-cols-7 gap-x-0 gap-y-3'>
-            {calendarDays.map((day, index) => {
-              // 첫 번째 캘린더면 다음 달 날짜 숨기기, 마지막 캘린더면 이전 달 날짜 숨기기
-              const currentMonthLastDay = new Date(year, month + 1, 0)
-              const currentMonthFirstDay = new Date(year, month, 1)
-
-              const shouldHide =
-                (isFirst && !isLast && day.fullDate > currentMonthLastDay) ||
-                (isLast && !isFirst && day.fullDate < currentMonthFirstDay)
-
-              const isStart = isSameDate(day.fullDate, dates.startDate)
-              const isEnd = isSameDate(day.fullDate, dates.endDate)
-              const isInRange = isDateInRange(
-                day.fullDate,
-                dates.startDate,
-                dates.endDate,
-              )
-              // 요일 계산 일요일 0 ~ 토요일 6
-              const dayOfWeek = index % 7
-              const isFirstDayOfWeek = dayOfWeek === 0
-              const isLastDayOfWeek = dayOfWeek === 6
-
-              // 라운드 처리: 시작일과 완료일만
-              let roundedClass = ''
-              if (isStart && isEnd) {
-                // 시작일과 완료일이 같은 경우
-                roundedClass = 'rounded-2xl'
-              } else if (isStart) {
-                // 시작일
-                roundedClass = 'rounded-l-full'
-              } else if (isEnd) {
-                // 완료일
-                roundedClass = 'rounded-r-full'
-              }
-
-              // 숨겨진 날짜 처리
-              if (shouldHide) {
-                // 현재 주에 현재 월의 날짜가 포함되어 있는지 확인
-                const weekStartIndex = Math.floor(index / 7) * 7
-                const weekEndIndex = weekStartIndex + 7
-                const currentWeek = calendarDays.slice(
-                  weekStartIndex,
-                  weekEndIndex,
-                )
-                const hasCurrentMonthInWeek = currentWeek.some(
-                  (d) => d.isCurrentMonth,
-                )
-
-                // 현재 월의 날짜가 포함된 주에만 배경색 표시
-                if (isInRange && hasCurrentMonthInWeek) {
-                  return (
-                    <div
-                      key={index}
-                      className={`aspect-square ${`bg-[#B2D6FF] ${roundedClass}`}`}
-                    ></div>
-                  )
-                }
-                // 현재 월의 날짜가 없는 주의 빈칸을 채우기
-                return (
-                  <div
-                    key={index}
-                    className='aspect-square'
-                  ></div>
-                )
-              }
-
-              return (
+          {/* 요일 헤더 (첫 번째 캘린더에만 표시) */}
+          {isFirst && (
+            <div className='grid grid-cols-5 gap-1 mb-2'>
+              {weekDays.map((day) => (
                 <div
-                  key={index}
-                  className={`
-                    aspect-square flex items-center justify-center text-sm relative
-                    ${!day.isCurrentMonth ? 'text-gray-300' : 'text-gray-800'}
-                    ${isInRange ? `bg-[#B2D6FF] ${roundedClass}` : ''}
-                  `}
+                  key={day}
+                  className='text-center text-xs font-bold py-2 text-gray-700'
                 >
-                  {isStart || isEnd ?
-                    <div className='w-10 h-10 rounded-full bg-[#5188FB] flex items-center justify-center relative z-10'>
-                      <span className='relative z-10 text-white font-bold'>
-                        {day.date}
-                      </span>
-                    </div>
-                  : <span className='relative z-10'>{day.date}</span>}
+                  {day}
                 </div>
-              )
-            })}
-          </div>
+              ))}
+            </div>
+          )}
+
+          {/* 월별 그룹 렌더링 */}
+          {groupedByMonth.map((group, groupIndex) => {
+            const groupYear =
+              group.days[0].year !== undefined ?
+                group.days[0].year
+              : group.days[0].fullDate.getFullYear()
+
+            return (
+              <div key={`${groupYear}-${group.month}`}>
+                {/* 월 구분 표시 (첫 번째 그룹이 아닐 때만) */}
+                {groupIndex > 0 && (
+                  <div className='mt-4 mb-2 text-left'>
+                    <span className='text-sm font-semibold text-gray-600'>
+                      {group.month + 1}월
+                    </span>
+                  </div>
+                )}
+
+                {/* 날짜 그리드 */}
+                <div className='grid grid-cols-5 gap-x-0 gap-y-3'>
+                  {group.days.map((day, index) => {
+                    const globalIndex = weekdayOnly.findIndex(
+                      (d) => d.fullDate.getTime() === day.fullDate.getTime(),
+                    )
+                    // 첫 번째 캘린더면 다음 달 날짜 숨기기, 마지막 캘린더면 이전 달 날짜 숨기기
+                    const currentMonthLastDay = new Date(year, month + 1, 0)
+                    const currentMonthFirstDay = new Date(year, month, 1)
+
+                    const shouldHide =
+                      (isFirst &&
+                        !isLast &&
+                        day.fullDate > currentMonthLastDay) ||
+                      (isLast &&
+                        !isFirst &&
+                        day.fullDate < currentMonthFirstDay)
+
+                    const isStart = isSameDate(day.fullDate, dates.startDate)
+                    const isEnd = isSameDate(day.fullDate, dates.endDate)
+                    const isInRange = isDateInRange(
+                      day.fullDate,
+                      dates.startDate,
+                      dates.endDate,
+                    )
+                    // 요일 계산 월요일 1 ~ 금요일 5
+                    const dayOfWeek = day.fullDate.getDay()
+                    const isFirstDayOfWeek = dayOfWeek === 1
+                    const isLastDayOfWeek = dayOfWeek === 5
+                    // 그리드 열 위치 계산 (월요일=1 -> col-1, 화요일=2 -> col-2, ...)
+                    const gridColumn =
+                      dayOfWeek >= 1 && dayOfWeek <= 5 ? dayOfWeek : null
+
+                    // 라운드 처리: 시작일과 완료일만
+                    let roundedClass = ''
+                    if (isStart && isEnd) {
+                      // 시작일과 완료일이 같은 경우
+                      roundedClass = 'rounded-2xl'
+                    } else if (isStart) {
+                      // 시작일
+                      roundedClass = 'rounded-l-full'
+                    } else if (isEnd) {
+                      // 완료일
+                      roundedClass = 'rounded-r-full'
+                    }
+
+                    // 숨겨진 날짜 처리
+                    if (shouldHide) {
+                      // 현재 행에 현재 월의 날짜가 포함되어 있는지 확인
+                      const rowStartIndex = Math.floor(globalIndex / 5) * 5
+                      const rowEndIndex = rowStartIndex + 5
+                      const currentRow = weekdayOnly.slice(
+                        rowStartIndex,
+                        rowEndIndex,
+                      )
+                      const hasCurrentMonthInRow = currentRow.some(
+                        (d) => d.isCurrentMonth,
+                      )
+
+                      // 현재 월의 날짜가 포함된 행에만 배경색 표시
+                      if (isInRange && hasCurrentMonthInRow) {
+                        return (
+                          <div
+                            key={index}
+                            className={`aspect-square ${`bg-[#B2D6FF] ${roundedClass}`}`}
+                          ></div>
+                        )
+                      }
+                      // 현재 월의 날짜가 없는 행의 빈칸을 채우기
+                      return (
+                        <div
+                          key={index}
+                          className='aspect-square'
+                        ></div>
+                      )
+                    }
+
+                    return (
+                      <div
+                        key={index}
+                        className='aspect-square flex items-center justify-center text-sm relative'
+                        style={{ gridColumn: gridColumn || 'auto' }}
+                      >
+                        {isStart || isEnd ?
+                          <>
+                            {/* 연결 배경 */}
+                            {isInRange && (
+                              <div
+                                className={`absolute inset-0 ${roundedClass}`}
+                                style={{
+                                  backgroundColor: '#B2D6FF',
+                                  zIndex: 0,
+                                }}
+                              ></div>
+                            )}
+                            {/* 원형 배경 */}
+                            <div
+                              style={{
+                                width: '40px',
+                                height: '40px',
+                                borderRadius: '50%',
+                                backgroundColor: '#5188FB',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                position: 'relative',
+                                zIndex: 10,
+                              }}
+                            >
+                              <span
+                                style={{ color: 'white', fontWeight: 'bold' }}
+                              >
+                                {day.date}
+                              </span>
+                            </div>
+                          </>
+                        : isInRange ?
+                          <>
+                            <div
+                              className={`absolute inset-0 bg-[#B2D6FF] ${roundedClass}`}
+                            ></div>
+                            <span
+                              className={`relative z-10 ${!day.isCurrentMonth ? 'text-gray-300' : 'text-gray-800'}`}
+                            >
+                              {day.date}
+                            </span>
+                          </>
+                        : <span
+                            className={`relative z-10 ${!day.isCurrentMonth ? 'text-gray-300' : 'text-gray-800'}`}
+                          >
+                            {day.date}
+                          </span>
+                        }
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            )
+          })}
         </div>
       )
     }
@@ -412,42 +531,16 @@ const Make = () => {
 
         {renderProgressBar()}
 
-        {/* 날짜 정보 요약 */}
-        <div className='mb-6 p-4 bg-[#F0F7FF] rounded-xl'>
-          <div className='flex justify-between items-center text-sm'>
-            <div>
-              <p className='text-gray-600 text-xs mb-1'>시작일</p>
-              <p className='font-bold'>{formatDate(dates.startDate)}</p>
-            </div>
-            <div className='text-center'>
-              <p className='text-gray-600 text-xs mb-1'>기간</p>
-              <p className='font-bold text-[#6FAEFF]'>{dates.durationDays}일</p>
-            </div>
-            <div className='text-right'>
-              <p className='text-gray-600 text-xs mb-1'>완료일</p>
-              <p className='font-bold'>{formatDate(dates.endDate)}</p>
-            </div>
-          </div>
-        </div>
-
         {/* 캘린더 컨테이너 - 하나의 박스로 */}
-        <div className='bg-[#E2EFFF] rounded-2xl border-2 border-[#6FAEFF] p-4'>
-          {/* 요일 헤더 */}
-          <div className='grid grid-cols-7 gap-1 mb-2'>
-            {weekDays.map((day, index) => (
-              <div
-                key={day}
-                className={`text-center text-xs font-bold py-2 ${
-                  index === 0 ? 'text-red-500'
-                  : index === 6 ? 'text-blue-500'
-                  : 'text-gray-700'
-                }`}
-              >
-                {day}
-              </div>
-            ))}
-          </div>
-
+        <div
+          className='relative bg-[#E2EFFF] rounded-2xl p-4 overflow-hidden'
+          style={{
+            maskImage:
+              'linear-gradient(to bottom, black 70%, transparent 100%)',
+            WebkitMaskImage:
+              'linear-gradient(to bottom, black 70%, transparent 100%)',
+          }}
+        >
           {/* 캘린더들 */}
           {isDifferentMonth ?
             <>
@@ -455,18 +548,6 @@ const Make = () => {
               {renderCalendar(endYear, endMonth, false, true)}
             </>
           : renderCalendar(startYear, startMonth, true, true)}
-        </div>
-
-        {/* 범례 */}
-        <div className='mt-4 flex gap-4 justify-center text-xs'>
-          <div className='flex items-center gap-1'>
-            <div className='w-4 h-4 bg-[#5188FB] rounded-full'></div>
-            <span className='text-gray-600'>시작/완료일</span>
-          </div>
-          <div className='flex items-center gap-1'>
-            <div className='w-4 h-4 bg-[#B2D6FF] rounded'></div>
-            <span className='text-gray-600'>미션 기간</span>
-          </div>
         </div>
       </div>
     )
