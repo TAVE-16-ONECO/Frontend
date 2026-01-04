@@ -10,6 +10,7 @@ import PWAInstallModal from '@/components/PWAInstallModal'
 import { usePWAInstall } from '@/hooks/usePWAInstall'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/css'
+import apiClient from '../api/client'
 
 const Home = () => {
   const navigate = useNavigate()
@@ -19,7 +20,7 @@ const Home = () => {
   const role = useAuthStore((state) => state.role)
   const isMissionCreated = useMissionStore((state) => state.isMissionCreated)
   const [activeMissionIndex, setActiveMissionIndex] = useState(0)
-
+  const inviteCode = useAuthStore((state) => state.inviteCode)
   // PWA 설치 훅 사용
   const {
     showModal,
@@ -32,6 +33,25 @@ const Home = () => {
   useEffect(() => {
     setShowHeader(false)
     setShowNavigation(true)
+  }, [])
+
+  // 초대 코드가 저장되어 있다면 초대 수락 api 실행
+  useEffect(() => {
+    const acceptInvite = async () => {
+      if (!inviteCode) return
+      try {
+        const response = await apiClient.post(
+          '/api/family/invitations/accept',
+          {
+            code: inviteCode,
+          },
+        )
+        console.log('초대 수락 성공')
+      } catch (e) {
+        console.log('초대 링크 수락 중 에러 발생', e)
+      }
+    }
+    acceptInvite()
   }, [])
 
   const handleAlarmClick = () => {

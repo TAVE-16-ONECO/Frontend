@@ -9,6 +9,7 @@ export const useAuthStore = create()(
       isAuthenticated: false, // 로그인 여부
       hasMembers: false, // 구성원 존재 여부
       isNew: false,
+      inviteCode: null,
       accessToken: null,
       refreshToken: null,
       onboardingToken: null,
@@ -40,6 +41,9 @@ export const useAuthStore = create()(
         // 임시: 기본값 false 유지
         set({ hasMembers: false })
       },
+      setInviteCode: (inviteCode) => {
+        set({ inviteCode })
+      },
       logout: () => {
         set({
           userData: null,
@@ -47,6 +51,7 @@ export const useAuthStore = create()(
           isAuthenticated: false,
           hasMembers: false,
           isNew: false,
+          inviteCode: null,
           accessToken: null,
           refreshToken: null,
           onboardingToken: null,
