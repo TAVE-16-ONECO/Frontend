@@ -117,8 +117,8 @@ const Make = () => {
 
     const endDate = new Date(startDate)
 
-    // 주말을 제외하고 영업일만 카운트
-    let daysAdded = 0
+    // 주말을 제외하고 영업일만 카운트 (시작일 포함)
+    let daysAdded = 1 // 시작일 포함
     let currentDate = new Date(startDate)
 
     while (daysAdded < mission.durationDays) {
@@ -174,6 +174,9 @@ const Make = () => {
 
   const handleMissionSelect = (missionId) => {
     setSelectedMission(missionId)
+    // 미션 변경 시 커스텀 날짜 초기화
+    setCustomStartDate(null)
+    setCustomEndDate(null)
   }
 
   const handleMemberToggle = (memberId) => {
@@ -203,9 +206,9 @@ const Make = () => {
     // 시작일 설정
     setCustomStartDate(date)
 
-    // 종료일 계산 (주말 제외)
+    // 종료일 계산 (주말 제외, 시작일 포함)
     const endDate = new Date(date)
-    let daysAdded = 0
+    let daysAdded = 1 // 시작일 포함
 
     while (daysAdded < mission.durationDays) {
       endDate.setDate(endDate.getDate() + 1)
