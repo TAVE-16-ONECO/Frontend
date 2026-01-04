@@ -43,7 +43,7 @@ const Members = () => {
     try {
       const response = await apiClient.get('/api/family/invitations/code')
       const inviteCode = response.data.data.code
-      const inviteLink = `${window.location.origin}/?inviteCode=${inviteCode}`
+      const inviteLink = `${window.location.origin}/login?inviteCode=${inviteCode}`
       navigator.clipboard.writeText(inviteLink)
       alert('초대 링크가 복사되었습니다!')
       setShowModal(false)
