@@ -138,7 +138,7 @@ const My = () => {
           className='flex flex-col h-[80px] rounded-lg overflow-hidden border-gray-100 border-1 shadow'
         >
           {/* 위 3/5 - 회색 배경 */}
-          <div className='h-3/5 bg-[#EDEDED] flex px-[10px] items-center gap-2'>
+          <div className='w-full h-3/5 bg-[#EDEDED] flex px-[10px] items-center gap-2'>
             <p className='text-[14px] text-[#2c2c2c] font-medium text-left'>
               계정 정보
             </p>

@@ -46,7 +46,7 @@ const Home = () => {
     <>
       <div className='flex flex-col bg-white'>
         {/* 알림 아이콘 */}
-        <div className='flex justify-end pt-4 pb-[10px] px-6'>
+        <div className='flex justify-end pb-[10px] px-6'>
           <button
             onClick={handleAlarmClick}
             className='p-2 hover:opacity-70 transition-opacity'
