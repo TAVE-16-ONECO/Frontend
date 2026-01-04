@@ -374,7 +374,7 @@ const Make = () => {
               {weekDays.map((day) => (
                 <div
                   key={day}
-                  className='w-[38px] text-center text-xs font-bold py-2 text-gray-700'
+                  className='w-[38px] text-center text-xs font-bold py-2 text-[#919191]'
                 >
                   {day}
                 </div>
@@ -399,7 +399,7 @@ const Make = () => {
                   <div
                     className={`mb-2 text-left ${groupIndex > 0 || !isFirst ? 'mt-4' : ''}`}
                   >
-                    <span className='text-sm font-semibold text-gray-600'>
+                    <span className='text-sm font-semibold text-[#919191]'>
                       {group.month + 1}월
                     </span>
                   </div>
