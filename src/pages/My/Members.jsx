@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { BackArrowIcon } from '../../components/icons/BackArrowIcon'
 import { useAuthStore } from '../../store/authStore'
 import { useUIOptionStore } from '@/store/uiOptionStore'
+import apiClient from '../../api/client'
 
 const Members = () => {
   const navigate = useNavigate()
@@ -37,12 +38,18 @@ const Members = () => {
     return role === 'parent' ? 'child' : 'parent'
   }
 
-  const handleCopyLink = () => {
+  const handleCopyLink = async () => {
     // 초대 링크 복사 로직
-    const inviteLink = `https://wonco.app/invite/${inviteType}/123456`
-    navigator.clipboard.writeText(inviteLink)
-    alert('초대 링크가 복사되었습니다!')
-    setShowModal(false)
+    try {
+      const response = await apiClient.get('/api/family/invitations/code')
+      const inviteCode = response.data.data.code
+      const inviteLink = `${window.location.origin}/?inviteCode=${inviteCode}`
+      navigator.clipboard.writeText(inviteLink)
+      alert('초대 링크가 복사되었습니다!')
+      setShowModal(false)
+    } catch (e) {
+      console.error('초대 링크 복사 실패', e)
+    }
   }
 
   const handleCloseModal = () => {
