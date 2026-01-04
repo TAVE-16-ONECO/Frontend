@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { FadeLoader } from 'react-spinners'
 import apiClient from '../api/client'
@@ -8,6 +8,7 @@ import { useAuthStore } from '../store/authStore'
 export default function LoginBridge() {
   const [params] = useSearchParams()
   const navigate = useNavigate()
+  const hasCalledApi = useRef(false)
 
   const setShowHeader = useUIOptionStore((state) => state.setShowHeader)
   const setShowNavigation = useUIOptionStore((state) => state.setShowNavigation)
@@ -21,6 +22,9 @@ export default function LoginBridge() {
 
   // 리다이렉트 후 쿼리 파라미터에서 key 추출 및 로그인 결과 API 호출
   useEffect(() => {
+    // 이미 API를 호출했다면 실행하지 않음 (Strict Mode 대응)
+    if (hasCalledApi.current) return
+
     // key 추출
     const key = params.get('key')
 
@@ -28,6 +32,9 @@ export default function LoginBridge() {
       navigate('/login', { replace: true })
       return
     }
+
+    // API 호출 플래그 설정
+    hasCalledApi.current = true
 
     // 로그인 key로 로그인 결과 API 호출하는 함수
     const getLoginResult = async () => {
@@ -66,7 +73,7 @@ export default function LoginBridge() {
     }
 
     getLoginResult()
-  }, [params, navigate])
+  }, [])
 
   return (
     <div className='flex flex-col justify-center items-center h-full'>
