@@ -33,11 +33,11 @@ const PWAInstallModal = ({
       >
         {/* 아이콘 영역 */}
         <div className='flex justify-center mt-8 mb-4'>
-          <div className='w-[75px] h-[75px] bg-[#6FAEFF] rounded-2xl flex items-center justify-center p-3'>
+          <div className='w-[75px] h-[75px] rounded-2xl flex items-center justify-center'>
             <img
               src='/pwa-512x512.png'
               alt='원코 앱 아이콘'
-              className='w-full h-full object-contain'
+              className='w-full h-full object-contain rounded-2xl'
             />
           </div>
         </div>
