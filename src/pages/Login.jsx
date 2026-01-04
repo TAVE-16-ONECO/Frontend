@@ -1,15 +1,25 @@
 import { useEffect } from 'react'
 import { useUIOptionStore } from '@/store/uiOptionStore'
+import { useSearchParams } from 'react-router-dom'
+import { useAuthStore } from '../store/authStore'
 
 const Login = () => {
   const { setShowHeader, setShowNavigation } = useUIOptionStore()
+  const [searchParam] = useSearchParams()
+
+  const setInviteCode = useAuthStore((state) => state.setInviteCode)
 
   useEffect(() => {
     setShowHeader(true)
     setShowNavigation(false)
   }, [])
 
-  // TODO: 백엔드에서 리다이렉트 된 경우 로직 처리
+  // 초대 코드 authStore에 저장
+  useEffect(() => {
+    const inviteCode = searchParam.get('inviteCode')
+    if (!inviteCode) return
+    setInviteCode(inviteCode)
+  }, [])
 
   const handleKakaoLogin = () => {
     try {
