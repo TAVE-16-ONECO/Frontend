@@ -8,7 +8,7 @@ export const DefaultLayout = () => {
   const showNavigationBar = useUIOptionStore((state) => state.showNavigationBar)
   const showHeader = useUIOptionStore((state) => state.showHeader)
   return (
-    <div className='w-full flex justify-center bg-[#f1f1f1] font-body pt-safe-top pb-safe-bottom'>
+    <div className='w-full flex justify-center bg-[#f1f1f1] font-body'>
       <div
         className={clsx(
           'w-full min-w-[360px] max-w-[600px] min-h-screen flex flex-col bg-white pt-[60px]',
