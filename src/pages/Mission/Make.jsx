@@ -364,14 +364,17 @@ const Make = () => {
       ]
 
       return (
-        <div key={`${year}-${month}`}>
+        <div
+          key={`${year}-${month}`}
+          className={!isLast ? 'mb-[80px]' : ''}
+        >
           {/* 요일 헤더 (첫 번째 캘린더에만 표시) */}
           {isFirst && (
-            <div className='grid grid-cols-5 gap-[55px] mb-2'>
+            <div className='grid grid-cols-5 gap-[30px] mb-2'>
               {weekDays.map((day) => (
                 <div
                   key={day}
-                  className='text-center text-xs font-bold py-2 text-gray-700'
+                  className='w-[38px] text-center text-xs font-bold py-2 text-gray-700'
                 >
                   {day}
                 </div>
@@ -403,7 +406,7 @@ const Make = () => {
                 )}
 
                 {/* 날짜 그리드 */}
-                <div className='grid grid-cols-5 gap-x-0 gap-y-3'>
+                <div className='grid grid-cols-5 gap-x-[30px] gap-y-[14px] px-[1px]'>
                   {group.days.map((day, index) => {
                     const isStart = isSameDate(day.fullDate, dates.startDate)
                     const isEnd = isSameDate(day.fullDate, dates.endDate)
@@ -417,6 +420,23 @@ const Make = () => {
                     // 그리드 열 위치 계산 (월요일=1 -> col-1, 화요일=2 -> col-2, ...)
                     const gridColumn =
                       dayOfWeek >= 1 && dayOfWeek <= 5 ? dayOfWeek : null
+
+                    // 첫 번째/마지막 열 확인
+                    const isFirstColumn = dayOfWeek === 1
+                    const isLastColumn = dayOfWeek === 5
+
+                    // 중간 날짜 배경 크기 계산
+                    let bgWidth, bgLeft
+                    if (isFirstColumn) {
+                      bgWidth = 'calc(100% + 30px)'
+                      bgLeft = '0'
+                    } else if (isLastColumn) {
+                      bgWidth = 'calc(100% + 30px)'
+                      bgLeft = '-30px'
+                    } else {
+                      bgWidth = 'calc(100% + 60px)'
+                      bgLeft = '-30px'
+                    }
 
                     // 라운드 처리: 시작일과 완료일만
                     let roundedClass = ''
@@ -433,7 +453,7 @@ const Make = () => {
                       return (
                         <div
                           key={index}
-                          className='aspect-square flex items-center justify-center text-sm relative w-full'
+                          className='w-[38px] h-[38px] flex items-center justify-center text-sm relative'
                           style={{ gridColumn: gridColumn || 'auto' }}
                         >
                           <span className='relative z-20 font-medium text-gray-300'>
@@ -447,7 +467,7 @@ const Make = () => {
                       <button
                         key={index}
                         onClick={() => handleDateClick(day.fullDate)}
-                        className='aspect-square flex items-center justify-center text-sm relative hover:opacity-80 transition-opacity cursor-pointer w-full'
+                        className='w-[38px] h-[38px] flex items-center justify-center text-sm relative hover:opacity-80 transition-opacity cursor-pointer'
                         style={{ gridColumn: gridColumn || 'auto' }}
                       >
                         {/* 1. 범위 내 배경 (연결 바) - 시작일/종료일이 아닐 때만 */}
@@ -455,8 +475,8 @@ const Make = () => {
                           <div
                             className='absolute h-[38px] bg-[#B2D6FF] z-0'
                             style={{
-                              width: 'calc(100% + 2px)',
-                              left: '-1px',
+                              width: bgWidth,
+                              left: bgLeft,
                               top: '50%',
                               transform: 'translateY(-50%)',
                             }}
@@ -468,13 +488,13 @@ const Make = () => {
                           <>
                             {/* 시작일 원형 */}
                             <div className='absolute z-10 w-[38px] h-[38px] rounded-full bg-[#5188FB]' />
-                            {/* 시작일 오른쪽 연결 배경 */}
-                            {!isEnd && (
+                            {/* 시작일 오른쪽 연결 배경 (마지막 열이 아닐 때만) */}
+                            {!isEnd && !isLastColumn && (
                               <div
                                 className='absolute h-[38px] bg-[#B2D6FF] z-0'
                                 style={{
-                                  left: '50%',
-                                  width: '50%',
+                                  left: '19px',
+                                  width: 'calc(100% + 30px)',
                                   top: '50%',
                                   transform: 'translateY(-50%)',
                                 }}
@@ -492,8 +512,8 @@ const Make = () => {
                               <div
                                 className='absolute h-[38px] bg-[#B2D6FF] z-0'
                                 style={{
-                                  left: '0',
-                                  width: '50%',
+                                  right: '19px',
+                                  width: 'calc(100% + 30px)',
                                   top: '50%',
                                   transform: 'translateY(-50%)',
                                 }}
@@ -533,7 +553,7 @@ const Make = () => {
         {/* 캘린더 컨테이너 - 하나의 박스로 */}
 
         <div
-          className='relative bg-[#E2EFFF] rounded-2xl p-4 overflow-y-auto mx-[6px]'
+          className='relative bg-[#E2EFFF] rounded-2xl p-4 overflow-y-auto overflow-x-visible mx-[6px]'
           style={{
             height: '611px',
             touchAction: 'pan-y',
