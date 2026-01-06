@@ -34,7 +34,6 @@ export const router = createBrowserRouter([
       { path: '/login-bridge', element: <LoginBridge /> },
       { path: '/role-select', element: <RoleSelect /> },
       {
-        element: <ProtectedRoute />,
         // 홈
         children: [
           { path: '/', element: <Home /> },

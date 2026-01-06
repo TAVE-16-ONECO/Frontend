@@ -4,6 +4,7 @@ import { useUIOptionStore } from '@/store/uiOptionStore'
 import { BackArrowIcon } from '../../components/icons/BackArrowIcon'
 import MissionCard from '@/components/Mission/MissionCard'
 import RewardRequestModal from '@/components/Mission/RewardRequestModal'
+import { missionAPI } from '../../api/mission'
 
 export const ongoingMissions = [
   {
