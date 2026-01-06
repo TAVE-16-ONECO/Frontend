@@ -15,12 +15,28 @@ export const missionAPI = {
   },
   // 진행 중인 미션 조회
   getOngoingMissions: async () => {
-    const response = await apiClient.get('/missions/in-progress')
-    return response.data
+    try {
+      const response = await apiClient.get('/api/missions/in-progress', {
+        params: { lastId: 5, size: 5 },
+      })
+      console.log('진행 중인 미션 전체 응답:', response)
+      console.log('진행 중인 미션 response.data:', response.data)
+      return response.data?.data?.content ?? []
+    } catch (error) {
+      console.error('진행 중인 미션 API 에러:', error)
+      throw error
+    }
   },
   //종료된 미션 조회
   getFinishedMissions: async () => {
-    const response = await apiClient.get('/missions/finished')
-    return response.data
+    try {
+      const response = await apiClient.get('/api/missions/finished')
+      console.log('종료된 미션 전체 응답:', response)
+      console.log('종료된 미션 response.data:', response.data)
+      return response.data?.data?.content ?? []
+    } catch (error) {
+      console.error('종료된 미션 API 에러:', error)
+      throw error
+    }
   },
 }

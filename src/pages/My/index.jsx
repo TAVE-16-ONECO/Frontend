@@ -2,11 +2,13 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUIOptionStore } from '../../store/uiOptionStore'
 import PlusIcon from '../../components/icons/PlusIcon'
-import { ongoingMissions, completedMissions } from '../Mission/Current'
+import { missionAPI } from '../../api/mission'
 
 const My = () => {
   const navigate = useNavigate()
   const [keywordAlarmEnabled, setKeywordAlarmEnabled] = useState(false)
+  const [ongoingMissions, setOngoingMissions] = useState([])
+  const [completedMissions, setCompletedMissions] = useState([])
 
   const setShowHeader = useUIOptionStore((state) => state.setShowHeader)
   const setShowNavigation = useUIOptionStore((state) => state.setShowNavigation)
@@ -14,6 +16,24 @@ const My = () => {
   useEffect(() => {
     setShowHeader(false)
     setShowNavigation(true)
+  }, [])
+
+  useEffect(() => {
+    const fetchMissions = async () => {
+      try {
+        const [ongoingData, finishedData] = await Promise.all([
+          missionAPI.getOngoingMissions(),
+          missionAPI.getFinishedMissions(),
+        ])
+
+        setOngoingMissions(Array.isArray(ongoingData) ? ongoingData : [])
+        setCompletedMissions(Array.isArray(finishedData) ? finishedData : [])
+      } catch (err) {
+        console.error('미션 데이터 로딩 실패:', err)
+      }
+    }
+
+    fetchMissions()
   }, [])
 
   const handleAlarmClick = () => {
