@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useQuizStore } from '@/store/quizStore'
 import apiClient from '../../api/client'
@@ -15,6 +15,7 @@ const Quiz = () => {
   const [quizNumber, setQuizNumber] = useState(0) // 0은 첫 번째 퀴즈를 의미
   const [quizAnswer, setQuizAnswer] = useState({ 0: null, 1: null, 2: null })
   const [attemptId, setAttemptId] = useState(null)
+  const isQuizStarted = useRef(false)
 
   const studyRecordId = useQuizStore((state) => state.studyRecordId)
   const daySequence = useQuizStore((state) => state.daySequence)
@@ -23,6 +24,9 @@ const Quiz = () => {
 
   // 퀴즈 시작하는 함수
   useEffect(() => {
+    if (isQuizStarted.current) {
+      return
+    }
     const tryQuiz = async () => {
       try {
         const response = await apiClient.post(
@@ -37,6 +41,7 @@ const Quiz = () => {
       }
     }
     tryQuiz()
+    isQuizStarted.current = true
   }, [])
 
   // 퀴즈 정답 선택 함수
