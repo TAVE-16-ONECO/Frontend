@@ -15,6 +15,22 @@ const Result = () => {
     }
   }
 
+  if (!quizResultData) {
+    return (
+      <>
+        <div className='flex flex-col justify-center items-center mt-5'>
+          <p className='text-red-500 text-xl'>결과를 불러오는 도중</p>
+          <p className='text-red-500 text-xl'>에러가 발생했습니다</p>
+          <button
+            className='bg-gray-500 rounded-2xl p-2 text-white mt-3'
+            onClick={() => navigate('/')}
+          >
+            홈으로 돌아가기
+          </button>
+        </div>
+      </>
+    )
+  }
   return (
     <>
       <div className='w-full h-[30px] flex items-center relative'>
@@ -72,25 +88,36 @@ const Result = () => {
           <div className='w-full px-[10px] pb-[10px] flex justify-center'>
             {
               quizResultData.newsUnlocked ?
-                // TODO: 뉴스 데이터 API가 나오면 하드코딩된 뉴스 데이터 삭제
                 // 뉴스 정보 카드
                 <div className='w-full min-h-[215px] px-[14px] py-[19px] mt-[44px] flex justify-around items-center gap-[20px] bg-[#fdfdfd] rounded-xl'>
-                  <div className='flex-1 flex flex-col items-center gap-[6px]'>
-                    <div className='bg-gray-400 rounded-2xl w-[133px] h-[133px]'>
-                      뉴스 이미지
-                    </div>
+                  <a
+                    className='flex-1 flex flex-col items-center gap-[6px]'
+                    href={quizResultData.newsItems[0].url}
+                    target='_blank'
+                  >
+                    <img
+                      className='bg-gray-400 rounded-2xl w-[133px] h-[133px]'
+                      src={quizResultData.newsItems[0].imageUrl}
+                      alt='뉴스 기사 1'
+                    />
                     <p className='font-normal text-[#2c2c2c] text-[12px]'>
-                      쿡 연준 이사 "노동시장 둔화 위험, 인플레이션보다 크다"
+                      {quizResultData.newsItems[0].title}
                     </p>
-                  </div>
-                  <div className='flex-1 flex flex-col items-center gap-[6px]'>
-                    <div className='bg-gray-400 rounded-2xl w-[133px] h-[133px]'>
-                      뉴스 이미지
-                    </div>
+                  </a>
+                  <a
+                    className='flex-1 flex flex-col items-center gap-[6px]'
+                    href={quizResultData.newsItems[1].url}
+                    target='_blank'
+                  >
+                    <img
+                      className='bg-gray-400 rounded-2xl w-[133px] h-[133px]'
+                      src={quizResultData.newsItems[1].imageUrl}
+                      alt='뉴스 기사 2'
+                    />
                     <p className='font-normal text-[#2c2c2c] text-[12px]'>
-                      쿡 연준 이사 "노동시장 둔화 위험, 인플레이션보다 크다"
+                      {quizResultData.newsItems[1].title}
                     </p>
-                  </div>
+                  </a>
                 </div>
                 // 키워드 정보 카드
               : <div className='w-full min-h-[215px] px-[14px] py-[19px] mt-[44px] bg-[#fdfdfd] rounded-xl'>
