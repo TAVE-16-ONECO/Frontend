@@ -86,24 +86,25 @@ apiClient.interceptors.response.use(
         // 리프레시 토큰으로 새 토큰 요청
         const response = await axios.post(
           `${import.meta.env.VITE_API_BASE_URL}/api/auth/refresh`,
-          { refreshToken },
           {
             headers: {
               'Content-Type': 'application/json',
+              Authorization: `Bearer ${refreshToken}`,
             },
           },
         )
 
-        const { accessToken, refreshToken } = response.data
+        const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
+          response.data
 
         // 새 토큰 저장
-        useAuthStore.getState().existUserLogin(accessToken, refreshToken)
+        useAuthStore.getState().existUserLogin(newAccessToken, newRefreshToken)
 
         // 대기 중인 요청들 처리
-        processQueue(null, accessToken)
+        processQueue(null, newAccessToken)
 
         // 실패했던 요청 재시도
-        originalRequest.headers.Authorization = `Bearer ${accessToken}`
+        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`
         return apiClient(originalRequest)
       } catch (refreshError) {
         // 리프레시 토큰 갱신 실패 시 로그아웃
