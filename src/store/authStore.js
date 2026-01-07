@@ -13,6 +13,7 @@ export const useAuthStore = create()(
       accessToken: null,
       refreshToken: null,
       onboardingToken: null,
+      _hasHydrated: false, // Hydration 완료 여부 추적
       newUserLogin: (onboardingToken) => {
         set({ onboardingToken, isNew: true })
       },
@@ -44,6 +45,9 @@ export const useAuthStore = create()(
       setInviteCode: (inviteCode) => {
         set({ inviteCode })
       },
+      setHasHydrated: (status) => {
+        set({ _hasHydrated: status })
+      },
       logout: () => {
         set({
           userData: null,
@@ -63,6 +67,21 @@ export const useAuthStore = create()(
     {
       name: 'auth-storage', // 로컬 스토리지 저장 키
       storage: createJSONStorage(() => localStorage),
+
+      // Hydration callback - persist가 localStorage에서 데이터를 복원할 때 호출
+      onRehydrateStorage: () => (state, error) => {
+        if (error) {
+          console.error('Failed to rehydrate auth store:', error)
+        }
+        // 성공이든 실패든 hydration 완료로 표시 (무한 로딩 방지)
+        state?.setHasHydrated?.(true)
+      },
+
+      // _hasHydrated는 localStorage에 저장하지 않음 (항상 false로 시작)
+      partialState: (state) => {
+        const { _hasHydrated, ...rest } = state
+        return rest
+      },
     },
   ),
 )
