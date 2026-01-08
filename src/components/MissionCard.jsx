@@ -11,7 +11,7 @@ const missionMockData = [
     remainingDays: 4,
     studyPeriod: {
       startDate: '2025-12-22',
-      endDate: '2026-1-2',
+      endDate: '2026-01-02',
     },
     calendarData: {
       dailyRecords: {
@@ -25,8 +25,8 @@ const missionMockData = [
         '2025-12-29': { studyStatus: 'studied' },
         '2025-12-30': { studyStatus: 'studied' },
         '2025-12-31': { studyStatus: 'not-studied' },
-        '2026-1-1': { studyStatus: 'studied' },
-        '2026-1-2': { studyStatus: 'studied' },
+        '2026-01-01': { studyStatus: 'studied' },
+        '2026-01-02': { studyStatus: 'studied' },
       },
     },
   },
@@ -67,7 +67,7 @@ const missionMockData = [
     remainingDays: 25,
     studyPeriod: {
       startDate: '2025-12-28',
-      endDate: '2026-1-15',
+      endDate: '2026-01-15',
     },
     calendarData: {
       dailyRecords: {
