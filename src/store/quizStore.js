@@ -12,7 +12,7 @@ import { create } from 'zustand'
 
 export const useQuizStore = create((set, get) => ({
   studyRecordId: null,
-  dailyContentId: 1,
+  dailyContentId: null,
   dailyContent: null,
   daySequence: null,
   quizResultData: null,
