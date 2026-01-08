@@ -4,13 +4,14 @@ import rehypeHighlight from 'rehype-highlight'
 import { useAuthStore } from '@/store/authStore'
 import { useQuizStore } from '@/store/quizStore'
 import { useNavigate } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import apiClient from '../../api/client'
 import { FadeLoader } from 'react-spinners'
 import { BackArrowIcon } from '../../components/icons/BackArrowIcon'
 
 const KeyWordExplain = () => {
   const navigate = useNavigate()
+  const isStudyStarted = useRef(false)
 
   const [loading, setLoading] = useState(true)
   const [hasError, setHasError] = useState(false)
@@ -27,6 +28,8 @@ const KeyWordExplain = () => {
   // TODO: 홈에서 dailyContentId 설정해야 함. 현재는 초기값 입력해서 사용.
 
   useEffect(() => {
+    if (isStudyStarted.current) return
+
     const getKeywordExplain = async () => {
       try {
         const response = await apiClient.post('/api/study-records/start', {
@@ -46,6 +49,7 @@ const KeyWordExplain = () => {
     }
 
     getKeywordExplain()
+    isStudyStarted.current = true
   }, [])
 
   const handleStudyCompleted = () => {

@@ -86,7 +86,7 @@ const Home = () => {
           {/* 아빠 이미지 */}
           <div className='w-[134px] h-[134px] flex-shrink-0'>
             <img
-              src='/images/MainCharacter.png'
+              src='/images/MainCharacter-peaceful.png'
               alt='메인 캐릭터'
             />
           </div>

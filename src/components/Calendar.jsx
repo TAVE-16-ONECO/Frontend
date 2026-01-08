@@ -1,5 +1,6 @@
 import clsx from 'clsx'
 import { useMemo, useState, useRef, useEffect } from 'react'
+import { useUIOptionStore } from '../store/uiOptionStore'
 
 const Calendar = ({
   studyPeriod,
@@ -7,8 +8,8 @@ const Calendar = ({
   currentDate,
   setCurrentDate,
 }) => {
-  // 내부 state로 뷰 관리
-  const [isMonthView, setIsMonthView] = useState(false)
+  const isMonthView = useUIOptionStore((state) => state.isMonthView)
+  const setIsMonthView = useUIOptionStore((state) => state.setIsMonthView)
   const [height, setHeight] = useState('auto')
   const contentRef = useRef(null)
 
