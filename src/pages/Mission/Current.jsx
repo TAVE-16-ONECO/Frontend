@@ -186,20 +186,14 @@ const Current = () => {
       </div>
 
       {/* 플로팅 버튼 */}
-      {activeTab === 'ongoing' ?
+      {activeTab === 'ongoing' && (
         <button
           className='fixed bottom-8 left-1/2 -translate-x-1/2 bg-[#6FAEFF] hover:bg-[#5188FB] text-white px-8 py-4 rounded-2xl shadow-lg transition-colors font-bold'
           onClick={() => navigate('/mission/make')}
         >
           + 미션만들기
         </button>
-      : <button
-          className='fixed bottom-8 left-1/2 -translate-x-1/2 bg-[#6FAEFF] text-white px-8 py-4 rounded-2xl shadow-lg hover:bg-[#5188FB] transition-colors font-bold'
-          onClick={() => setIsRewardModalOpen(true)}
-        >
-          보상요청하기
-        </button>
-      }
+      )}
 
       {/* 보상 요청 모달 */}
       <RewardRequestModal
