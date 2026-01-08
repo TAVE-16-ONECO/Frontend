@@ -86,19 +86,18 @@ apiClient.interceptors.response.use(
         // 리프레시 토큰으로 새 토큰 요청
         const response = await axios.post(
           `${import.meta.env.VITE_API_BASE_URL}/api/auth/refresh`,
+          {},
           {
             headers: {
-              'Content-Type': 'application/json',
               Authorization: `Bearer ${refreshToken}`,
             },
           },
         )
 
-        const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
-          response.data
+        const { accessToken: newAccessToken } = response.data.data
 
         // 새 토큰 저장
-        useAuthStore.getState().existUserLogin(newAccessToken, newRefreshToken)
+        useAuthStore.getState().existUserLogin(newAccessToken, refreshToken)
 
         // 대기 중인 요청들 처리
         processQueue(null, newAccessToken)
