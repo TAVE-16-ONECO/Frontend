@@ -57,13 +57,22 @@ const Result = () => {
       </div>
       <div className='flex flex-col items-center px-[16px] pb-[47px]'>
         {/* 아빠 이미지 */}
-        <div className='w-[137px] h-[137px] mt-10'>
+        <div className='mt-10'>
           <img
-            src='/images/MainCharacter.png'
+            className='w-[137px] h-[140px] object-contain'
+            src={
+              quizResultData.grading.correctCount === 3 ?
+                '/images/MainCharacter-peaceful.png'
+              : '/images/MainCharacter-sensitive.png'
+            }
             alt='아빠 캐릭터'
           />
         </div>
-        <p className='text-[16px] font-semibold mt-4'>너가 정말 대견하구나.</p>
+        <p className='text-[16px] font-semibold mt-4'>
+          {quizResultData.grading.correctCount === 3 ?
+            '너가 정말 대견하구나.'
+          : '3문제 다 맞혀보렴'}
+        </p>
         {/* 결과 정보 카드 */}
         <div className='w-full bg-[#e2efff] mt-7 rounded-xl flex flex-col items-center'>
           <div className='w-fit mt-4 px-[10px] py-[4px] rounded-2xl border-1 border-[#2c2c2c] text-[14px] font-medium'>
