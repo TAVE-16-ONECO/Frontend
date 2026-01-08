@@ -125,10 +125,10 @@ const Current = () => {
           </p>
         </div>
         {/*탭 영역*/}
-        <div className='flex items-center justify-center gap-23 mt-[26px] font-bold border-b'>
+        <div className='flex items-center justify-center gap-12 mt-[26px] font-bold border-b'>
           <button
             onClick={() => setActiveTab('ongoing')}
-            className={`pb-2 px-4 transition-all border-b-2 ${
+            className={`pb-2 px-4 transition-all border-b-2 min-w-[140px] ${
               activeTab === 'ongoing' ?
                 'border-black text-black'
               : 'border-transparent text-gray-400'
@@ -138,7 +138,7 @@ const Current = () => {
           </button>
           <button
             onClick={() => setActiveTab('completed')}
-            className={`pb-2 px-4 transition-all border-b-2 ${
+            className={`pb-2 px-4 transition-all border-b-2 min-w-[140px] ${
               activeTab === 'completed' ?
                 'border-black text-black'
               : 'border-transparent text-gray-400'
