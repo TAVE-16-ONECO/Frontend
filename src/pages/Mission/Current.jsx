@@ -5,7 +5,7 @@ import { BackArrowIcon } from '../../components/icons/BackArrowIcon'
 import MissionCard from '@/components/Mission/MissionCard'
 import RewardRequestModal from '@/components/Mission/RewardRequestModal'
 import { missionAPI } from '../../api/mission'
-import { authAPI } from '../../api/auth'
+import { membersAPI } from '../../api/members'
 
 const Current = () => {
   const navigate = useNavigate()
@@ -21,7 +21,7 @@ const Current = () => {
   const [completedMissions, setCompletedMissions] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [userName, setUserName] = useState('')
+  const [nickname, setNickname] = useState('')
 
   useEffect(() => {
     setShowHeader(false)
@@ -39,22 +39,24 @@ const Current = () => {
         setLoading(true)
         setError(null)
 
-        const [ongoingData, finishedData, userInfo] = await Promise.all([
+        const [ongoingData, finishedData, memberInfo] = await Promise.all([
           missionAPI.getOngoingMissions(5, 5),
           missionAPI.getFinishedMissions(5, 5),
-          authAPI.getUserInfo(),
+          membersAPI.getMemberInfo(),
         ])
 
         console.log('진행 중인 미션 데이터:', ongoingData)
         console.log('종료된 미션 데이터:', finishedData)
-        console.log('사용자 정보:', userInfo)
+        console.log('회원 정보:', memberInfo)
 
         // API 응답이 배열인지 확인하고, 아니면 빈 배열로 설정
         setOngoingMissions(Array.isArray(ongoingData) ? ongoingData : [])
         setCompletedMissions(Array.isArray(finishedData) ? finishedData : [])
 
-        // 사용자 이름 설정 (API 응답 구조에 따라 수정 필요)
-        setUserName(userInfo?.nickname || userInfo?.name || '사용자')
+        // nickname 설정
+        if (memberInfo?.data?.nickname) {
+          setNickname(memberInfo.data.nickname)
+        }
       } catch (err) {
         console.error('미션 데이터 로딩 실패:', err)
         setError('미션 데이터를 불러오는데 실패했습니다.')
@@ -117,7 +119,7 @@ const Current = () => {
         </div>
         {/*중간 내용 영역*/}
         <div className='mt-[38px] ml-[21px] font-bold'>
-          <p>{userName}의 미션현황</p>
+          <p>{nickname}의 미션현황</p>
           <p className='flex text-gray-400 text-[14px]'>
             보상 대기 중 {ongoingMissions.length}건
           </p>
@@ -142,7 +144,7 @@ const Current = () => {
               : 'border-transparent text-gray-400'
             }`}
           >
-            종료된 미션
+            종료된 미션 {completedMissions.length}
           </button>
         </div>
 
