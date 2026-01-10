@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import { useUIOptionStore } from '@/store/uiOptionStore'
 import { BackArrowIcon } from '../../components/icons/BackArrowIcon'
-
+import { Home } from '../../components/icons/Home'
 const Details = () => {
   const navigate = useNavigate()
   const { id } = useParams()
@@ -165,6 +165,10 @@ const Details = () => {
     navigate(-1)
   }
 
+  const home = () => {
+    navigate('/')
+  }
+
   // 미션 상태에 따른 메시지 반환
   const getStatusMessage = (status) => {
     const messages = {
@@ -205,6 +209,13 @@ const Details = () => {
             미션 상세
           </p>
           <div className='w-[24px]'></div>
+          <button
+            onClick={home}
+            className='text-[24px] text-[#2c2c2c] hover:opacity-70 transition-opacity'
+            aria-label='홈으로 가기'
+          >
+            <Home />
+          </button>
         </div>
 
         {/* 미션 상세 윗부분 */}
