@@ -25,8 +25,6 @@ const KeyWordExplain = () => {
   const setDaySequence = useQuizStore((state) => state.setDaySequence)
   const setStudyRecordId = useQuizStore((state) => state.setStudyRecordId)
 
-  // TODO: 홈에서 dailyContentId 설정해야 함. 현재는 초기값 입력해서 사용.
-
   useEffect(() => {
     if (isStudyStarted.current) return
 
