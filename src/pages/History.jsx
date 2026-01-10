@@ -60,28 +60,29 @@ const History = () => {
   }, [])
 
   return (
-    <div className='w-full bg-white'>
+    <div className='flex flex-col h-screen'>
       {/* 필터 버튼 UI */}
-      <div className='flex flex-row w-full h-[57px] border-b-[0.7px] border-[#D9D9D9] px-[18px] gap-[5px]'>
+      <div className='shrink-0 flex flex-row w-full h-[57px] border-b-[0.7px] border-[#D9D9D9] px-[18px] gap-[5px]'>
         <FilterButtons />
       </div>
+      <div className='w-full bg-white flex-1 overflow-y-auto'>
+        {/* 카드 리스트 */}
+        {list.map((item, index) => (
+          <HistoryCard
+            key={index}
+            title={item.title}
+            date={item.date}
+            text={item.text}
+            items={item.items}
+          />
+        ))}
 
-      {/* 카드 리스트 */}
-      {list.map((item, index) => (
-        <HistoryCard
-          key={index}
-          title={item.title}
-          date={item.date}
-          text={item.text}
-          items={item.items}
-        />
-      ))}
-
-      {/* 무한 스크롤 감지용 div */}
-      <div
-        ref={loaderRef}
-        className='h-[50px]'
-      ></div>
+        {/* 무한 스크롤 감지용 div */}
+        <div
+          ref={loaderRef}
+          className='h-[50px]'
+        ></div>
+      </div>
     </div>
   )
 }
