@@ -1,87 +1,51 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import Calendar from './Calendar'
 import { useNavigate } from 'react-router-dom'
-
-// 퍼블리싱 용 미션 mock 데이터
-const missionMockData = [
-  {
-    missionTheme: 'part.1 돈의 흐름',
-    progress: 90,
-    keyword: '저축률',
-    remainingDays: 4,
-    studyPeriod: {
-      startDate: '2025-12-22',
-      endDate: '2026-01-02',
-    },
-    calendarData: {
-      dailyRecords: {
-        '2025-12-22': { studyStatus: 'studied' },
-        '2025-12-23': { studyStatus: 'studied' },
-        '2025-12-24': { studyStatus: 'studied' },
-        '2025-12-25': { studyStatus: 'studied' },
-        '2025-12-26': { studyStatus: 'studied' },
-        '2025-12-27': { studyStatus: 'not-studied' },
-        '2025-12-28': { studyStatus: 'not-studied' },
-        '2025-12-29': { studyStatus: 'studied' },
-        '2025-12-30': { studyStatus: 'studied' },
-        '2025-12-31': { studyStatus: 'not-studied' },
-        '2026-01-01': { studyStatus: 'studied' },
-        '2026-01-02': { studyStatus: 'studied' },
-      },
-    },
-  },
-  {
-    missionTheme: 'part.2 금융상품',
-    progress: 45,
-    keyword: '이자율',
-    remainingDays: 12,
-    studyPeriod: {
-      startDate: '2025-12-15',
-      endDate: '2025-12-30',
-    },
-    calendarData: {
-      dailyRecords: {
-        '2025-12-15': { studyStatus: 'studied' },
-        '2025-12-16': { studyStatus: 'studied' },
-        '2025-12-17': { studyStatus: 'studied' },
-        '2025-12-18': { studyStatus: 'not-studied' },
-        '2025-12-19': { studyStatus: 'studied' },
-        '2025-12-20': { studyStatus: 'not-studied' },
-        '2025-12-21': { studyStatus: 'not-studied' },
-        '2025-12-22': { studyStatus: 'not-studied' },
-        '2025-12-23': { studyStatus: 'studied' },
-        '2025-12-24': { studyStatus: 'studied' },
-        '2025-12-25': { studyStatus: 'not-studied' },
-        '2025-12-26': { studyStatus: 'studied' },
-        '2025-12-27': { studyStatus: 'studied' },
-        '2025-12-28': { studyStatus: 'not-studied' },
-        '2025-12-29': { studyStatus: 'studied' },
-        '2025-12-30': { studyStatus: 'studied' },
-      },
-    },
-  },
-  {
-    missionTheme: 'part.3 투자의 기초',
-    progress: 15,
-    keyword: '주식시장',
-    remainingDays: 25,
-    studyPeriod: {
-      startDate: '2025-12-28',
-      endDate: '2026-01-15',
-    },
-    calendarData: {
-      dailyRecords: {
-        '2025-12-28': { studyStatus: 'studied' },
-        '2025-12-29': { studyStatus: 'not-studied' },
-        '2025-12-30': { studyStatus: 'studied' },
-      },
-    },
-  },
-]
+import { useQuizStore } from '../store/quizStore'
+import { transformMissionData } from '../utils/missionDataTransformer'
 
 const MissionCard = ({ mission, index }) => {
   const navigate = useNavigate()
   const [currentDate, setCurrentDate] = useState(new Date())
+
+  const setDailyContentId = useQuizStore((state) => state.setDailyContentId)
+
+  // 원본 API 데이터를 컴포넌트에서 사용할 형식으로 변환
+  const missionData = useMemo(() => transformMissionData(mission), [mission])
+
+  // IN_PROGRESS 또는 COMPLETED 중 가장 최신 날짜 찾기
+  const getInProgressDate = () => {
+    // 먼저 IN_PROGRESS 찾기
+    const inProgressItem = mission.dateList.find(
+      (item) => item.studyStatus === 'IN_PROGRESS',
+    )
+
+    if (inProgressItem) {
+      const date = new Date(inProgressItem.date)
+      const month = date.getMonth() + 1
+      const day = date.getDate()
+      return `${month}월 ${day}일 키워드`
+    }
+
+    // IN_PROGRESS가 없으면 COMPLETED 중 가장 최신 날짜 찾기
+    const completedItems = mission.dateList.filter(
+      (item) => item.studyStatus === 'COMPLETED',
+    )
+
+    if (completedItems.length > 0) {
+      // 날짜 기준으로 내림차순 정렬하여 가장 최신 항목 찾기
+      const latestCompleted = completedItems.sort(
+        (a, b) => new Date(b.date) - new Date(a.date),
+      )[0]
+
+      const date = new Date(latestCompleted.date)
+      const month = date.getMonth() + 1
+      const day = date.getDate()
+      return `${month}월 ${day}일 키워드`
+    }
+
+    return '오늘의 키워드' // 기본값
+  }
 
   // 공부 시작 일차 계산
   const calculateStudyDay = (startDate) => {
@@ -93,20 +57,23 @@ const MissionCard = ({ mission, index }) => {
   }
 
   const handleQuizStart = () => {
+    const dailyContentId = mission.dailyContent.dailyContentId
+    setDailyContentId(dailyContentId)
     navigate('/quiz/keyword-explain')
   }
 
   return (
     <>
       {/* 미션 카드 */}
-      <div className='w-full pt-[24px] px-[24px] [box-shadow:0px_1px_5px_0px_rgba(0,0,0,0.15)] flex flex-col rounded-2xl bg-[#e2efff]'>
+      <div className='w-full pt-[24px] px-[16px] [box-shadow:0px_1px_5px_0px_rgba(0,0,0,0.15)] flex flex-col rounded-2xl bg-[#e2efff]'>
         {/* 미션 주제 */}
         <div className='pb-[10px] border-b-1 border-[#dbdbdb]'>
           <div className='flex flex-col gap-1'>
             <p className='text-[10px] font-normal leading-[130%] text-[#717171]'>
-              시작한 지 {calculateStudyDay(mission.studyPeriod.startDate)}일차
+              시작한 지 {missionData.studyDay}
+              일차
             </p>
-            <p className='text-[14px] font-medium'>{mission.missionTheme}</p>
+            <p className='text-[14px] font-medium'>미션 제목</p>
             <div className='flex items-center gap-2'>
               <div className='flex-1 relative pt-[10px]'>
                 {/* 80% 지점 마커 */}
@@ -127,13 +94,13 @@ const MissionCard = ({ mission, index }) => {
                 <div className='h-[13px] bg-[#f4f4f4] rounded-full overflow-hidden relative'>
                   <div
                     className='h-full bg-[#6FAEFF] rounded-full transition-all duration-300'
-                    style={{ width: `${mission.progress}%` }}
+                    style={{ width: `${missionData.progress}%` }}
                   />
                 </div>
               </div>
             </div>
             <span className='text-[10px] text-[#bababa] min-w-[35px] text-right'>
-              전체 정답률 {mission.progress}%
+              전체 정답률 {missionData.progress}%
             </span>
           </div>
         </div>
@@ -144,13 +111,13 @@ const MissionCard = ({ mission, index }) => {
             <div className='flex flex-col'>
               {/* Today's keyword 헤더 */}
               <h3 className='text-[14px] text-[#000000] opacity-70 font-medium mb-[4px]'>
-                오늘의 키워드
+                {getInProgressDate()}
               </h3>
 
               {/* 키워드 및 디데이 */}
               <div className='flex items-center mb-[10px]'>
-                <p className='text-[16px] text-[#000000] font-semibold'>
-                  {mission.keyword}
+                <p className='text-[16px] text-[#000000] font-medium'>
+                  {missionData.missionTheme}: {missionData.keyword}
                 </p>
               </div>
 
@@ -167,8 +134,8 @@ const MissionCard = ({ mission, index }) => {
         {/* 캘린더 섹션 */}
         <div className='mb-3'>
           <Calendar
-            studyPeriod={mission.studyPeriod}
-            calendarData={mission.calendarData}
+            studyPeriod={missionData.studyPeriod}
+            calendarData={missionData.calendarData}
             currentDate={currentDate}
             setCurrentDate={setCurrentDate}
           />
@@ -178,5 +145,4 @@ const MissionCard = ({ mission, index }) => {
   )
 }
 
-export { missionMockData }
 export default MissionCard

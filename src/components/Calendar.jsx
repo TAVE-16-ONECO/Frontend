@@ -12,6 +12,7 @@ const Calendar = ({
   const setIsMonthView = useUIOptionStore((state) => state.setIsMonthView)
   const [height, setHeight] = useState('auto')
   const contentRef = useRef(null)
+  const prevIsMonthViewRef = useRef(isMonthView)
 
   // 현재 주의 월~금 날짜 계산
   const weekDates = useMemo(() => {
@@ -220,8 +221,11 @@ const Calendar = ({
       requestAnimationFrame(() => {
         setHeight(`${targetHeight}px`)
 
-        // 월간 뷰로 확장될 때 스크롤
-        if (isMonthView) {
+        // 실제로 뷰가 토글되어 월간 뷰로 변경되었을 때만 스크롤
+        const wasWeekView = prevIsMonthViewRef.current === false
+        const isNowMonthView = isMonthView === true
+
+        if (wasWeekView && isNowMonthView) {
           // 애니메이션이 완료된 후 스크롤 (100ms 후)
           setTimeout(() => {
             window.scrollTo({
@@ -230,6 +234,9 @@ const Calendar = ({
             })
           }, 100)
         }
+
+        // 현재 상태를 저장
+        prevIsMonthViewRef.current = isMonthView
       })
     }
   }, [isMonthView, dates])

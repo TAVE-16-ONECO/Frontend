@@ -4,7 +4,7 @@ import { createJSONStorage, persist } from 'zustand/middleware'
 export const useAuthStore = create()(
   persist(
     (set, get) => ({
-      userData: null, // 유저 정보(ex 유저 이메일, 이름 등)
+      userData: null, // 유저 정보(멤버 id, 역할, 이름, 닉네임, 이메일, 프로필 링크)
       role: null, // 부모/자녀 역할 정보
       isAuthenticated: false, // 로그인 여부
       hasMembers: false, // 구성원 존재 여부
@@ -24,6 +24,9 @@ export const useAuthStore = create()(
           isAuthenticated: true,
         })
       },
+      setUserData: (userData) => {
+        set({ userData })
+      },
       setIsNew: (bool) => {
         set({
           isNew: bool,
@@ -34,13 +37,8 @@ export const useAuthStore = create()(
         // 부모/자녀 선택
         set({ role })
       },
-      fetchMemberStatus: async () => {
-        // TODO: 백엔드 API 연결 후 구성원 존재 여부 조회
-        // const response = await api.get('/members/status')
-        // set({ hasMembers: response.data.hasMembers })
-
-        // 임시: 기본값 false 유지
-        set({ hasMembers: false })
+      setHasMembers: (hasMembers) => {
+        set({ hasMembers })
       },
       setInviteCode: (inviteCode) => {
         set({ inviteCode })
