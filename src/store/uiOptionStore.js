@@ -1,8 +1,8 @@
 import { create } from 'zustand'
 
 export const useUIOptionStore = create((set, get) => ({
-  showNavigationBar: true,
-  showHeader: true,
+  showNavigationBar: false,
+  showHeader: false,
   isMonthView: false,
   setShowNavigation: (bool) => {
     set({ showNavigationBar: bool })
