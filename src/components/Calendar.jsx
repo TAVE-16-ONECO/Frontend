@@ -110,10 +110,13 @@ const Calendar = ({
 
   // 공부 기간 체크
   const isInStudyPeriod = (date) => {
-    const dateStr = formatDate(date)
-    const startDate = new Date(studyPeriod.startDate)
-    const endDate = new Date(studyPeriod.endDate)
-    return date >= startDate && date <= endDate
+    const startDate = new Date(studyPeriod.startDate + 'T00:00:00')
+    const endDate = new Date(studyPeriod.endDate + 'T00:00:00')
+
+    const compareDate = new Date(date)
+    compareDate.setHours(0, 0, 0, 0)
+
+    return compareDate >= startDate && compareDate <= endDate
   }
 
   // 공부 상태 가져오기
@@ -296,12 +299,12 @@ const Calendar = ({
       <div
         ref={contentRef}
         onClick={toggleView}
-        className='bg-[#fdfdfd] rounded-2xl px-4 pt-4 pb-2 transition-all duration-100 ease-in-out overflow-hidden [box-shadow:0px_1px_5px_0px_rgba(0,0,0,0.15)]'
+        className='bg-[#fdfdfd] rounded-2xl pt-4 pb-2 transition-all duration-100 ease-in-out overflow-hidden [box-shadow:0px_1px_5px_0px_rgba(0,0,0,0.15)]'
         style={{
           height: height,
         }}
       >
-        <div className='flex gap-8'>
+        <div className='flex justify-between'>
           {[0, 1, 2, 3, 4].map((dayIndex) => {
             const columnDates = dates.filter((_, idx) => idx % 5 === dayIndex)
 
@@ -325,8 +328,9 @@ const Calendar = ({
                     <button
                       key={dateIdx}
                       className={clsx(
-                        'flex flex-col items-center w-fit mt-[13px]',
-                        todayHighlight && 'bg-[#f4f4f4] rounded-xl',
+                        'flex flex-col items-center w-full mt-[13px] pb-2',
+                        todayHighlight &&
+                          'w-full max-w-[34px] bg-[#f4f4f4] rounded-xl',
                       )}
                     >
                       <span
