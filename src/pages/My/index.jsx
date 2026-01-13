@@ -65,7 +65,9 @@ const My = () => {
 
   const handleAccountInfo = () => {
     // 계정정보 페이지로 이동
-    console.log('계정정보')
+    {
+      memberInfo?.data?.email
+    }
   }
 
   const handleCustomerService = () => {
@@ -120,19 +122,20 @@ const My = () => {
         <div className='flex items-center gap-5 justify-center mb-4'>
           {/* 멤버 연동 여부 카톡프사 영역 */}
           <div className='w-[80px] h-[80px] rounded-full bg-gray-200 overflow-hidden flex items-center justify-center'>
-            {memberInfo?.data?.profileImageUrl ? (
+            {memberInfo?.data?.profileImageUrl ?
               <img
                 src={memberInfo.data.profileImageUrl}
                 alt='프로필 이미지'
                 className='w-full h-full object-cover'
                 onError={(e) => {
-                  console.error('이미지 로드 실패:', memberInfo.data.profileImageUrl)
+                  console.error(
+                    '이미지 로드 실패:',
+                    memberInfo.data.profileImageUrl,
+                  )
                   e.target.style.display = 'none'
                 }}
               />
-            ) : (
-              <div className='w-full h-full bg-gray-200' />
-            )}
+            : <div className='w-full h-full bg-gray-200' />}
           </div>
           {/*인원들 사이에 물방울표시*/}
           <div className='flex gap-[7px]'>
@@ -190,7 +193,9 @@ const My = () => {
           </div>
           {/* 아래 2/5 - 하얀색 배경 */}
           <div className='h-2/5 bg-white flex items-center px-[10px]'>
-            <p className='text-[10px] text-[#2c2c2c]'>아이디 {}</p>
+            <p className='text-[10px] text-[#2c2c2c]'>
+              아이디 {memberInfo?.data?.email || '이메일이 연동되지 않았습니다'}
+            </p>
           </div>
         </button>
 
