@@ -15,7 +15,7 @@ export default defineConfig({
       manifest: {
         name: 'ONECO',
         short_name: 'ONECO',
-        description: 'ONECO - 똑똑해지는 경제 습관',
+        description: 'ONECO - 내가 도전하고, 부모가 응원하는 경제 공부',
         theme_color: '#ffffff',
         background_color: '#ffffff',
         display: 'standalone',

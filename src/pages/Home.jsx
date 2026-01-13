@@ -19,7 +19,6 @@ const Home = () => {
   const [loading, setLoading] = useState(true)
   const [hasError, setHasError] = useState(null)
 
-  const setShowHeader = useUIOptionStore((state) => state.setShowHeader)
   const setShowNavigation = useUIOptionStore((state) => state.setShowNavigation)
   const role = useAuthStore((state) => state.role)
   const isMissionCreated = useMissionStore((state) => state.isMissionCreated)
@@ -47,7 +46,6 @@ const Home = () => {
   } = usePWAInstall()
 
   useEffect(() => {
-    setShowHeader(false)
     setShowNavigation(true)
   }, [])
 

@@ -7,11 +7,9 @@ import { useNavigate } from 'react-router-dom'
 const Alarm = () => {
   const navigate = useNavigate()
 
-  const setShowHeader = useUIOptionStore((state) => state.setShowHeader)
   const setShowNavigation = useUIOptionStore((state) => state.setShowNavigation)
 
   useEffect(() => {
-    setShowHeader(false)
     setShowNavigation(false)
   })
 

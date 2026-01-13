@@ -1,12 +1,12 @@
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
 import Header from '@/components/Header'
 import NavigationBar from '@/components/NavigationBar'
 import { useUIOptionStore } from '@/store/uiOptionStore'
 import clsx from 'clsx'
 
 export const DefaultLayout = () => {
+  const location = useLocation()
   const showNavigationBar = useUIOptionStore((state) => state.showNavigationBar)
-  const showHeader = useUIOptionStore((state) => state.showHeader)
   return (
     <div className='w-full flex justify-center bg-[#f1f1f1] font-body'>
       <div
@@ -15,7 +15,7 @@ export const DefaultLayout = () => {
           showNavigationBar && 'pb-[86px]',
         )}
       >
-        {showHeader && <Header />}
+        {location.pathname === '/login' && <Header />}
         <Outlet />
       </div>
       {showNavigationBar && (

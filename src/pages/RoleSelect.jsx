@@ -11,25 +11,15 @@ const RoleSelect = () => {
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
   const { selectRole, existUserLogin } = useAuthStore()
-  const { setShowHeader, setShowNavigation } = useUIOptionStore()
-  const isNew = useAuthStore((state) => state.isNew)
+  const setShowNavigation = useUIOptionStore((state) => state.setShowNavigation)
   const setIsNew = useAuthStore((state) => state.setIsNew)
   const onboardingToken = useAuthStore((state) => state.onboardingToken)
 
   useEffect(() => {
-    // if (!isNew) {
-    //   navigate('/', { replace: true })
-    //   return
-    // }
-    setShowHeader(false)
     setShowNavigation(false)
-    return () => {
-      setShowNavigation(true)
-    }
-  }, [isNew, navigate, setShowHeader, setShowNavigation])
+  }, [])
 
   const handleBack = () => {
-    setIsNew(false)
     navigate('/login')
   }
 

@@ -5,18 +5,11 @@ const History = () => {
   const [list, setList] = useState([])
   const [page, setPage] = useState(1)
   const loaderRef = useRef(null)
-  const setShowHeader = useUIOptionStore((state) => state.setShowHeader)
   const setShowNavigation = useUIOptionStore((state) => state.setShowNavigation)
 
   useEffect(() => {
-    setShowHeader(false)
     setShowNavigation(true)
-
-    return () => {
-      setShowHeader(true)
-      setShowNavigation(true)
-    }
-  }, [setShowHeader, setShowNavigation])
+  }, [])
 
   // 더미 데이터 생성
   const generateFakeData = () => {

@@ -10,7 +10,6 @@ import { membersAPI } from '../../api/members'
 const Current = () => {
   const navigate = useNavigate()
   const location = useLocation()
-  const setShowHeader = useUIOptionStore((state) => state.setShowHeader)
   const setShowNavigation = useUIOptionStore((state) => state.setShowNavigation)
   // location.state에서 이전 탭 정보를 가져오거나, 없으면 'ongoing'을 기본값으로 사용
   const [activeTab, setActiveTab] = useState(
@@ -24,14 +23,8 @@ const Current = () => {
   const [nickname, setNickname] = useState('')
 
   useEffect(() => {
-    setShowHeader(false)
     setShowNavigation(false)
-
-    return () => {
-      setShowHeader(true)
-      setShowNavigation(true)
-    }
-  }, [setShowHeader, setShowNavigation])
+  }, [])
 
   useEffect(() => {
     const fetchMissions = async () => {

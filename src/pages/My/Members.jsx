@@ -9,10 +9,10 @@ const Members = () => {
   const navigate = useNavigate()
   const [showModal, setShowModal] = useState(false)
   const [inviteType, setInviteType] = useState('') // 'parent' or 'child'
-  const setShowHeader = useUIOptionStore((state) => state.setShowHeader)
+  const setShowNavigation = useUIOptionStore((state) => state.setShowNavigation)
 
   useEffect(() => {
-    setShowHeader(false)
+    setShowNavigation(false)
   }, [])
 
   // authStore에서 role과 hasMembers 가져오기

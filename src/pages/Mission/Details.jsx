@@ -7,7 +7,6 @@ const Details = () => {
   const navigate = useNavigate()
   const { id } = useParams()
   const location = useLocation()
-  const setShowHeader = useUIOptionStore((state) => state.setShowHeader)
   const setShowNavigation = useUIOptionStore((state) => state.setShowNavigation)
   const [mission, setMission] = useState(null)
 
@@ -142,7 +141,6 @@ const Details = () => {
   ])
 
   useEffect(() => {
-    setShowHeader(false)
     setShowNavigation(false)
 
     // URL 파라미터로부터 받은 ID로 미션 정보 찾기
@@ -150,12 +148,7 @@ const Details = () => {
     const allMissionsData = [...allMissions, ...completedMissions]
     const foundMission = allMissionsData.find((m) => m.id === parseInt(id))
     setMission(foundMission)
-
-    return () => {
-      setShowHeader(true)
-      setShowNavigation(true)
-    }
-  }, [id, setShowHeader, setShowNavigation])
+  }, [id])
 
   const handleBack = () => {
     // 이전 페이지에서 받은 activeTab 정보를 다시 전달
