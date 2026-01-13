@@ -6,7 +6,6 @@ import clsx from 'clsx'
 
 export const DefaultLayout = () => {
   const showNavigationBar = useUIOptionStore((state) => state.showNavigationBar)
-  const showHeader = useUIOptionStore((state) => state.showHeader)
   return (
     <div className='w-full flex justify-center bg-[#f1f1f1] font-body'>
       <div
@@ -15,7 +14,7 @@ export const DefaultLayout = () => {
           showNavigationBar && 'pb-[86px]',
         )}
       >
-        {showHeader && <Header />}
+        <Header />
         <Outlet />
       </div>
       {showNavigationBar && (

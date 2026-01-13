@@ -10,13 +10,11 @@ export default function LoginBridge() {
   const navigate = useNavigate()
   const hasCalledApi = useRef(false)
 
-  const setShowHeader = useUIOptionStore((state) => state.setShowHeader)
   const setShowNavigation = useUIOptionStore((state) => state.setShowNavigation)
   const newUserLogin = useAuthStore((state) => state.newUserLogin)
   const existUserLogin = useAuthStore((state) => state.existUserLogin)
 
   useEffect(() => {
-    setShowHeader(false)
     setShowNavigation(false)
   }, [])
 

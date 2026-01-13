@@ -4,13 +4,12 @@ import { useSearchParams } from 'react-router-dom'
 import { useAuthStore } from '../store/authStore'
 
 const Login = () => {
-  const { setShowHeader, setShowNavigation } = useUIOptionStore()
+  const setShowNavigation = useUIOptionStore((state) => state.setShowNavigation)
   const [searchParam] = useSearchParams()
 
   const setInviteCode = useAuthStore((state) => state.setInviteCode)
 
   useEffect(() => {
-    setShowHeader(true)
     setShowNavigation(false)
   }, [])
 

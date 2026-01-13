@@ -5,7 +5,6 @@ import { BackArrowIcon } from '@/components/icons/BackArrowIcon'
 
 const Make = () => {
   const navigate = useNavigate()
-  const setShowHeader = useUIOptionStore((state) => state.setShowHeader)
   const setShowNavigation = useUIOptionStore((state) => state.setShowNavigation)
 
   const [currentStep, setCurrentStep] = useState(1)
@@ -155,14 +154,8 @@ const Make = () => {
   }
 
   useEffect(() => {
-    setShowHeader(false)
     setShowNavigation(false)
-
-    return () => {
-      setShowHeader(true)
-      setShowNavigation(true)
-    }
-  }, [setShowHeader, setShowNavigation])
+  }, [])
 
   const handleBack = () => {
     if (currentStep === 1) {
