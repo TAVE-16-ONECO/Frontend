@@ -24,8 +24,6 @@ export const missionAPI = {
       const response = await apiClient.get('/api/missions/in-progress', {
         params,
       })
-      console.log('진행 중인 미션 전체 응답:', response)
-      console.log('진행 중인 미션 response.data:', response.data)
       return response.data?.data?.content ?? []
     } catch (error) {
       console.error('진행 중인 미션 API 에러:', error)
@@ -43,8 +41,6 @@ export const missionAPI = {
       const response = await apiClient.get('/api/missions/finished', {
         params,
       })
-      console.log('종료된 미션 전체 응답:', response)
-      console.log('종료된 미션 response.data:', response.data)
       return response.data?.data?.content ?? []
     } catch (error) {
       console.error('종료된 미션 API 에러:', error)
