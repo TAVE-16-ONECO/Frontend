@@ -12,10 +12,6 @@
   .font-body {
     font-family: 'Pretendard Variable', sans-serif;
   }
-
-  .font-header {
-    font-family: 'BM Hanna Pro', sans-serif;
-  }
 }
 
 @layer components {
