@@ -1,9 +1,14 @@
 import apiClient from './client'
 
 export const missionAPI = {
+  // 카테고리 목록 조회
+  getCategories: async () => {
+    const response = await apiClient.get('/api/categories')
+    return response.data
+  },
   //미션 생성
   createMission: async (missionData) => {
-    const response = await apiClient.post('/missions', missionData)
+    const response = await apiClient.post('/api/categories', missionData)
     return response.data
   },
   //미션 승인/거절

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUIOptionStore } from '@/store/uiOptionStore'
 import { BackArrowIcon } from '@/components/icons/BackArrowIcon'
+import { missionAPI } from '@/api/mission'
 
 const Make = () => {
   const navigate = useNavigate()
@@ -15,6 +16,7 @@ const Make = () => {
   const [noMessage, setNoMessage] = useState(false)
   const [customStartDate, setCustomStartDate] = useState(null)
   const [customEndDate, setCustomEndDate] = useState(null)
+  const [missionTemplates, setMissionTemplates] = useState([])
 
   // 멤버 데이터
   const familyMembers = [
@@ -26,63 +28,13 @@ const Make = () => {
     { id: 6, name: '할아버지', avatar: '👴' },
   ]
 
-  // 미션 템플릿 데이터
-  const missionTemplates = [
-    {
-      id: 1,
-      title: '주식 시장 공부하기',
-      description: '주식 투자의 기본 개념을 학습합니다',
-      durationDays: 14,
-    },
-    {
-      id: 2,
-      title: '은행 업무 배우기',
-      description: '은행에서 할 수 있는 업무를 배웁니다',
-      durationDays: 7,
-    },
-    {
-      id: 3,
-      title: '투자 이해하기',
-      description: '다양한 투자 방법을 이해합니다',
-      durationDays: 21,
-    },
-    {
-      id: 4,
-      title: '재테크 배우기',
-      description: '효율적인 재테크 방법을 학습합니다',
-      durationDays: 14,
-    },
-    {
-      id: 5,
-      title: '경제 뉴스 읽기',
-      description: '경제 뉴스를 이해하고 분석합니다',
-      durationDays: 10,
-    },
-    {
-      id: 6,
-      title: '저축 습관 들이기',
-      description: '꾸준한 저축 습관을 만듭니다',
-      durationDays: 30,
-    },
-    {
-      id: 7,
-      title: '금융 용어 학습',
-      description: '기본 금융 용어를 익힙니다',
-      durationDays: 7,
-    },
-    {
-      id: 8,
-      title: '세금 이해하기',
-      description: '세금의 종류와 개념을 배웁니다',
-      durationDays: 10,
-    },
-  ]
-
   // 날짜 계산 함수 (주말 제외)
   const calculateDates = () => {
     if (!selectedMission) return null
 
-    const mission = missionTemplates.find((m) => m.id === selectedMission)
+    const mission = missionTemplates.find(
+      (m) => m.categoryId === selectedMission,
+    )
     if (!mission) return null
 
     // customStartDate와 customEndDate가 있으면 사용
@@ -106,7 +58,7 @@ const Make = () => {
       }
     }
 
-    let today = new Date(2026, 0, 3) // 테스트: 2026년 1월 30일
+    let today = new Date()
 
     // 시작일이 주말이면 다음 평일로 조정
     let startDate = new Date(today)
@@ -120,7 +72,7 @@ const Make = () => {
     let daysAdded = 1 // 시작일 포함
     let currentDate = new Date(startDate)
 
-    while (daysAdded < mission.durationDays) {
+    while (daysAdded < mission.missionDays) {
       currentDate.setDate(currentDate.getDate() + 1)
       const dayOfWeek = currentDate.getDay()
       // 0(일요일), 6(토요일)이 아니면 카운트
@@ -135,7 +87,7 @@ const Make = () => {
     return {
       startDate: startDate,
       endDate: endDate,
-      durationDays: mission.durationDays,
+      durationDays: mission.missionDays,
     }
   }
 
@@ -155,6 +107,16 @@ const Make = () => {
 
   useEffect(() => {
     setShowNavigation(false)
+
+    const fetchCategories = async () => {
+      try {
+        const response = await missionAPI.getCategories()
+        setMissionTemplates(response.data?.categories || [])
+      } catch (error) {
+        console.error('카테고리 조회 에러:', error)
+      }
+    }
+    fetchCategories()
   }, [])
 
   const handleBack = () => {
@@ -186,14 +148,16 @@ const Make = () => {
     if (dayOfWeek === 0 || dayOfWeek === 6) return
 
     // 현재일보다 이전 날짜 선택 불가
-    const today = new Date(2026, 0, 3) // 테스트: 2026년 1월 3일
+    const today = new Date()
     today.setHours(0, 0, 0, 0) // 시간 제거
     const selectedDate = new Date(date)
     selectedDate.setHours(0, 0, 0, 0) // 시간 제거
     if (selectedDate < today) return
 
     // 선택된 미션 정보 가져오기
-    const mission = missionTemplates.find((m) => m.id === selectedMission)
+    const mission = missionTemplates.find(
+      (m) => m.categoryId === selectedMission,
+    )
     if (!mission) return
 
     // 시작일 설정
@@ -203,7 +167,7 @@ const Make = () => {
     const endDate = new Date(date)
     let daysAdded = 1 // 시작일 포함
 
-    while (daysAdded < mission.durationDays) {
+    while (daysAdded < mission.missionDays) {
       endDate.setDate(endDate.getDate() + 1)
       const dayOfWeek = endDate.getDay()
       // 주말이 아니면 카운트
@@ -251,19 +215,19 @@ const Make = () => {
       <div className='grid grid-cols-2 gap-4'>
         {missionTemplates.map((mission) => (
           <button
-            key={mission.id}
-            onClick={() => handleMissionSelect(mission.id)}
+            key={mission.categoryId}
+            onClick={() => handleMissionSelect(mission.categoryId)}
             className={`py-[26px] px-[20px] rounded-3xl h-[160px] [box-shadow:0px_1px_5px_0px_rgba(0,0,0,0.15)] transition-all text-left flex flex-col ${
-              selectedMission === mission.id ?
+              selectedMission === mission.categoryId ?
                 'bg-[#B2D6FF]'
               : 'bg-[#E2EFFF]  hover:border-gray-300'
             }`}
           >
             <p className='text-[16px] leading-[150%] font-semibold mb-2'>
-              {mission.title}
+              {mission.categoryTitle}
             </p>
             <p className='text-[12px] leading-[100%] text-gray-600'>
-              {mission.description}
+              {mission.summary}
             </p>
           </button>
         ))}
@@ -324,7 +288,7 @@ const Make = () => {
     const weekDays = ['월', '화', '수', '목', '금']
 
     // 현재 날짜부터 4개월치 캘린더 생성
-    const today = new Date(2026, 0, 3)
+    const today = new Date()
     const monthsToRender = []
     for (let i = 0; i < 12; i++) {
       const monthDate = new Date(today.getFullYear(), today.getMonth() + i, 1)
@@ -604,7 +568,7 @@ const Make = () => {
   //------------------4페이지------------------
   const renderStep4 = () => {
     const selectedMissionData = missionTemplates.find(
-      (m) => m.id === selectedMission,
+      (m) => m.categoryId === selectedMission,
     )
     if (!selectedMissionData) return null
 
@@ -625,7 +589,7 @@ const Make = () => {
             {/* 제목과 보상 영역 */}
             <div className='bg-[#E2EFFF] rounded-2xl py-[34px] mb-[17.63px] flex flex-col justify-center items-center text-[#404040]'>
               <p className='text-[16px] font-medium mb-2'>
-                {selectedMissionData.title}
+                {selectedMissionData.categoryTitle}
               </p>
               <p className='text-[18px] font-semibold'>{reward}</p>
             </div>
