@@ -242,7 +242,7 @@ const MenuItemWithToggle = ({ label, enabled, onToggle }) => {
       <span className='text-[14px] text-[black] font-medium'>{label}</span>
       <button
         onClick={onToggle}
-        className={`relative inline-flex h-[14px] w-[34px] items-center rounded-full transition-colors shadow shadow-inner ${
+        className={`relative inline-flex h-[14px] w-[34px] items-center rounded-full transition-colors shadow-inner ${
           enabled ? 'bg-[#6FAEFF]' : 'bg-gray-300'
         }`}
         aria-label={`${label} ${enabled ? '켜기' : '끄기'}`}
