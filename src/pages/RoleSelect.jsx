@@ -49,7 +49,7 @@ const RoleSelect = () => {
         selectRole(selectedRole)
         existUserLogin(accessToken, refreshToken) // isAuthenticated: true 설정
         setIsNew(false)
-        navigate('/')
+        navigate('/on-boarding')
       } else {
         // 토큰이 없으면 로그인으로 리다이렉트
         navigate('/login', { replace: true })
