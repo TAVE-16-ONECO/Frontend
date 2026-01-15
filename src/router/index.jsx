@@ -23,6 +23,7 @@ import QuizLayout from '../layouts/QuizLayout'
 import KeyWordExplain from '@/pages/Quiz/KeyWordExplain'
 import Test from '@/pages/Quiz/Test'
 import Result from '@/pages/Quiz/Result'
+import OnBoarding from '../pages/OnBoarding'
 
 // url 작명 규칙은 케밥 케이스를 사용
 // 케밥 케이스: 단어와 단어를 하이픈(-)으로 구분
@@ -33,6 +34,7 @@ export const router = createBrowserRouter([
       { path: '/login', element: <Login /> },
       { path: '/login-bridge', element: <LoginBridge /> },
       { path: '/role-select', element: <RoleSelect /> },
+      { path: '/on-boarding', element: <OnBoarding /> },
       {
         element: <ProtectedRoute />,
         // 홈

@@ -9,25 +9,25 @@ const calculateRemainingDays = (endDate) => {
 }
 
 const calculateStudyDay = (dateList) => {
-  // dateList에서 IN_PROGRESS 상태의 인덱스를 찾아 반환 (1부터 시작)
-  const inProgressIndex = dateList.findIndex(
-    (item) => item.studyStatus === 'IN_PROGRESS',
-  )
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
 
-  if (inProgressIndex !== -1) {
-    return inProgressIndex + 1
-  }
+  // dateList에서 오늘 날짜보다 작거나 같은 날짜 중 가장 마지막 인덱스 찾기
+  let targetIndex = -1
+  for (let i = 0; i < dateList.length; i++) {
+    const itemDate = new Date(dateList[i].date)
+    itemDate.setHours(0, 0, 0, 0)
 
-  // IN_PROGRESS가 없으면 COMPLETED 중 가장 최신(마지막) 인덱스 찾기
-  let lastCompletedIndex = -1
-  for (let i = dateList.length - 1; i >= 0; i--) {
-    if (dateList[i].studyStatus === 'COMPLETED') {
-      lastCompletedIndex = i
+    if (itemDate.getTime() <= today.getTime()) {
+      targetIndex = i
+    } else {
+      // 날짜가 오늘보다 크면 더 이상 찾을 필요 없음
       break
     }
   }
 
-  return lastCompletedIndex !== -1 ? lastCompletedIndex + 1 : 1
+  // 인덱스 + 1 (1부터 시작), 없으면 1
+  return targetIndex !== -1 ? targetIndex + 1 : 1
 }
 
 const convertDateListToDailyRecords = (dateList) => {
@@ -50,7 +50,7 @@ const convertDateListToDailyRecords = (dateList) => {
 export const transformMissionData = (apiData) => {
   return {
     missionTheme: apiData.category.categoryTitle,
-    progress: apiData.progress || 0, // 백엔드에서 추가될 때까지 0
+    progress: apiData.progressPercentage,
     keyword: apiData.dailyContent.contentKeyword,
     remainingDays: calculateRemainingDays(apiData.endDate),
     studyDay: calculateStudyDay(apiData.dateList),

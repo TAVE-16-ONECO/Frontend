@@ -10,14 +10,15 @@ const RoleSelect = () => {
   const [selectedRole, setSelectedRole] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
-  const { selectRole, existUserLogin } = useAuthStore()
+  const selectRole = useAuthStore((state) => state.selectRole)
+  const existUserLogin = useAuthStore((state) => state.existUserLogin)
   const setShowNavigation = useUIOptionStore((state) => state.setShowNavigation)
   const setIsNew = useAuthStore((state) => state.setIsNew)
   const onboardingToken = useAuthStore((state) => state.onboardingToken)
 
   useEffect(() => {
     setShowNavigation(false)
-  }, [])
+  }, [setShowNavigation])
 
   const handleBack = () => {
     navigate('/login')
@@ -49,7 +50,7 @@ const RoleSelect = () => {
         selectRole(selectedRole)
         existUserLogin(accessToken, refreshToken) // isAuthenticated: true 설정
         setIsNew(false)
-        navigate('/')
+        navigate('/on-boarding')
       } else {
         // 토큰이 없으면 로그인으로 리다이렉트
         navigate('/login', { replace: true })

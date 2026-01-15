@@ -13,32 +13,43 @@ const MissionCard = ({ mission, index }) => {
   // 원본 API 데이터를 컴포넌트에서 사용할 형식으로 변환
   const missionData = useMemo(() => transformMissionData(mission), [mission])
 
-  // IN_PROGRESS 또는 COMPLETED 중 가장 최신 날짜 찾기
+  // 오늘 날짜에서 가장 가까운 평일의 키워드 찾기
   const getInProgressDate = () => {
-    // 먼저 IN_PROGRESS 찾기
-    const inProgressItem = mission.dateList.find(
-      (item) => item.studyStatus === 'IN_PROGRESS',
-    )
-
-    if (inProgressItem) {
-      const date = new Date(inProgressItem.date)
-      const month = date.getMonth() + 1
-      const day = date.getDate()
-      return `${month}월 ${day}일 키워드`
+    if (!mission.dateList || mission.dateList.length === 0) {
+      return '오늘의 키워드' // 기본값
     }
 
-    // IN_PROGRESS가 없으면 COMPLETED 중 가장 최신 날짜 찾기
-    const completedItems = mission.dateList.filter(
-      (item) => item.studyStatus === 'COMPLETED',
-    )
+    // 오늘 날짜를 가져와서 시간 정보 제거 (자정으로 설정)
+    let targetDate = new Date()
+    targetDate.setHours(0, 0, 0, 0)
+    const dayOfWeek = targetDate.getDay()
 
-    if (completedItems.length > 0) {
-      // 날짜 기준으로 내림차순 정렬하여 가장 최신 항목 찾기
-      const latestCompleted = completedItems.sort(
-        (a, b) => new Date(b.date) - new Date(a.date),
-      )[0]
+    // 주말인 경우 가장 가까운 금요일로 조정
+    if (dayOfWeek === 0) {
+      // 일요일 -> 2일 전 금요일
+      targetDate.setDate(targetDate.getDate() - 2)
+    } else if (dayOfWeek === 6) {
+      // 토요일 -> 1일 전 금요일
+      targetDate.setDate(targetDate.getDate() - 1)
+    }
 
-      const date = new Date(latestCompleted.date)
+    // dateList에서 targetDate와 가장 가까운 날짜 찾기
+    let closestItem = null
+    let minDiff = Infinity
+
+    mission.dateList.forEach((item) => {
+      const itemDate = new Date(item.date)
+      itemDate.setHours(0, 0, 0, 0) // 시간 정보 제거
+      const diff = Math.abs(itemDate - targetDate)
+
+      if (diff < minDiff) {
+        minDiff = diff
+        closestItem = item
+      }
+    })
+
+    if (closestItem) {
+      const date = new Date(closestItem.date)
       const month = date.getMonth() + 1
       const day = date.getDate()
       return `${month}월 ${day}일 키워드`
@@ -73,7 +84,7 @@ const MissionCard = ({ mission, index }) => {
               시작한 지 {missionData.studyDay}
               일차
             </p>
-            <p className='text-[14px] font-medium'>미션 제목</p>
+            <p className='text-[14px] font-medium'>{mission.rewardTitle}</p>
             <div className='flex items-center gap-2'>
               <div className='flex-1 relative pt-[10px]'>
                 {/* 80% 지점 마커 */}
@@ -100,7 +111,7 @@ const MissionCard = ({ mission, index }) => {
               </div>
             </div>
             <span className='text-[10px] text-[#bababa] min-w-[35px] text-right'>
-              전체 정답률 {missionData.progress}%
+              전체 진행률 {missionData.progress}%
             </span>
           </div>
         </div>
