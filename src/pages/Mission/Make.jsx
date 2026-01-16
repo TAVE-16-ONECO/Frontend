@@ -4,6 +4,7 @@ import { useUIOptionStore } from '@/store/uiOptionStore'
 import { useAuthStore } from '@/store/authStore'
 import { BackArrowIcon } from '@/components/icons/BackArrowIcon'
 import { missionAPI } from '@/api/mission'
+import { familyAPI } from '@/api/family'
 
 const Make = () => {
   const navigate = useNavigate()
@@ -19,16 +20,7 @@ const Make = () => {
   const [customStartDate, setCustomStartDate] = useState(null)
   const [customEndDate, setCustomEndDate] = useState(null)
   const [missionTemplates, setMissionTemplates] = useState([])
-
-  // 멤버 데이터
-  const familyMembers = [
-    { id: 1, name: '엄마', avatar: '👩' },
-    { id: 2, name: '아빠', avatar: '👨' },
-    { id: 3, name: '언니', avatar: '👧' },
-    { id: 4, name: '형', avatar: '👦' },
-    { id: 5, name: '할머니', avatar: '👵' },
-    { id: 6, name: '할아버지', avatar: '👴' },
-  ]
+  const [familyMembers, setFamilyMembers] = useState([])
 
   // 날짜 계산 함수 (주말 제외)
   const calculateDates = () => {
@@ -118,7 +110,18 @@ const Make = () => {
         console.error('카테고리 조회 에러:', error)
       }
     }
+
+    const fetchFamilyMembers = async () => {
+      try {
+        const response = await familyAPI.getMembers()
+        setFamilyMembers(response.data?.members || [])
+      } catch (error) {
+        console.error('가족 멤버 조회 에러:', error)
+      }
+    }
+
     fetchCategories()
+    fetchFamilyMembers()
   }, [])
 
   const handleBack = () => {
@@ -210,17 +213,18 @@ const Make = () => {
   const renderStep1 = () => (
     <div className='flex-1 px-6 py-6 pb-24'>
       <h2 className='text-[22px] text-[#404040] leading-[130%] font-bold mb-[27px]'>
-        {role === 'parent' ? (
+        {role === 'parent' ?
           <>
-            내 아이의 학습목표를 설정하고<br />
+            내 아이의 학습목표를 설정하고
+            <br />
             보상을 제안해보세요.
           </>
-        ) : (
-          <>
-            너가 원하는 학습 목표를 설정하고<br />
+        : <>
+            너가 원하는 학습 목표를 설정하고
+            <br />
             내게 보상을 제안해보렴.
           </>
-        )}
+        }
       </h2>
       {renderProgressBar()}
 
@@ -513,8 +517,16 @@ const Make = () => {
     return (
       <div className='flex-1 px-6 py-6 pb-24'>
         <h2 className='text-[22px] leading-[130%] text-[#2c2c2c] font-bold mb-4'>
-          {dates.durationDays}일치 목표를 골랐구나.<br></br>미션 완료일은{' '}
-          {formatDatewithoutyear(dates.endDate)}이란다.{' '}
+          {role === 'parent' ?
+            <>
+              {dates.durationDays}일치 목표를 골랐어요.<br></br>미션 완료일은{' '}
+              {formatDatewithoutyear(dates.endDate)}이에요.{' '}
+            </>
+          : <>
+              {dates.durationDays}일치 목표를 골랐구나.<br></br>미션 완료일은{' '}
+              {formatDatewithoutyear(dates.endDate)}이란다.{' '}
+            </>
+          }
         </h2>
 
         {renderProgressBar()}
@@ -629,16 +641,20 @@ const Make = () => {
           <div className='grid grid-cols-3 gap-4'>
             {familyMembers.map((member) => (
               <button
-                key={member.id}
-                onClick={() => handleMemberToggle(member.id)}
+                key={member.memberId}
+                onClick={() => handleMemberToggle(member.memberId)}
                 className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${
-                  selectedMembers.includes(member.id) ?
+                  selectedMembers.includes(member.memberId) ?
                     'border-[#6FAEFF] bg-[#E2EFFF]'
                   : 'border-gray-200 bg-white hover:border-gray-300'
                 }`}
               >
-                <div className='text-3xl'>{member.avatar}</div>
-                <p className='text-sm font-medium'>{member.name}</p>
+                <img
+                  src={member.profileImageUrl}
+                  alt={member.nickname}
+                  className='w-12 h-12 rounded-full object-cover'
+                />
+                <p className='text-sm font-medium'>{member.nickname}</p>
               </button>
             ))}
           </div>
@@ -650,8 +666,8 @@ const Make = () => {
 
   const renderStep5 = () => {
     const selectedMemberNames = familyMembers
-      .filter((member) => selectedMembers.includes(member.id))
-      .map((member) => member.name)
+      .filter((member) => selectedMembers.includes(member.memberId))
+      .map((member) => member.nickname)
       .join(', ')
 
     return (
@@ -667,15 +683,19 @@ const Make = () => {
           {/* 선택된 멤버 아바타 */}
           <div className='flex gap-4 mb-10 mt-[33px] '>
             {familyMembers
-              .filter((member) => selectedMembers.includes(member.id))
+              .filter((member) => selectedMembers.includes(member.memberId))
               .map((member) => (
                 <div
-                  key={member.id}
+                  key={member.memberId}
                   className='flex flex-col items-center'
                 >
-                  <div className='text-3xl mb-1'>{member.avatar}</div>
+                  <img
+                    src={member.profileImageUrl}
+                    alt={member.nickname}
+                    className='w-12 h-12 rounded-full object-cover mb-1'
+                  />
                   <p className='text-sm font-medium text-gray-700'>
-                    {member.name}
+                    {member.nickname}
                   </p>
                 </div>
               ))}
