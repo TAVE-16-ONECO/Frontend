@@ -185,7 +185,7 @@ const Make = () => {
   }
 
   const handleNext = () => {
-    if (currentStep < 5) {
+    if (currentStep < 6) {
       setCurrentStep((prev) => prev + 1)
       window.scrollTo(0, 0)
     }
@@ -682,7 +682,14 @@ const Make = () => {
     return (
       <div className='flex-1 px-6 py-6 pb-24'>
         <h2 className='text-xl font-bold mb-4'>
-          하고 싶은 말과 함께<br></br>미션 제안서를 보내주렴.
+          {role === 'parent' ?
+            <>
+              하고 싶은 말과 함께 <br></br>미션 제안서를 보내보세요.
+            </>
+          : <>
+              하고 싶은 말과 함께<br></br>미션 제안서를 보내주렴.
+            </>
+          }
         </h2>
 
         {renderProgressBar()}
@@ -749,6 +756,86 @@ const Make = () => {
       </div>
     )
   }
+
+  //--------------------------------6페이지 (최종 확인)-----------------------------------------------
+  const renderStep6 = () => {
+    const selectedMemberNicknames = familyMembers
+      .filter((member) => selectedMembers.includes(member.memberId))
+      .map((member) => member.nickname)
+      .join(', ')
+
+    const selectedMissionData = missionTemplates.find(
+      (m) => m.categoryId === selectedMission,
+    )
+    const dates = calculateDates()
+
+    return (
+      <div className='flex-1 px-6 py-6 pb-24'>
+        <h2 className='text-[22px] leading-[130%] text-[#2c2c2c] font-bold mb-6'>
+          {selectedMemberNicknames}님께
+          <br />
+          미션제안서를 보낼게요.
+        </h2>
+
+        {/* 미션 카드 */}
+        <div className='bg-white rounded-3xl [box-shadow:0px_1px_5px_0px_rgba(0,0,0,0.15)] w-full pt-[18px] px-[24px] pb-8'>
+          {/* 선택된 멤버 아바타 */}
+          <div className='flex justify-center gap-4 mb-6'>
+            {familyMembers
+              .filter((member) => selectedMembers.includes(member.memberId))
+              .map((member) => (
+                <div
+                  key={member.memberId}
+                  className='flex flex-col items-center'
+                >
+                  <img
+                    src={member.profileImageUrl}
+                    alt={member.nickname}
+                    className='w-12 h-12 rounded-full object-cover mb-1'
+                  />
+                  <p className='text-sm font-medium text-gray-700'>
+                    {member.nickname}
+                  </p>
+                </div>
+              ))}
+          </div>
+          {/* 메시지 */}
+          {message && (
+            <p className='text-xs text-gray-400 text-left mb-[45px]'>
+              {message}
+            </p>
+          )}
+
+          {/* 제목과 보상 영역 */}
+          <div className='bg-[#E2EFFF] rounded-2xl py-[34px] mb-[17.63px] flex flex-col justify-center items-center text-[#404040]'>
+            <p className='text-[16px] font-medium mb-2'>
+              {selectedMissionData?.categoryTitle}
+            </p>
+            <p className='text-[18px] font-semibold'>{reward}</p>
+          </div>
+
+          {/* 구분선 */}
+          <div className='border-b-1 border-[#000000] opacity-50 mb-3'></div>
+
+          {/* 날짜 정보 */}
+          <div className='flex-col text-[16px] mt-[24px] text-[#404040]'>
+            <div className='flex justify-between mb-2'>
+              <p className='text-gray-600'>시작일</p>
+              <p className='font-medium'>
+                {dates && formatDate(dates.startDate)}
+              </p>
+            </div>
+            <div className='flex justify-between'>
+              <p className='text-gray-600'>완료일</p>
+              <p className='font-medium'>
+                {dates && formatDate(dates.endDate)}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
   //--------------------------
 
   return (
@@ -781,6 +868,7 @@ const Make = () => {
       {currentStep === 3 && renderStep3()}
       {currentStep === 4 && renderStep4()}
       {currentStep === 5 && renderStep5()}
+      {currentStep === 6 && renderStep6()}
 
       {/* 다음 버튼 (플로팅) 로직구현필요 */}
       <button
@@ -802,7 +890,7 @@ const Make = () => {
           : 'bg-[#6FAEFF] hover:bg-[#5188FB] text-white'
         }`}
       >
-        {currentStep === 5 ? '미션 만들기' : '다음'}
+        {currentStep === 6 ? '미션 만들기' : '다음'}
       </button>
     </div>
   )
