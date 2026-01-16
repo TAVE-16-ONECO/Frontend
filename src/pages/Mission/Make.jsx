@@ -562,7 +562,14 @@ const Make = () => {
   const renderStep3 = () => (
     <div className='flex-1 px-6 py-6 pb-24'>
       <h2 className='text-[22px] leading-[130%] text-[#2c2c2c] font-bold mb-4'>
-        보상은<br></br>무엇으로 정할거니?
+        {role === 'parent' ?
+          <>
+            보상은<br></br>무엇으로 정할까요?
+          </>
+        : <>
+            보상은<br></br>무엇으로 정할거니?
+          </>
+        }
       </h2>
 
       {renderProgressBar()}
@@ -602,7 +609,9 @@ const Make = () => {
     return (
       <div className='flex-1 px-6 py-6 pb-24'>
         <h2 className='text-[22px] leading-[130%] text-[#2c2c2c] font-bold mb-[56px]'>
-          이 미션을 누구에게 보낼거니?
+          {role === 'parent' ?
+            <>이 미션을 누구에게 보낼까요?</>
+          : <>이 미션을 누구에게 보낼거니?</>}
         </h2>
 
         {renderProgressBar()}
