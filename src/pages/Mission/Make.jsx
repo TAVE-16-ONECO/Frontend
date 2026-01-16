@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUIOptionStore } from '@/store/uiOptionStore'
+import { useAuthStore } from '@/store/authStore'
 import { BackArrowIcon } from '@/components/icons/BackArrowIcon'
 import { missionAPI } from '@/api/mission'
 
 const Make = () => {
   const navigate = useNavigate()
   const setShowNavigation = useUIOptionStore((state) => state.setShowNavigation)
+  const role = useAuthStore((state) => state.role)
 
   const [currentStep, setCurrentStep] = useState(1)
   const [selectedMission, setSelectedMission] = useState(null)
@@ -208,7 +210,17 @@ const Make = () => {
   const renderStep1 = () => (
     <div className='flex-1 px-6 py-6 pb-24'>
       <h2 className='text-[22px] text-[#404040] leading-[130%] font-bold mb-[27px]'>
-        너가 원하는 학습 목표를 설정하고<br></br> 내게 보상을 제안해보렴.
+        {role === 'parent' ? (
+          <>
+            내 아이의 학습목표를 설정하고<br />
+            보상을 제안해보세요.
+          </>
+        ) : (
+          <>
+            너가 원하는 학습 목표를 설정하고<br />
+            내게 보상을 제안해보렴.
+          </>
+        )}
       </h2>
       {renderProgressBar()}
 
