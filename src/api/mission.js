@@ -6,9 +6,9 @@ export const missionAPI = {
     const response = await apiClient.get('/api/categories')
     return response.data
   },
-  //미션 생성
+  //미션 생성 (POST /api/missions)
   createMission: async (missionData) => {
-    const response = await apiClient.post('/api/categories', missionData)
+    const response = await apiClient.post('/api/missions', missionData)
     return response.data
   },
   //미션 승인/거절
