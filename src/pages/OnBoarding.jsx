@@ -3,6 +3,8 @@ import { useAuthStore } from '../store/authStore'
 import { useUIOptionStore } from '../store/uiOptionStore'
 import clsx from 'clsx'
 import { useNavigate } from 'react-router-dom'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import 'swiper/css'
 
 const onBoardingData = {
   child: [
@@ -52,12 +54,13 @@ const OnBoarding = () => {
 
   const role = useAuthStore((state) => state.role)
   const [pageIndex, setPageIndex] = useState(0) // 온보딩 설명 인덱스
+  const [swiperInstance, setSwiperInstance] = useState(null)
 
   const setShowNavigation = useUIOptionStore((state) => state.setShowNavigation)
 
   useEffect(() => {
     setShowNavigation(false)
-  }, [])
+  }, [setShowNavigation])
 
   const handleNextClick = () => {
     // 마지막 설명 페이지에서 다음 클릭 시 홈으로 이동
@@ -65,7 +68,10 @@ const OnBoarding = () => {
       navigate('/')
       return
     }
-    setPageIndex((prev) => prev + 1)
+    // Swiper 인스턴스를 통해 다음 슬라이드로 이동
+    if (swiperInstance) {
+      swiperInstance.slideNext()
+    }
   }
 
   // 건너뛰기 버튼 클릭시 홈으로 바로 이동
@@ -73,8 +79,15 @@ const OnBoarding = () => {
     navigate('/')
   }
 
+  const handleIndexPointClick = (movePageIndexTo) => {
+    if (swiperInstance) {
+      swiperInstance.slideTo(movePageIndexTo, 500)
+      setPageIndex(movePageIndexTo)
+    }
+  }
+
   return (
-    <>
+    <div className='flex flex-col'>
       {/* 건너뛰기 버튼 */}
       <div className='flex justify-end'>
         <button
@@ -85,56 +98,73 @@ const OnBoarding = () => {
         </button>
       </div>
 
-      {/* 메인 이미지 */}
-      <div className='mt-[120px] flex justify-center mr-3'>
-        <img
-          className='h-[140px]'
-          src={onBoardingData[role][pageIndex].image}
-          alt='메인 설명 이미지'
-        />
-      </div>
-
-      {/* 설명 타이틀 */}
-      <div className='text-center font-bold text-[22px] text-[#2c2c2c] leading-[130%] mt-[60px]'>
-        {onBoardingData[role][pageIndex].title}
-      </div>
-
-      {/* 설명 내용 */}
-      <div className='relative'>
-        <div className='w-full absolute top-[45px] text-[16px] font-medium leading-[150%] text-[#717171] px-[27px] whitespace-pre-line text-center'>
-          {onBoardingData[role][pageIndex].description}
-        </div>
-      </div>
-
-      {/* 인덱스 바 */}
-      <div className='mt-[183px] flex justify-center gap-[18px]'>
-        {Array(3)
-          .fill(0)
-          .map((_, idx) => {
+      {/* Swiper 컨테이너 */}
+      <div className='flex flex-col'>
+        <Swiper
+          onSwiper={setSwiperInstance}
+          onSlideChange={(swiper) => setPageIndex(swiper.activeIndex)}
+          className='w-full'
+          allowTouchMove={true}
+        >
+          {onBoardingData[role].map((data, idx) => {
             return (
-              <div
-                key={idx}
-                className={clsx(
-                  'h-[10px] rounded-2xl transition-all duration-300 ease-in-out',
-                  pageIndex === idx ?
-                    'w-[20px] bg-[#5188fb]'
-                  : ' w-[10px] bg-[#d9d9d9]',
-                )}
-              ></div>
+              <SwiperSlide key={idx}>
+                <div className='flex flex-col'>
+                  {/* 메인 이미지 */}
+                  <div className='mt-[90px] flex justify-center mr-3'>
+                    <img
+                      className='h-[140px]'
+                      src={data.image}
+                      alt='메인 설명 이미지'
+                    />
+                  </div>
+
+                  {/* 설명 타이틀 */}
+                  <div className='text-center font-bold text-[22px] text-[#2c2c2c] leading-[130%] mt-[50px]'>
+                    {data.title}
+                  </div>
+
+                  {/* 설명 내용 */}
+                  <div className='mt-[45px] text-[15.5px] font-medium leading-[150%] text-[#717171] px-[27px] whitespace-pre-line text-center'>
+                    {data.description}
+                  </div>
+                </div>
+              </SwiperSlide>
             )
           })}
-      </div>
+        </Swiper>
 
-      {/* 다음 버튼 */}
-      <div className='w-full px-[20px] mt-[108px]'>
-        <button
-          className='w-full h-[56px] bg-[#6FAEFF] text-white rounded-2xl text-center hover:bg-[#378dfd]'
-          onClick={handleNextClick}
-        >
-          다음
-        </button>
+        {/* 인덱스 바 */}
+        <div className='mt-[60px] flex justify-center gap-[18px]'>
+          {Array(3)
+            .fill(0)
+            .map((_, idx) => {
+              return (
+                <div
+                  key={idx}
+                  className={clsx(
+                    'h-[10px] rounded-2xl transition-all duration-500 ease-in-out',
+                    pageIndex === idx ?
+                      'w-[20px] bg-[#5188fb]'
+                    : ' w-[10px] bg-[#d9d9d9]',
+                  )}
+                  onClick={() => handleIndexPointClick(idx)}
+                ></div>
+              )
+            })}
+        </div>
+
+        {/* 다음 버튼 */}
+        <div className='w-full px-[20px] mt-[60px] pb-[40px]'>
+          <button
+            className='w-full h-[56px] bg-[#6FAEFF] text-white rounded-2xl text-center hover:bg-[#378dfd]'
+            onClick={handleNextClick}
+          >
+            다음
+          </button>
+        </div>
       </div>
-    </>
+    </div>
   )
 }
 
