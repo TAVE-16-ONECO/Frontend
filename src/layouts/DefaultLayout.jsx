@@ -11,7 +11,7 @@ export const DefaultLayout = () => {
     <div className='w-full flex justify-center bg-[#f1f1f1] font-body'>
       <div
         className={clsx(
-          'w-full min-w-[360px] max-w-[600px] min-h-screen flex flex-col bg-white pt-[40px] pb-[50px]',
+          'w-full min-w-[360px] max-w-[600px] min-h-screen flex flex-col bg-white pt-[30px] pb-[50px]',
           showNavigationBar && 'pb-[86px]',
         )}
       >
