@@ -47,20 +47,20 @@ const Login = () => {
       </div>
 
       {/* 메인 텍스트 */}
-      <div className='text-center mt-[43px]'>
+      <div className='text-center mt-[40px]'>
         <p className='font-semibold text-[22px] leading-[130%]'>
           얘야, 경제는 같이 배우는 거란다
         </p>
       </div>
 
       {/* 서브 텍스트 */}
-      <div className='text-center mt-[74px] text-[15px] leading-[150%] text-[#595959]'>
+      <div className='text-center mt-[30px] text-[15px] leading-[150%] text-[#595959]'>
         <p>부모와 함께 약속을 만들고, 아이는 경제를 배우며,</p>
         <p>약속을 지키면 보상으로 이어지는 경제 학습 앱이에요</p>
       </div>
 
       {/* 카카오 로그인 버튼 */}
-      <div className='mt-[200px]'>
+      <div className='mt-[40px]'>
         <button
           onClick={handleKakaoLogin}
           className='w-[282px] h-[40px] bg-[#FDEE4B] hover:bg-[#E6CF00] transition-colors rounded-xl flex items-center justify-center gap-2 shadow-sm'
