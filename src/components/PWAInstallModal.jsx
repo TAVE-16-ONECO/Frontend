@@ -44,7 +44,7 @@ const PWAInstallModal = ({
 
         {/* 안내 텍스트 */}
         <p className='text-center text-[18px] text-[#000000] font-medium leading-[150%] mb-4'>
-          홈 화면에 원코 앱을 추가해서
+          홈 화면에 원코 아이콘을 추가하고
           <br />
           원코를 더 빠르고 편하게 이용해보세요.
         </p>
@@ -81,7 +81,7 @@ const PWAInstallModal = ({
             onClick={onInstall}
             className='w-full py-2 bg-[#6FAEFF] text-white rounded-2xl font-normal text-[16px] hover:bg-[#5188FB] transition-colors mb-4'
           >
-            간편하게 원코 앱 추가하기
+            홈화면에 바로가기 추가하기
           </button>
         )}
 
