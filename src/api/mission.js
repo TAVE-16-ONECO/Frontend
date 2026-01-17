@@ -12,9 +12,9 @@ export const missionAPI = {
     return response.data
   },
   //미션 승인/거절
-  respondToMission: async (missionId, isApproved) => {
-    const response = await apiClient.post(`/missions/${missionId}/approval`, {
-      isApproved,
+  respondToMission: async (missionId, accept) => {
+    const response = await apiClient.post(`/api/missions/${missionId}/approval`, {
+      accept,
     })
     return response.data
   },
