@@ -68,9 +68,10 @@ const getStatusLabel = (status) => {
   return statusMap[status] || status
 }
 
-const MissionCard = ({ mission, onClick }) => {
+const MissionCard = ({ mission, onClick, onAccept }) => {
   const statusLabel = getStatusLabel(mission.missionStatus)
   const statusStyle = getStatusStyle(statusLabel)
+  const isApprovalRequest = mission.missionStatus === 'APPROVAL_REQUEST'
 
   // 미션 종료까지 남은 일수 계산 (진행 중 상태일 때만)
   const getDaysRemaining = () => {
@@ -83,6 +84,11 @@ const MissionCard = ({ mission, onClick }) => {
   }
 
   const daysRemaining = getDaysRemaining()
+
+  const handleAcceptClick = (e) => {
+    e.stopPropagation()
+    onAccept?.(mission.missionId)
+  }
 
   return (
     <div
@@ -120,6 +126,18 @@ const MissionCard = ({ mission, onClick }) => {
           <span className='text-sm font-semibold text-black-600'>
             {mission.rewardTitle}
           </span>
+        </div>
+      )}
+
+      {/* 승인 요청 상태일 때 수락 버튼 */}
+      {isApprovalRequest && onAccept && (
+        <div className='mt-3 flex justify-end'>
+          <button
+            onClick={handleAcceptClick}
+            className='bg-[#6FAEFF] hover:bg-[#5188FB] text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors'
+          >
+            수락하기
+          </button>
         </div>
       )}
     </div>

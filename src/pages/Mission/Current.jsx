@@ -70,6 +70,18 @@ const Current = () => {
     navigate(`/mission/details/${missionId}`, { state: { activeTab } })
   }
 
+  const handleAcceptMission = async (missionId) => {
+    try {
+      await missionAPI.respondToMission(missionId, true)
+      // 미션 목록 새로고침
+      const ongoingData = await missionAPI.getOngoingMissions()
+      setOngoingMissions(Array.isArray(ongoingData) ? ongoingData : [])
+    } catch (err) {
+      console.error('미션 수락 실패:', err)
+      alert('미션 수락에 실패했습니다.')
+    }
+  }
+
   if (loading) {
     return (
       <div className='flex justify-center items-center h-screen'>
@@ -152,6 +164,7 @@ const Current = () => {
                     key={mission.id}
                     mission={mission}
                     onClick={handleMissionClick}
+                    onAccept={handleAcceptMission}
                   />
                 ))
               : <p className='text-gray-400 text-center py-8'>
