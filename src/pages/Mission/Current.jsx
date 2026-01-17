@@ -33,8 +33,8 @@ const Current = () => {
         setError(null)
 
         const [ongoingData, finishedData, memberInfo] = await Promise.all([
-          missionAPI.getOngoingMissions(5, 5),
-          missionAPI.getFinishedMissions(5, 5),
+          missionAPI.getOngoingMissions(),
+          missionAPI.getFinishedMissions(),
           membersAPI.getMemberInfo(),
         ])
 

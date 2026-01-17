@@ -3,6 +3,7 @@ import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import { useUIOptionStore } from '@/store/uiOptionStore'
 import { BackArrowIcon } from '../../components/icons/BackArrowIcon'
 import { Home } from '../../components/icons/Home'
+import { missionAPI } from '../../api/mission'
 const Details = () => {
   const navigate = useNavigate()
   const { id } = useParams()
@@ -162,6 +163,17 @@ const Details = () => {
     navigate('/')
   }
 
+  const handleAcceptMission = async () => {
+    try {
+      await missionAPI.respondToMission(id, true)
+      // 수락 후 이전 페이지로 이동
+      navigate(-1)
+    } catch (err) {
+      console.error('미션 수락 실패:', err)
+      alert('미션 수락에 실패했습니다.')
+    }
+  }
+
   // 미션 상태에 따른 메시지 반환
   const getStatusMessage = (status) => {
     const messages = {
@@ -298,6 +310,16 @@ const Details = () => {
           }}
         >
           + 미션만들기
+        </button>
+      )}
+
+      {/* 승인 요청 미션일 때 수락하기 플로팅 버튼 */}
+      {mission.status === '승인 요청' && (
+        <button
+          className='fixed bottom-8 left-1/2 -translate-x-1/2 bg-[#6FAEFF] hover:bg-[#5188FB] text-white px-8 py-4 rounded-2xl shadow-lg transition-colors font-bold'
+          onClick={handleAcceptMission}
+        >
+          수락하기
         </button>
       )}
     </div>

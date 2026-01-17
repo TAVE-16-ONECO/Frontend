@@ -1,11 +1,15 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUIOptionStore } from '@/store/uiOptionStore'
+import { useAuthStore } from '@/store/authStore'
 import { BackArrowIcon } from '@/components/icons/BackArrowIcon'
+import { missionAPI } from '@/api/mission'
+import { familyAPI } from '@/api/family'
 
 const Make = () => {
   const navigate = useNavigate()
   const setShowNavigation = useUIOptionStore((state) => state.setShowNavigation)
+  const role = useAuthStore((state) => state.role)
 
   const [currentStep, setCurrentStep] = useState(1)
   const [selectedMission, setSelectedMission] = useState(null)
@@ -15,74 +19,16 @@ const Make = () => {
   const [noMessage, setNoMessage] = useState(false)
   const [customStartDate, setCustomStartDate] = useState(null)
   const [customEndDate, setCustomEndDate] = useState(null)
-
-  // 멤버 데이터
-  const familyMembers = [
-    { id: 1, name: '엄마', avatar: '👩' },
-    { id: 2, name: '아빠', avatar: '👨' },
-    { id: 3, name: '언니', avatar: '👧' },
-    { id: 4, name: '형', avatar: '👦' },
-    { id: 5, name: '할머니', avatar: '👵' },
-    { id: 6, name: '할아버지', avatar: '👴' },
-  ]
-
-  // 미션 템플릿 데이터
-  const missionTemplates = [
-    {
-      id: 1,
-      title: '주식 시장 공부하기',
-      description: '주식 투자의 기본 개념을 학습합니다',
-      durationDays: 14,
-    },
-    {
-      id: 2,
-      title: '은행 업무 배우기',
-      description: '은행에서 할 수 있는 업무를 배웁니다',
-      durationDays: 7,
-    },
-    {
-      id: 3,
-      title: '투자 이해하기',
-      description: '다양한 투자 방법을 이해합니다',
-      durationDays: 21,
-    },
-    {
-      id: 4,
-      title: '재테크 배우기',
-      description: '효율적인 재테크 방법을 학습합니다',
-      durationDays: 14,
-    },
-    {
-      id: 5,
-      title: '경제 뉴스 읽기',
-      description: '경제 뉴스를 이해하고 분석합니다',
-      durationDays: 10,
-    },
-    {
-      id: 6,
-      title: '저축 습관 들이기',
-      description: '꾸준한 저축 습관을 만듭니다',
-      durationDays: 30,
-    },
-    {
-      id: 7,
-      title: '금융 용어 학습',
-      description: '기본 금융 용어를 익힙니다',
-      durationDays: 7,
-    },
-    {
-      id: 8,
-      title: '세금 이해하기',
-      description: '세금의 종류와 개념을 배웁니다',
-      durationDays: 10,
-    },
-  ]
+  const [missionTemplates, setMissionTemplates] = useState([])
+  const [familyMembers, setFamilyMembers] = useState([])
 
   // 날짜 계산 함수 (주말 제외)
   const calculateDates = () => {
     if (!selectedMission) return null
 
-    const mission = missionTemplates.find((m) => m.id === selectedMission)
+    const mission = missionTemplates.find(
+      (m) => m.categoryId === selectedMission,
+    )
     if (!mission) return null
 
     // customStartDate와 customEndDate가 있으면 사용
@@ -106,7 +52,7 @@ const Make = () => {
       }
     }
 
-    let today = new Date(2026, 0, 3) // 테스트: 2026년 1월 30일
+    let today = new Date()
 
     // 시작일이 주말이면 다음 평일로 조정
     let startDate = new Date(today)
@@ -120,7 +66,7 @@ const Make = () => {
     let daysAdded = 1 // 시작일 포함
     let currentDate = new Date(startDate)
 
-    while (daysAdded < mission.durationDays) {
+    while (daysAdded < mission.missionDays) {
       currentDate.setDate(currentDate.getDate() + 1)
       const dayOfWeek = currentDate.getDay()
       // 0(일요일), 6(토요일)이 아니면 카운트
@@ -135,7 +81,7 @@ const Make = () => {
     return {
       startDate: startDate,
       endDate: endDate,
-      durationDays: mission.durationDays,
+      durationDays: mission.missionDays,
     }
   }
 
@@ -153,8 +99,75 @@ const Make = () => {
     return `${month}.${day}`
   }
 
+  // API용 날짜 포맷팅 함수 (YYYY-MM-DD)
+  const formatDateForAPI = (date) => {
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
+
+  // 미션 생성 핸들러
+  const handleCreateMission = async () => {
+    console.log('=== 미션 생성 시작 ===')
+    const dates = calculateDates()
+    console.log('계산된 날짜:', dates)
+    console.log('선택된 멤버:', selectedMembers)
+
+    if (!dates || selectedMembers.length === 0) {
+      console.log('날짜 또는 멤버 없음 - 종료')
+      return
+    }
+
+    try {
+      // 선택된 각 멤버에게 미션 생성
+      for (const memberId of selectedMembers) {
+        const missionData = {
+          recipientId: memberId,
+          categoryId: selectedMission,
+          startDate: formatDateForAPI(dates.startDate),
+          endDate: formatDateForAPI(dates.endDate),
+          title: reward,
+          message: noMessage ? '' : message,
+        }
+
+        console.log('API 요청 데이터:', missionData)
+        const response = await missionAPI.createMission(missionData)
+        console.log('API 응답:', response)
+      }
+
+      console.log('=== 미션 생성 완료 ===')
+      // 성공 시 미션 목록 페이지로 이동
+      navigate('/mission/current')
+    } catch (error) {
+      console.error('미션 생성 에러:', error)
+      console.error('에러 상세:', error.response?.data)
+    }
+  }
+
   useEffect(() => {
     setShowNavigation(false)
+
+    const fetchCategories = async () => {
+      try {
+        const response = await missionAPI.getCategories()
+        setMissionTemplates(response.data?.categories || [])
+      } catch (error) {
+        console.error('카테고리 조회 에러:', error)
+      }
+    }
+
+    const fetchFamilyMembers = async () => {
+      try {
+        const response = await familyAPI.getMembers()
+        setFamilyMembers(response.data?.members || [])
+      } catch (error) {
+        console.error('가족 멤버 조회 에러:', error)
+      }
+    }
+
+    fetchCategories()
+    fetchFamilyMembers()
   }, [])
 
   const handleBack = () => {
@@ -186,14 +199,16 @@ const Make = () => {
     if (dayOfWeek === 0 || dayOfWeek === 6) return
 
     // 현재일보다 이전 날짜 선택 불가
-    const today = new Date(2026, 0, 3) // 테스트: 2026년 1월 3일
+    const today = new Date()
     today.setHours(0, 0, 0, 0) // 시간 제거
     const selectedDate = new Date(date)
     selectedDate.setHours(0, 0, 0, 0) // 시간 제거
     if (selectedDate < today) return
 
     // 선택된 미션 정보 가져오기
-    const mission = missionTemplates.find((m) => m.id === selectedMission)
+    const mission = missionTemplates.find(
+      (m) => m.categoryId === selectedMission,
+    )
     if (!mission) return
 
     // 시작일 설정
@@ -203,7 +218,7 @@ const Make = () => {
     const endDate = new Date(date)
     let daysAdded = 1 // 시작일 포함
 
-    while (daysAdded < mission.durationDays) {
+    while (daysAdded < mission.missionDays) {
       endDate.setDate(endDate.getDate() + 1)
       const dayOfWeek = endDate.getDay()
       // 주말이 아니면 카운트
@@ -216,7 +231,7 @@ const Make = () => {
   }
 
   const handleNext = () => {
-    if (currentStep < 5) {
+    if (currentStep < 6) {
       setCurrentStep((prev) => prev + 1)
       window.scrollTo(0, 0)
     }
@@ -244,26 +259,37 @@ const Make = () => {
   const renderStep1 = () => (
     <div className='flex-1 px-6 py-6 pb-24'>
       <h2 className='text-[22px] text-[#404040] leading-[130%] font-bold mb-[27px]'>
-        너가 원하는 학습 목표를 설정하고<br></br> 내게 보상을 제안해보렴.
+        {role === 'parent' ?
+          <>
+            내 아이의 학습목표를 설정하고
+            <br />
+            보상을 제안해보세요.
+          </>
+        : <>
+            너가 원하는 학습 목표를 설정하고
+            <br />
+            내게 보상을 제안해보렴.
+          </>
+        }
       </h2>
       {renderProgressBar()}
 
       <div className='grid grid-cols-2 gap-4'>
         {missionTemplates.map((mission) => (
           <button
-            key={mission.id}
-            onClick={() => handleMissionSelect(mission.id)}
+            key={mission.categoryId}
+            onClick={() => handleMissionSelect(mission.categoryId)}
             className={`py-[26px] px-[20px] rounded-3xl h-[160px] [box-shadow:0px_1px_5px_0px_rgba(0,0,0,0.15)] transition-all text-left flex flex-col ${
-              selectedMission === mission.id ?
+              selectedMission === mission.categoryId ?
                 'bg-[#B2D6FF]'
               : 'bg-[#E2EFFF]  hover:border-gray-300'
             }`}
           >
             <p className='text-[16px] leading-[150%] font-semibold mb-2'>
-              {mission.title}
+              {mission.categoryTitle}
             </p>
             <p className='text-[12px] leading-[100%] text-gray-600'>
-              {mission.description}
+              {mission.summary}
             </p>
           </button>
         ))}
@@ -324,7 +350,7 @@ const Make = () => {
     const weekDays = ['월', '화', '수', '목', '금']
 
     // 현재 날짜부터 4개월치 캘린더 생성
-    const today = new Date(2026, 0, 3)
+    const today = new Date()
     const monthsToRender = []
     for (let i = 0; i < 12; i++) {
       const monthDate = new Date(today.getFullYear(), today.getMonth() + i, 1)
@@ -537,8 +563,16 @@ const Make = () => {
     return (
       <div className='flex-1 px-6 py-6 pb-24'>
         <h2 className='text-[22px] leading-[130%] text-[#2c2c2c] font-bold mb-4'>
-          {dates.durationDays}일치 목표를 골랐구나.<br></br>미션 완료일은{' '}
-          {formatDatewithoutyear(dates.endDate)}이란다.{' '}
+          {role === 'parent' ?
+            <>
+              {dates.durationDays}일치 목표를 골랐어요.<br></br>미션 완료일은{' '}
+              {formatDatewithoutyear(dates.endDate)}이에요.{' '}
+            </>
+          : <>
+              {dates.durationDays}일치 목표를 골랐구나.<br></br>미션 완료일은{' '}
+              {formatDatewithoutyear(dates.endDate)}이란다.{' '}
+            </>
+          }
         </h2>
 
         {renderProgressBar()}
@@ -574,7 +608,14 @@ const Make = () => {
   const renderStep3 = () => (
     <div className='flex-1 px-6 py-6 pb-24'>
       <h2 className='text-[22px] leading-[130%] text-[#2c2c2c] font-bold mb-4'>
-        보상은<br></br>무엇으로 정할거니?
+        {role === 'parent' ?
+          <>
+            보상은<br></br>무엇으로 정할까요?
+          </>
+        : <>
+            보상은<br></br>무엇으로 정할거니?
+          </>
+        }
       </h2>
 
       {renderProgressBar()}
@@ -604,7 +645,7 @@ const Make = () => {
   //------------------4페이지------------------
   const renderStep4 = () => {
     const selectedMissionData = missionTemplates.find(
-      (m) => m.id === selectedMission,
+      (m) => m.categoryId === selectedMission,
     )
     if (!selectedMissionData) return null
 
@@ -614,7 +655,9 @@ const Make = () => {
     return (
       <div className='flex-1 px-6 py-6 pb-24'>
         <h2 className='text-[22px] leading-[130%] text-[#2c2c2c] font-bold mb-[56px]'>
-          이 미션을 누구에게 보낼거니?
+          {role === 'parent' ?
+            <>이 미션을 누구에게 보낼까요?</>
+          : <>이 미션을 누구에게 보낼거니?</>}
         </h2>
 
         {renderProgressBar()}
@@ -625,7 +668,7 @@ const Make = () => {
             {/* 제목과 보상 영역 */}
             <div className='bg-[#E2EFFF] rounded-2xl py-[34px] mb-[17.63px] flex flex-col justify-center items-center text-[#404040]'>
               <p className='text-[16px] font-medium mb-2'>
-                {selectedMissionData.title}
+                {selectedMissionData.categoryTitle}
               </p>
               <p className='text-[18px] font-semibold'>{reward}</p>
             </div>
@@ -653,16 +696,20 @@ const Make = () => {
           <div className='grid grid-cols-3 gap-4'>
             {familyMembers.map((member) => (
               <button
-                key={member.id}
-                onClick={() => handleMemberToggle(member.id)}
+                key={member.memberId}
+                onClick={() => handleMemberToggle(member.memberId)}
                 className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${
-                  selectedMembers.includes(member.id) ?
+                  selectedMembers.includes(member.memberId) ?
                     'border-[#6FAEFF] bg-[#E2EFFF]'
                   : 'border-gray-200 bg-white hover:border-gray-300'
                 }`}
               >
-                <div className='text-3xl'>{member.avatar}</div>
-                <p className='text-sm font-medium'>{member.name}</p>
+                <img
+                  src={member.profileImageUrl}
+                  alt={member.nickname}
+                  className='w-12 h-12 rounded-full object-cover'
+                />
+                <p className='text-sm font-medium'>{member.nickname}</p>
               </button>
             ))}
           </div>
@@ -674,14 +721,21 @@ const Make = () => {
 
   const renderStep5 = () => {
     const selectedMemberNames = familyMembers
-      .filter((member) => selectedMembers.includes(member.id))
-      .map((member) => member.name)
+      .filter((member) => selectedMembers.includes(member.memberId))
+      .map((member) => member.nickname)
       .join(', ')
 
     return (
       <div className='flex-1 px-6 py-6 pb-24'>
         <h2 className='text-xl font-bold mb-4'>
-          하고 싶은 말과 함께<br></br>미션 제안서를 보내주렴.
+          {role === 'parent' ?
+            <>
+              하고 싶은 말과 함께 <br></br>미션 제안서를 보내보세요.
+            </>
+          : <>
+              하고 싶은 말과 함께<br></br>미션 제안서를 보내주렴.
+            </>
+          }
         </h2>
 
         {renderProgressBar()}
@@ -691,15 +745,19 @@ const Make = () => {
           {/* 선택된 멤버 아바타 */}
           <div className='flex gap-4 mb-10 mt-[33px] '>
             {familyMembers
-              .filter((member) => selectedMembers.includes(member.id))
+              .filter((member) => selectedMembers.includes(member.memberId))
               .map((member) => (
                 <div
-                  key={member.id}
+                  key={member.memberId}
                   className='flex flex-col items-center'
                 >
-                  <div className='text-3xl mb-1'>{member.avatar}</div>
+                  <img
+                    src={member.profileImageUrl}
+                    alt={member.nickname}
+                    className='w-12 h-12 rounded-full object-cover mb-1'
+                  />
                   <p className='text-sm font-medium text-gray-700'>
-                    {member.name}
+                    {member.nickname}
                   </p>
                 </div>
               ))}
@@ -744,6 +802,87 @@ const Make = () => {
       </div>
     )
   }
+
+  //--------------------------------6페이지 (최종 확인)-----------------------------------------------
+  const renderStep6 = () => {
+    const selectedMemberNicknames = familyMembers
+      .filter((member) => selectedMembers.includes(member.memberId))
+      .map((member) => member.nickname)
+      .join(', ')
+
+    const selectedMissionData = missionTemplates.find(
+      (m) => m.categoryId === selectedMission,
+    )
+    const dates = calculateDates()
+
+    return (
+      <div className='flex-1 px-6 py-6 pb-24'>
+        <h2 className='text-[22px] leading-[130%] text-[#2c2c2c] font-bold mb-6'>
+          {selectedMemberNicknames}님께
+          <br />
+          미션제안서를 보낼게요.
+        </h2>
+        {renderProgressBar()}
+
+        {/* 미션 카드 */}
+        <div className='bg-white rounded-3xl [box-shadow:0px_1px_5px_0px_rgba(0,0,0,0.15)] w-full pt-[18px] px-[24px] pb-8'>
+          {/* 선택된 멤버 아바타 */}
+          <div className='flex justify-center gap-4 mb-6'>
+            {familyMembers
+              .filter((member) => selectedMembers.includes(member.memberId))
+              .map((member) => (
+                <div
+                  key={member.memberId}
+                  className='flex flex-col items-center'
+                >
+                  <img
+                    src={member.profileImageUrl}
+                    alt={member.nickname}
+                    className='w-12 h-12 rounded-full object-cover mb-1'
+                  />
+                  <p className='text-sm font-medium text-gray-700'>
+                    {member.nickname}
+                  </p>
+                </div>
+              ))}
+          </div>
+          {/* 메시지 */}
+          {message && (
+            <p className='text-xs text-gray-400 text-left mb-[45px]'>
+              {message}
+            </p>
+          )}
+
+          {/* 제목과 보상 영역 */}
+          <div className='bg-[#E2EFFF] rounded-2xl py-[34px] mb-[17.63px] flex flex-col justify-center items-center text-[#404040]'>
+            <p className='text-[16px] font-medium mb-2'>
+              {selectedMissionData?.categoryTitle}
+            </p>
+            <p className='text-[18px] font-semibold'>{reward}</p>
+          </div>
+
+          {/* 구분선 */}
+          <div className='border-b-1 border-[#000000] opacity-50 mb-3'></div>
+
+          {/* 날짜 정보 */}
+          <div className='flex-col text-[16px] mt-[24px] text-[#404040]'>
+            <div className='flex justify-between mb-2'>
+              <p className='text-gray-600'>시작일</p>
+              <p className='font-medium'>
+                {dates && formatDate(dates.startDate)}
+              </p>
+            </div>
+            <div className='flex justify-between'>
+              <p className='text-gray-600'>완료일</p>
+              <p className='font-medium'>
+                {dates && formatDate(dates.endDate)}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
   //--------------------------
 
   return (
@@ -776,10 +915,11 @@ const Make = () => {
       {currentStep === 3 && renderStep3()}
       {currentStep === 4 && renderStep4()}
       {currentStep === 5 && renderStep5()}
+      {currentStep === 6 && renderStep6()}
 
-      {/* 다음 버튼 (플로팅) 로직구현필요 */}
+      {/* 다음 버튼 (플로팅) */}
       <button
-        onClick={handleNext}
+        onClick={currentStep === 6 ? handleCreateMission : handleNext}
         disabled={
           (currentStep === 1 && !selectedMission) ||
           (currentStep === 3 && !reward.trim()) ||
@@ -797,7 +937,7 @@ const Make = () => {
           : 'bg-[#6FAEFF] hover:bg-[#5188FB] text-white'
         }`}
       >
-        {currentStep === 5 ? '미션 만들기' : '다음'}
+        {currentStep === 6 ? '미션 만들기' : '다음'}
       </button>
     </div>
   )

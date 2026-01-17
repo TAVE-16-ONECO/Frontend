@@ -4,6 +4,7 @@ import { useUIOptionStore } from '../../store/uiOptionStore'
 import PlusIcon from '../../components/icons/PlusIcon'
 import { missionAPI } from '../../api/mission'
 import { membersAPI } from '../../api/members'
+import { familyAPI } from '../../api/family'
 
 const My = () => {
   const navigate = useNavigate()
@@ -11,6 +12,7 @@ const My = () => {
   const [ongoingMissions, setOngoingMissions] = useState([])
   const [completedMissions, setCompletedMissions] = useState([])
   const [memberInfo, setMemberInfo] = useState(null)
+  const [familyprofile, setfamilyprofile] = useState(null)
 
   const setShowNavigation = useUIOptionStore((state) => state.setShowNavigation)
 
@@ -120,7 +122,7 @@ const My = () => {
           />
         </button>
         <div className='flex items-center gap-5 justify-center mb-4'>
-          {/* 멤버 연동 여부 카톡프사 영역 */}
+          {/* 본인 카톡프사 영역 */}
           <div className='w-[80px] h-[80px] rounded-full bg-gray-200 overflow-hidden flex items-center justify-center'>
             {memberInfo?.data?.profileImageUrl ?
               <img
@@ -144,8 +146,22 @@ const My = () => {
             <div className='w-[6px] h-[6px] rounded-full bg-[#E2EFFF]'></div>
             <div className='w-[8px] h-[8px] rounded-full bg-[#E2EFFF]'></div>
           </div>
-          <div className='w-[80px] h-[80px] rounded-full bg-gray-200'>
-            {/* 프로필 이미지 플레이스홀더 */}
+          {/* 두번째 멤버 프로필 이미지 영역(1월17일 수정, 확인필요)*/}
+          <div className='w-[80px] h-[80px] rounded-full bg-gray-200 overflow-hidden flex items-center justify-center'>
+            {familyAPI?.data?.profileImageUrl ?
+              <img
+                src={familyAPI.data.profileImageUrl}
+                alt='프로필 이미지'
+                className='w-full h-full object-cover'
+                onError={(e) => {
+                  console.error(
+                    '이미지 로드 실패:',
+                    memberInfo.data.profileImageUrl,
+                  )
+                  e.target.style.display = 'none'
+                }}
+              />
+            : <div className='w-full h-full bg-gray-200' />}
           </div>
         </div>
       </div>
@@ -242,7 +258,7 @@ const MenuItemWithToggle = ({ label, enabled, onToggle }) => {
       <span className='text-[14px] text-[black] font-medium'>{label}</span>
       <button
         onClick={onToggle}
-        className={`relative inline-flex h-[14px] w-[34px] items-center rounded-full transition-colors shadow shadow-inner ${
+        className={`relative inline-flex h-[14px] w-[34px] items-center rounded-full transition-colors shadow-inner ${
           enabled ? 'bg-[#6FAEFF]' : 'bg-gray-300'
         }`}
         aria-label={`${label} ${enabled ? '켜기' : '끄기'}`}
