@@ -102,7 +102,7 @@ const KeyWordExplain = () => {
         </div>
         <div className='px-[16px] py-7'>
           {/* 키워드 설명 */}
-          {dailyContent.imageUrl && (
+          {/* {dailyContent.imageUrl && (
             <div className='w-full mb-5'>
               <img
                 src={dailyContent.imageUrl}
@@ -113,7 +113,7 @@ const KeyWordExplain = () => {
                 }}
               />
             </div>
-          )}
+          )} */}
           <div className='pb-5'>
             {/* 마크다운 콘텐츠 */}
             <div className='markdown-content'>
