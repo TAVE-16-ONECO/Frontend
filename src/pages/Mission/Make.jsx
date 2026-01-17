@@ -99,6 +99,52 @@ const Make = () => {
     return `${month}.${day}`
   }
 
+  // API용 날짜 포맷팅 함수 (YYYY-MM-DD)
+  const formatDateForAPI = (date) => {
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
+
+  // 미션 생성 핸들러
+  const handleCreateMission = async () => {
+    console.log('=== 미션 생성 시작 ===')
+    const dates = calculateDates()
+    console.log('계산된 날짜:', dates)
+    console.log('선택된 멤버:', selectedMembers)
+
+    if (!dates || selectedMembers.length === 0) {
+      console.log('날짜 또는 멤버 없음 - 종료')
+      return
+    }
+
+    try {
+      // 선택된 각 멤버에게 미션 생성
+      for (const memberId of selectedMembers) {
+        const missionData = {
+          recipientId: memberId,
+          categoryId: selectedMission,
+          startDate: formatDateForAPI(dates.startDate),
+          endDate: formatDateForAPI(dates.endDate),
+          title: reward,
+          message: noMessage ? '' : message,
+        }
+
+        console.log('API 요청 데이터:', missionData)
+        const response = await missionAPI.createMission(missionData)
+        console.log('API 응답:', response)
+      }
+
+      console.log('=== 미션 생성 완료 ===')
+      // 성공 시 미션 목록 페이지로 이동
+      navigate('/mission/current')
+    } catch (error) {
+      console.error('미션 생성 에러:', error)
+      console.error('에러 상세:', error.response?.data)
+    }
+  }
+
   useEffect(() => {
     setShowNavigation(false)
 
@@ -776,6 +822,7 @@ const Make = () => {
           <br />
           미션제안서를 보낼게요.
         </h2>
+        {renderProgressBar()}
 
         {/* 미션 카드 */}
         <div className='bg-white rounded-3xl [box-shadow:0px_1px_5px_0px_rgba(0,0,0,0.15)] w-full pt-[18px] px-[24px] pb-8'>
@@ -870,9 +917,9 @@ const Make = () => {
       {currentStep === 5 && renderStep5()}
       {currentStep === 6 && renderStep6()}
 
-      {/* 다음 버튼 (플로팅) 로직구현필요 */}
+      {/* 다음 버튼 (플로팅) */}
       <button
-        onClick={handleNext}
+        onClick={currentStep === 6 ? handleCreateMission : handleNext}
         disabled={
           (currentStep === 1 && !selectedMission) ||
           (currentStep === 3 && !reward.trim()) ||
