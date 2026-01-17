@@ -69,62 +69,62 @@ const Home = () => {
   }, [])
 
   // 홈 화면 첫 진입 시 UI 결정에 필요한 데이터 로드
-  useEffect(() => {
-    const loadHomeData = async () => {
-      try {
-        // 개인 정보 조회
-        const userDataResponse = await apiClient.get('/api/members/info')
-        const userData = userDataResponse.data.data
-        console.log('사용자 정보 불러오는 API 실행 성공')
-        setUserData(userData)
-        selectRole(userData.familyRole.toLowerCase()) // CHILD or PARENT
+  // useEffect(() => {
+  //   const loadHomeData = async () => {
+  //     try {
+  //       // 개인 정보 조회
+  //       const userDataResponse = await apiClient.get('/api/members/info')
+  //       const userData = userDataResponse.data.data
+  //       console.log('사용자 정보 불러오는 API 실행 성공')
+  //       setUserData(userData)
+  //       selectRole(userData.familyRole.toLowerCase()) // CHILD or PARENT
 
-        // 가족 정보 조회
-        const familyResponse = await apiClient.get('/api/family/exists')
-        const hasFamily = familyResponse.data.data.hasFamilyRelation // true or false
-        console.log('가족 정보 불러오는 API 실행 성공')
-        if (!hasFamily) {
-          setLoading(false)
-          return // 가족이 없으면 미션 조회 불필요
-        }
-        setHasMembers(true)
+  //       // 가족 정보 조회
+  //       const familyResponse = await apiClient.get('/api/family/exists')
+  //       const hasFamily = familyResponse.data.data.hasFamilyRelation // true or false
+  //       console.log('가족 정보 불러오는 API 실행 성공')
+  //       if (!hasFamily) {
+  //         setLoading(false)
+  //         return // 가족이 없으면 미션 조회 불필요
+  //       }
+  //       setHasMembers(true)
 
-        // 미션 정보 조회
-        const missionListResponse = await apiClient.get(
-          '/api/home/missions/active',
-        )
-        const missionListData = missionListResponse.data.data
-        // 만약 미션이 존재하면 미션 정보 업데이트
-        if (missionListData.missionCount > 0) {
-          // 모든 미션 정보 한 번에 불러오기
-          const missionPromises = missionListData.activeMissionIds.map(
-            (missionId) =>
-              apiClient.get(`/api/home/dashboard?missionId=${missionId}`),
-          )
+  //       // 미션 정보 조회
+  //       const missionListResponse = await apiClient.get(
+  //         '/api/home/missions/active',
+  //       )
+  //       const missionListData = missionListResponse.data.data
+  //       // 만약 미션이 존재하면 미션 정보 업데이트
+  //       if (missionListData.missionCount > 0) {
+  //         // 모든 미션 정보 한 번에 불러오기
+  //         const missionPromises = missionListData.activeMissionIds.map(
+  //           (missionId) =>
+  //             apiClient.get(`/api/home/dashboard?missionId=${missionId}`),
+  //         )
 
-          const missionResponses = await Promise.all(missionPromises)
+  //         const missionResponses = await Promise.all(missionPromises)
 
-          // 원본 데이터를 그대로 저장
-          missionResponses.forEach((response, index) => {
-            addMissionDataAtIndex(index, response.data.data)
-          })
+  //         // 원본 데이터를 그대로 저장
+  //         missionResponses.forEach((response, index) => {
+  //           addMissionDataAtIndex(index, response.data.data)
+  //         })
 
-          setMissionIds(missionListData.activeMissionIds)
-          setIsMissionCreated(true)
-        } else {
-          setIsMissionCreated(false)
-        }
-        console.log('미션 정보 조회하는 API 실행 성공')
+  //         setMissionIds(missionListData.activeMissionIds)
+  //         setIsMissionCreated(true)
+  //       } else {
+  //         setIsMissionCreated(false)
+  //       }
+  //       console.log('미션 정보 조회하는 API 실행 성공')
 
-        // 모든 API 정상적으로 실행 완료 후 로딩 종료
-        setLoading(false)
-      } catch (e) {
-        setHasError(true)
-        setLoading(false)
-      }
-    }
-    loadHomeData()
-  }, [])
+  //       // 모든 API 정상적으로 실행 완료 후 로딩 종료
+  //       setLoading(false)
+  //     } catch (e) {
+  //       setHasError(true)
+  //       setLoading(false)
+  //     }
+  //   }
+  //   loadHomeData()
+  // }, [])
 
   const handleAlarmClick = () => {
     navigate('/alarm')
@@ -140,14 +140,7 @@ const Home = () => {
   }
 
   if (loading) {
-    return (
-      <div className='flex flex-col justify-center items-center h-full'>
-        <FadeLoader
-          aria-label='Loading Spinner'
-          cssOverride={{ left: '25px' }}
-        />
-      </div>
-    )
+    return <Loading />
   }
 
   if (hasError) {

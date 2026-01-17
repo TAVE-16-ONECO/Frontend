@@ -59,14 +59,7 @@ const KeyWordExplain = () => {
   }
 
   if (loading) {
-    return (
-      <div className='flex flex-col justify-center items-center h-full'>
-        <FadeLoader
-          aria-label='Loading Spinner'
-          cssOverride={{ left: '25px' }}
-        />
-      </div>
-    )
+    return <Loading />
   }
 
   if (hasError) {
