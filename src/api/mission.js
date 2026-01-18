@@ -18,6 +18,11 @@ export const missionAPI = {
     })
     return response.data
   },
+  // 미션 상세 조회
+  getMissionDetail: async (missionId) => {
+    const response = await apiClient.get(`/api/missions/${missionId}`)
+    return response.data
+  },
   // 진행 중인 미션 조회
   getOngoingMissions: async (lastId = null, size = 5) => {
     try {
