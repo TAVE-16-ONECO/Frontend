@@ -39,11 +39,14 @@ const Details = () => {
       try {
         setLoading(true)
         const missionResponse = await missionAPI.getMissionDetail(id)
+        console.log('미션 상세 API 응답:', missionResponse)
+        console.log('미션 상세 data:', missionResponse.data)
         setMission(missionResponse.data)
 
         // 부모일 때는 가족 멤버에서 자녀 닉네임 가져오기
         if (role === 'PARENT') {
           const familyResponse = await familyAPI.getMembers()
+          console.log('가족 멤버 API 응답:', familyResponse)
           const members = familyResponse.data?.members || []
           // 자녀 멤버의 닉네임 사용 (첫 번째 자녀)
           const childMember = members.find((m) => m.role === 'CHILD')
@@ -53,6 +56,7 @@ const Details = () => {
         } else {
           // 자녀일 때는 본인 정보 가져오기
           const memberInfo = await membersAPI.getMemberInfo()
+          console.log('멤버 정보 API 응답:', memberInfo)
           if (memberInfo?.data?.nickname) {
             setNickname(memberInfo.data.nickname)
           }
