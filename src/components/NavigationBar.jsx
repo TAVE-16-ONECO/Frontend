@@ -49,7 +49,7 @@ const MyIcon = () => (
 
 const menus = [
   { to: '/', label: '홈', Icon: HomeIcon },
-  { to: '/history', label: '히스토리', Icon: HistoryIcon },
+  { to: '/study-feed', label: '학습 피드', Icon: HistoryIcon },
   { to: '/my', label: '마이', Icon: MyIcon },
 ]
 

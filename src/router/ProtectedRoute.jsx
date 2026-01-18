@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from 'react-router-dom'
-import { FadeLoader } from 'react-spinners'
 import { useAuthStore } from '../store/authStore'
+import Loading from '../components/Loading'
 
 const ProtectedRoute = () => {
   // 로그인 여부 판단 로직
@@ -9,14 +9,7 @@ const ProtectedRoute = () => {
 
   // localStorage에서 토큰을 복원할 때까지 대기 (로딩 표시)
   if (!hasHydrated) {
-    return (
-      <div className='flex flex-col justify-center items-center min-h-screen'>
-        <FadeLoader
-          aria-label='Loading Spinner'
-          cssOverride={{ left: '25px' }}
-        />
-      </div>
-    )
+    return <Loading />
   }
 
   // Hydration 완료 후 인증 체크
