@@ -108,16 +108,15 @@ const MissionCard = ({ mission, onClick }) => {
         )}
       </div>
 
-      {/* 중단: 미션 내용 */}
-      <h3 className='font-bold text-base text-gray-800 mb-3'>
-        {mission.missionTitle}
+      {/* 중단: 미션 카테고리 */}
+      <h3 className='font-bold text-base text-[#404040] mb-3'>
+        {mission.categoryTitle}
       </h3>
 
       {/* 하단: 보상 내용 */}
       {mission.rewardTitle && (
         <div className='flex items-center'>
-          <span className='text-sm text-gray-600'></span>
-          <span className='text-sm font-semibold text-black-600'>
+          <span className='text-base font-bold text-[#404040]'>
             {mission.rewardTitle}
           </span>
         </div>
