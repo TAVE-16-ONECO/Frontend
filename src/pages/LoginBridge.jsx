@@ -1,9 +1,9 @@
 import { useEffect, useRef } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { FadeLoader } from 'react-spinners'
 import apiClient from '../api/client'
 import { useUIOptionStore } from '../store/uiOptionStore'
 import { useAuthStore } from '../store/authStore'
+import Loading from '../components/Loading'
 
 export default function LoginBridge() {
   const [params] = useSearchParams()

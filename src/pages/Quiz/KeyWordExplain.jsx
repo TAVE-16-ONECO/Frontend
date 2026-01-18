@@ -6,8 +6,8 @@ import { useQuizStore } from '@/store/quizStore'
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
 import apiClient from '../../api/client'
-import { FadeLoader } from 'react-spinners'
 import { BackArrowIcon } from '../../components/icons/BackArrowIcon'
+import Loading from '../../components/Loading'
 
 const KeyWordExplain = () => {
   const navigate = useNavigate()

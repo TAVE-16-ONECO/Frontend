@@ -3,8 +3,8 @@ import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useQuizStore } from '@/store/quizStore'
 import apiClient from '../../api/client'
-import { FadeLoader } from 'react-spinners'
 import { BackArrowIcon } from '../../components/icons/BackArrowIcon'
+import Loading from '../../components/Loading'
 
 const Quiz = () => {
   const navigate = useNavigate()

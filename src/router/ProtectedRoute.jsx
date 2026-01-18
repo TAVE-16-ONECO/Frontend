@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from 'react-router-dom'
-import { FadeLoader } from 'react-spinners'
 import { useAuthStore } from '../store/authStore'
+import Loading from '../components/Loading'
 
 const ProtectedRoute = () => {
   // 로그인 여부 판단 로직
