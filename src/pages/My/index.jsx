@@ -31,14 +31,21 @@ const My = () => {
         console.log('회원 정보 data:', memberData?.data)
         console.log('프로필 이미지 URL:', memberData?.data?.profileImageUrl)
 
-        const [ongoingData, finishedData] = await Promise.all([
+        const [ongoingData, finishedData, familyData] = await Promise.all([
           missionAPI.getOngoingMissions(),
           missionAPI.getFinishedMissions(),
+          familyAPI.getMembers(),
         ])
 
         setMemberInfo(memberData)
         setOngoingMissions(Array.isArray(ongoingData) ? ongoingData : [])
         setCompletedMissions(Array.isArray(finishedData) ? finishedData : [])
+
+        // 가족 멤버 중 첫번째 멤버의 프로필 이미지 설정
+        const members = familyData?.data?.members || []
+        if (members.length > 0) {
+          setfamilyprofile(members[0])
+        }
       } catch (err) {
         console.error('데이터 로딩 실패:', err)
         console.error('에러 상세:', err.response)
@@ -146,17 +153,17 @@ const My = () => {
             <div className='w-[6px] h-[6px] rounded-full bg-[#E2EFFF]'></div>
             <div className='w-[8px] h-[8px] rounded-full bg-[#E2EFFF]'></div>
           </div>
-          {/* 두번째 멤버 프로필 이미지 영역(1월17일 수정, 확인필요)*/}
+          {/* 두번째 멤버 프로필 이미지 영역 */}
           <div className='w-[80px] h-[80px] rounded-full bg-gray-200 overflow-hidden flex items-center justify-center'>
-            {familyAPI?.data?.profileImageUrl ?
+            {familyprofile?.profileImageUrl ?
               <img
-                src={familyAPI.data.profileImageUrl}
+                src={familyprofile.profileImageUrl}
                 alt='프로필 이미지'
                 className='w-full h-full object-cover'
                 onError={(e) => {
                   console.error(
                     '이미지 로드 실패:',
-                    memberInfo.data.profileImageUrl,
+                    familyprofile.profileImageUrl,
                   )
                   e.target.style.display = 'none'
                 }}
