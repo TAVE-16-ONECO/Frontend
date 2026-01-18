@@ -149,7 +149,7 @@ const Current = () => {
               {ongoingMissions.length > 0 ?
                 ongoingMissions.map((mission) => (
                   <MissionCard
-                    key={mission.id}
+                    key={mission.missionId}
                     mission={mission}
                     onClick={handleMissionClick}
                   />
@@ -164,7 +164,7 @@ const Current = () => {
               {completedMissions.length > 0 ?
                 completedMissions.map((mission) => (
                   <MissionCard
-                    key={mission.id}
+                    key={mission.missionId}
                     mission={mission}
                     onClick={handleMissionClick}
                   />
