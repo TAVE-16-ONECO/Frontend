@@ -28,6 +28,7 @@ const Details = () => {
   const { id } = useParams()
   const setShowNavigation = useUIOptionStore((state) => state.setShowNavigation)
   const role = useAuthStore((state) => state.role)
+  const userData = useAuthStore((state) => state.userData)
   const [mission, setMission] = useState(null)
   const [nickname, setNickname] = useState('')
   const [loading, setLoading] = useState(true)
@@ -87,6 +88,21 @@ const Details = () => {
     } catch (err) {
       console.error('미션 수락 실패:', err)
       alert('미션 수락에 실패했습니다.')
+    }
+  }
+
+  const handleRejectMission = async () => {
+    try {
+      console.log('미션 거절 요청:', id, false)
+      const response = await missionAPI.respondToMission(id, false)
+      console.log('미션 거절 응답:', response)
+      navigate(-1)
+    } catch (err) {
+      console.error('미션 거절 실패:', err)
+      console.error('에러 상세:', err.response?.data || err.message)
+      alert(
+        `미션 거절에 실패했습니다.\n${err.response?.data?.message || err.message}`,
+      )
     }
   }
 
@@ -166,10 +182,10 @@ const Details = () => {
                     : statusLabel === '보상완료' ? 'bg-[#91C4FF] text-white'
                     : statusLabel === '미션완료' ? 'bg-[#91C4FF] text-white'
                     : statusLabel === '보상 요청' ? 'bg-[#91C4FF] text-white'
-                    : statusLabel === '승인 수락' ? 'bg-[#FFE0A9] text-black'
-                    : statusLabel === '승인 거절' ? 'bg-[#FFE0A9] text-black'
-                    : statusLabel === '보상요청' ? 'bg-[#FFE0A9] text-black'
-                    : statusLabel === '승인 요청' ? 'bg-[#FFE0A9] text-black'
+                    : statusLabel === '승인 수락' ? 'bg-[#FFE0A9] text-white'
+                    : statusLabel === '승인 거절' ? 'bg-[#FFE0A9] text-white'
+                    : statusLabel === '보상요청' ? 'bg-[#FFE0A9] text-white'
+                    : statusLabel === '승인 요청' ? 'bg-[#FFE0A9] text-white'
                     : statusLabel === '미션실패' ? 'bg-gray-100 text-gray-600'
                     : ''
                   }`}
@@ -230,14 +246,23 @@ const Details = () => {
         </button>
       )}
 
-      {/* 승인 요청 미션일 때 수락하기 플로팅 버튼 */}
-      {mission.missionStatus === 'APPROVAL_REQUEST' && (
-        <button
-          className='fixed bottom-8 left-1/2 -translate-x-1/2 bg-[#6FAEFF] hover:bg-[#5188FB] text-white px-8 py-4 rounded-2xl shadow-lg transition-colors font-bold'
-          onClick={handleAcceptMission}
-        >
-          수락하기
-        </button>
+      {/* 승인 요청 미션일 때 수락/거절 플로팅 버튼 (수신자만) */}
+      {mission.missionStatus === 'APPROVAL_REQUEST' &&
+        userData?.id === mission.recipientId && (
+        <div className='fixed bottom-8 left-1/2 -translate-x-1/2 flex gap-6'>
+          <button
+            className='bg-gray-400 hover:bg-gray-500 text-white w-[150px] px-4 py-4 rounded-2xl shadow-lg transition-colors font-bold'
+            onClick={handleRejectMission}
+          >
+            거절하기
+          </button>
+          <button
+            className='bg-[#6FAEFF] hover:bg-[#5188FB] text-white w-[150px] px-4 py-4 rounded-2xl shadow-lg transition-colors font-bold'
+            onClick={handleAcceptMission}
+          >
+            수락하기
+          </button>
+        </div>
       )}
     </div>
   )
