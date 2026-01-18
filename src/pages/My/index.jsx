@@ -23,13 +23,7 @@ const My = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log('API 호출 시작...')
-
         const memberData = await membersAPI.getMemberInfo()
-        console.log('회원 정보 원본:', memberData)
-        console.log('회원 정보 타입:', typeof memberData)
-        console.log('회원 정보 data:', memberData?.data)
-        console.log('프로필 이미지 URL:', memberData?.data?.profileImageUrl)
 
         const [ongoingData, finishedData, familyData] = await Promise.all([
           missionAPI.getOngoingMissions(),
@@ -48,7 +42,6 @@ const My = () => {
         }
       } catch (err) {
         console.error('데이터 로딩 실패:', err)
-        console.error('에러 상세:', err.response)
       }
     }
 
@@ -63,30 +56,20 @@ const My = () => {
     navigate('/my/members')
   }
 
-  const handleMyActivity = () => {
-    // 나의 활동 페이지로 이동
-    console.log('나의 활동')
-  }
-
   const handleMissionStatus = () => {
     navigate('/mission/current')
   }
 
   const handleAccountInfo = () => {
-    // 계정정보 페이지로 이동
-    {
-      memberInfo?.data?.email
-    }
+    // TODO: 계정정보 페이지로 이동
   }
 
   const handleCustomerService = () => {
-    // 고객센터 페이지로 이동
-    console.log('고객센터')
+    // TODO: 고객센터 페이지로 이동
   }
 
   const handlePrivacyPolicy = () => {
-    // 개인정보처리방침 페이지로 이동
-    console.log('개인정보처리방침')
+    // TODO: 개인정보처리방침 페이지로 이동
   }
 
   const toggleKeywordAlarm = () => {
