@@ -11,7 +11,7 @@ import { usePWAInstall } from '@/hooks/usePWAInstall'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/css'
 import apiClient from '../api/client'
-import { FadeLoader } from 'react-spinners'
+import Loading from '../components/Loading'
 
 const Home = () => {
   const navigate = useNavigate()
@@ -140,14 +140,7 @@ const Home = () => {
   }
 
   if (loading) {
-    return (
-      <div className='flex flex-col justify-center items-center h-full'>
-        <FadeLoader
-          aria-label='Loading Spinner'
-          cssOverride={{ left: '25px' }}
-        />
-      </div>
-    )
+    return <Loading />
   }
 
   if (hasError) {

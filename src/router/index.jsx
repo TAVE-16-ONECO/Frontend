@@ -41,7 +41,7 @@ export const router = createBrowserRouter([
         children: [
           { path: '/', element: <Home /> },
           { path: '/alarm', element: <Alarm /> },
-          { path: '/history', element: <History /> },
+          { path: '/study-feed', element: <History /> },
 
           // 멤버 선택 및 관리
           { path: '/my', element: <My /> },

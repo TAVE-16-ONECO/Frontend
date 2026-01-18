@@ -154,9 +154,9 @@ const Result = () => {
 
           <button
             className='flex-1 h-[56px] text-center bg-[#91c4ff] rounded-2xl text-[#fdfdfd] text-[18px]'
-            onClick={() => navigate('/history')}
+            onClick={() => navigate('/study-feed')}
           >
-            히스토리 가기
+            학습 피드가기
           </button>
         </div>
       </div>

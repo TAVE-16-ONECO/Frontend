@@ -109,16 +109,21 @@ const RoleSelect = () => {
           <button
             onClick={() => handleRoleSelect('parent')}
             className={clsx(
-              'w-full max-w-[200px] h-[180px] rounded-2xl flex flex-col items-center justify-center gap-[20px] transition-all',
+              'w-full max-w-[200px] h-[180px] rounded-2xl flex flex-col items-center justify-center gap-[20px] transition-all border-2',
               '[box-shadow:0px_1px_5px_0px_rgba(0,0,0,0.15)]',
               selectedRole === 'parent' ?
-                'border-2 border-[#b2d6ff] bg-[#E2EFFF]'
-              : 'border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50',
+                'border-[#b2d6ff] bg-[#E2EFFF]'
+              : 'border-transparent bg-white hover:border-gray-300 hover:bg-gray-50',
             )}
             aria-selected={selectedRole === 'parent'}
           >
             {/* 아이콘 플레이스홀더 */}
-            <div className='w-[85px] h-[85px] rounded-full bg-gray-200'></div>
+            <div className='w-[85px] h-[85px] rounded-full flex justify-center items-center'>
+              <img
+                src='/images/MainCharacterFace-basic.png'
+                alt='메인 캐릭터 얼굴'
+              />
+            </div>
             <span className='text-[18px] text-[#2c2c2c] font-semibold'>
               부모
             </span>
@@ -128,16 +133,21 @@ const RoleSelect = () => {
           <button
             onClick={() => handleRoleSelect('child')}
             className={clsx(
-              'w-full max-w-[200px] h-[180px] rounded-2xl flex flex-col items-center justify-center gap-[20px] transition-all',
+              'w-full max-w-[200px] h-[180px] rounded-2xl flex flex-col items-center justify-center gap-[20px] transition-all border-2',
               '[box-shadow:0px_1px_5px_0px_rgba(0,0,0,0.15)]',
               selectedRole === 'child' ?
-                'border-2 border-[#b2d6ff] bg-[#E2EFFF]'
-              : 'border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50',
+                'border-[#b2d6ff] bg-[#E2EFFF]'
+              : 'border-transparent bg-white hover:border-gray-300 hover:bg-gray-50',
             )}
             aria-selected={selectedRole === 'child'}
           >
             {/* 아이콘 플레이스홀더 */}
-            <div className='w-[85px] h-[85px] rounded-full bg-gray-200'></div>
+            <div className='w-[85px] h-[85px] rounded-full flex justify-center items-center'>
+              <img
+                src='/images/MainCharacterFace-sensitive.png'
+                alt='메인 캐릭터 얼굴'
+              />
+            </div>
             <span className='text-[18px] text-[#2c2c2c] font-semibold'>
               자녀
             </span>
@@ -146,7 +156,7 @@ const RoleSelect = () => {
 
         {/* 안내 메시지 */}
         {selectedRole ?
-          <div className='mb-[42px] flex flex-col gap-[19px] text-[#919191]'>
+          <div className='mb-[30px] flex flex-col gap-[19px] text-[#919191]'>
             <div className='flex items-start gap-2'>
               <span className='text-[12px]'>•</span>
               {selectedRole === 'parent' ?
@@ -168,7 +178,7 @@ const RoleSelect = () => {
         : null}
 
         {/* 정보 박스 */}
-        <div className='h-[90px] mb-[60px] bg-[#f4f4f4] rounded-2xl p-4 flex justify-center items-center text-[16px] font-medium text-[#919191] leading-[130%]'>
+        <div className='h-[90px] mb-[40px] bg-[#f4f4f4] rounded-2xl p-4 flex justify-center items-center text-[16px] font-medium text-[#919191] leading-[130%]'>
           <div>
             <p>이용방법을 정한 후 변경을 원하시면 </p>
             <p>

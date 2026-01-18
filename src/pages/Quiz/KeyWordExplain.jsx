@@ -6,8 +6,8 @@ import { useQuizStore } from '@/store/quizStore'
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
 import apiClient from '../../api/client'
-import { FadeLoader } from 'react-spinners'
 import { BackArrowIcon } from '../../components/icons/BackArrowIcon'
+import Loading from '../../components/Loading'
 
 const KeyWordExplain = () => {
   const navigate = useNavigate()
@@ -59,14 +59,7 @@ const KeyWordExplain = () => {
   }
 
   if (loading) {
-    return (
-      <div className='flex flex-col justify-center items-center h-full'>
-        <FadeLoader
-          aria-label='Loading Spinner'
-          cssOverride={{ left: '25px' }}
-        />
-      </div>
-    )
+    return <Loading />
   }
 
   if (hasError) {
@@ -109,7 +102,7 @@ const KeyWordExplain = () => {
         </div>
         <div className='px-[16px] py-7'>
           {/* 키워드 설명 */}
-          {dailyContent.imageUrl && (
+          {/* {dailyContent.imageUrl && (
             <div className='w-full mb-5'>
               <img
                 src={dailyContent.imageUrl}
@@ -120,7 +113,7 @@ const KeyWordExplain = () => {
                 }}
               />
             </div>
-          )}
+          )} */}
           <div className='pb-5'>
             {/* 마크다운 콘텐츠 */}
             <div className='markdown-content'>
