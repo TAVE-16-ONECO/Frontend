@@ -71,7 +71,7 @@ const Details = () => {
     }
 
     fetchData()
-  }, [id, role])
+  }, [id, role, setShowNavigation])
 
   const handleBack = () => {
     navigate(-1)
@@ -249,21 +249,21 @@ const Details = () => {
       {/* 승인 요청 미션일 때 수락/거절 플로팅 버튼 (수신자만) */}
       {mission.missionStatus === 'APPROVAL_REQUEST' &&
         userData?.id === mission.recipientId && (
-        <div className='fixed bottom-8 left-1/2 -translate-x-1/2 flex gap-6'>
-          <button
-            className='bg-gray-400 hover:bg-gray-500 text-white w-[150px] px-4 py-4 rounded-2xl shadow-lg transition-colors font-bold'
-            onClick={handleRejectMission}
-          >
-            거절하기
-          </button>
-          <button
-            className='bg-[#6FAEFF] hover:bg-[#5188FB] text-white w-[150px] px-4 py-4 rounded-2xl shadow-lg transition-colors font-bold'
-            onClick={handleAcceptMission}
-          >
-            수락하기
-          </button>
-        </div>
-      )}
+          <div className='fixed bottom-8 left-1/2 -translate-x-1/2 flex gap-6'>
+            <button
+              className='bg-gray-400 hover:bg-gray-500 text-white w-[150px] px-4 py-4 rounded-2xl shadow-lg transition-colors font-bold'
+              onClick={handleRejectMission}
+            >
+              거절하기
+            </button>
+            <button
+              className='bg-[#6FAEFF] hover:bg-[#5188FB] text-white w-[150px] px-4 py-4 rounded-2xl shadow-lg transition-colors font-bold'
+              onClick={handleAcceptMission}
+            >
+              수락하기
+            </button>
+          </div>
+        )}
     </div>
   )
 }
