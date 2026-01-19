@@ -2,6 +2,7 @@ import { Outlet, useLocation } from 'react-router-dom'
 import Header from '@/components/Header'
 import NavigationBar from '@/components/NavigationBar'
 import { useUIOptionStore } from '@/store/uiOptionStore'
+import ScrollToTop from '@/components/ScrollToTop'
 import clsx from 'clsx'
 
 export const DefaultLayout = () => {
@@ -9,6 +10,7 @@ export const DefaultLayout = () => {
   const showNavigationBar = useUIOptionStore((state) => state.showNavigationBar)
   return (
     <div className='w-full flex justify-center bg-[#f1f1f1] font-body'>
+      <ScrollToTop />
       <div
         className={clsx(
           'w-full min-w-[360px] max-w-[600px] min-h-screen flex flex-col bg-white pt-[30px] pb-[50px]',
