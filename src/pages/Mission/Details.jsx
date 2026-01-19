@@ -199,9 +199,14 @@ const Details = () => {
                 <p className='text-[#404040] mb-[23px]'>
                   {mission.categoryTitle}
                 </p>
-                <p className='text-2xl mb-[28px] text-[#404040] font-bold'>
+                <p className='text-2xl text-[#404040] font-bold'>
                   {mission.rewardTitle}
                 </p>
+                {mission.message && (
+                  <p className='text-sm text-gray-500 mt-[12px] text-center'>
+                    "{mission.message}"
+                  </p>
+                )}
               </div>
 
               {/* 날짜 정보 - border-bottom 아래 */}
