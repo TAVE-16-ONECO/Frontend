@@ -130,7 +130,7 @@ const My = () => {
             : <div className='w-full h-full bg-gray-200' />}
           </div>
           {/*인원들 사이에 물방울표시*/}
-          <div className='flex gap-[7px]'>
+          <div className='flex items-center gap-[7px]'>
             <div className='w-[2px] h-[2px] rounded-full bg-[#E2EFFF]'></div>
             <div className='w-[4px] h-[4px] rounded-full bg-[#E2EFFF]'></div>
             <div className='w-[6px] h-[6px] rounded-full bg-[#E2EFFF]'></div>
