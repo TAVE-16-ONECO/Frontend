@@ -393,7 +393,7 @@ const Make = () => {
               {weekDays.map((day) => (
                 <div
                   key={day}
-                  className='w-[38px] text-center text-xs font-bold py-2 text-[#919191]'
+                  className='w-[38px] text-center text-xs font-bold py-2 text-[#404040]'
                 >
                   {day}
                 </div>
