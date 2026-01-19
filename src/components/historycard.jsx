@@ -1,6 +1,24 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { studyRecordsAPI } from '@/api/studyRecords'
 
-const HistoryCard = ({ title, date, text, items }) => {
+const HistoryCard = ({ studyRecordId, title, date, text, items, isBookmarked: initialBookmarked = false, showBookmark = true }) => {
+  const [isBookmarked, setIsBookmarked] = useState(initialBookmarked)
+
+  const handleBookmarkClick = async () => {
+    const newBookmarkState = !isBookmarked
+    setIsBookmarked(newBookmarkState)
+
+    try {
+      await studyRecordsAPI.toggleBookmark(studyRecordId, newBookmarkState)
+    } catch (error) {
+      // 실패 시 원래 상태로 롤백
+      setIsBookmarked(isBookmarked)
+    }
+  }
+
+  // 날짜 포맷팅 (yyyy-MM-dd -> yyyy.MM.dd)
+  const formattedDate = date?.replace(/-/g, '.')
+
   return (
     <div className='w-full h-[340px] bg-white border-b-[0.7px] border-[#D9D9D9]'>
       <div className='flex flex-col mt-[23px] ml-[18px] gap-[20px]'>
@@ -9,25 +27,30 @@ const HistoryCard = ({ title, date, text, items }) => {
           <div className='flex justify-between items-center w-full'>
             <div className='flex items-center gap-[8px]'>
               <p className='text-black text-[16px] font-[700]'>{title}</p>
-              <p className='text-[#BABABA] text-[12px] font-[600]'>{date}</p>
+              <p className='text-[#BABABA] text-[12px] font-[600]'>{formattedDate}</p>
             </div>
 
             <div className='flex items-center gap-[24px]'>
-              {/* 저장 아이콘 */}
-              <div className='w-[17.6px] h-[22px] shrink-0 cursor-pointer'>
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  width='18'
-                  height='22'
-                  viewBox='0 0 18 22'
-                  fill='none'
+              {/* 저장(북마크) 아이콘 - 자식만 표시 */}
+              {showBookmark && (
+                <div
+                  className='w-[17.6px] h-[22px] shrink-0 cursor-pointer'
+                  onClick={handleBookmarkClick}
                 >
-                  <path
-                    d='M17.5996 22L8.7998 15.6816L0 22V0H17.5996V22Z'
-                    fill='#BABABA'
-                  />
-                </svg>
-              </div>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    width='18'
+                    height='22'
+                    viewBox='0 0 18 22'
+                    fill='none'
+                  >
+                    <path
+                      d='M17.5996 22L8.7998 15.6816L0 22V0H17.5996V22Z'
+                      fill={isBookmarked ? '#5188FB' : '#BABABA'}
+                    />
+                  </svg>
+                </div>
+              )}
 
               {/* 공유 아이콘 */}
               <div className='w-[17px] h-[22px] shrink-0 cursor-pointer'>
@@ -56,9 +79,12 @@ const HistoryCard = ({ title, date, text, items }) => {
         {/* 가로 카드 스크롤 영역 */}
         <div className='flex gap-[11px] w-full overflow-x-scroll scrollbar-hide pr-[18px]'>
           {items?.map((item, idx) => (
-            <div
+            <a
               key={idx}
-              className='flex w-[230px] h-[219px] flex-col justify-end items-center gap-[5px] rounded-[7px] shadow-[0_1px_5px_rgba(0,0,0,0.10)] bg-lightgray bg-cover'
+              href={item.url}
+              target='_blank'
+              rel='noopener noreferrer'
+              className='flex w-[230px] h-[219px] flex-col justify-end items-center gap-[5px] rounded-[7px] shadow-[0_1px_5px_rgba(0,0,0,0.10)] bg-lightgray bg-cover shrink-0'
             >
               {item.img ?
                 <img
@@ -69,11 +95,11 @@ const HistoryCard = ({ title, date, text, items }) => {
               }
 
               <div className='flex w-[230px] h-[49px] justify-center items-center bg-[#FDFDFD] rounded-b-[7px]'>
-                <p className='w-[214px] text-[14px] font-[600] leading-[130%]'>
+                <p className='w-[214px] text-[14px] font-[600] leading-[130%] line-clamp-2'>
                   {item.text}
                 </p>
               </div>
-            </div>
+            </a>
           ))}
         </div>
       </div>
