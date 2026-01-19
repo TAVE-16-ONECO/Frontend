@@ -10,6 +10,7 @@ const Members = () => {
   const navigate = useNavigate()
   const [showModal, setShowModal] = useState(false)
   const [inviteType, setInviteType] = useState('') // 'parent' or 'child'
+  const [inviteCode, setInviteCode] = useState('')
   const setShowNavigation = useUIOptionStore((state) => state.setShowNavigation)
   const [members, setMembers] = useState([])
   const [loading, setLoading] = useState(true)
@@ -37,7 +38,19 @@ const Members = () => {
       }
     }
 
+    // 초대 코드 미리 받아오기
+    const fetchInviteCode = async () => {
+      try {
+        const response = await apiClient.get('/api/family/invitations/code')
+        const code = response.data.data.code
+        setInviteCode(code)
+      } catch (e) {
+        console.error('초대 코드 조회 실패', e)
+      }
+    }
+
     fetchMembers()
+    fetchInviteCode()
   }, [])
 
   const handleInviteClick = (type) => {
@@ -52,15 +65,19 @@ const Members = () => {
 
   const handleCopyLink = async () => {
     // 초대 링크 복사 로직
+    if (!inviteCode) {
+      alert('초대 코드를 불러오는 중입니다. 잠시 후 다시 시도해주세요.')
+      return
+    }
+
     try {
-      const response = await apiClient.get('/api/family/invitations/code')
-      const inviteCode = response.data.data.code
       const inviteLink = `${window.location.origin}/login?inviteCode=${inviteCode}`
-      navigator.clipboard.writeText(inviteLink)
+      await navigator.clipboard.writeText(inviteLink)
       alert('초대 링크가 복사되었습니다!')
       setShowModal(false)
     } catch (e) {
       console.error('초대 링크 복사 실패', e)
+      alert('초대 링크 복사에 실패했습니다.')
     }
   }
 
