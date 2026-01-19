@@ -38,6 +38,7 @@ const KeyWordExplain = () => {
         setDaySequence(data.daySequence)
         setStudyRecordId(data.studyRecordId)
         setQuizProgressStatus(data.quizProgressStatus)
+        console.log(data.dailyContent.bodyText)
       } catch (e) {
         console.log('키워드 본문 불러오기 실패', e)
         setHasError(true)
@@ -121,7 +122,11 @@ const KeyWordExplain = () => {
                 remarkPlugins={[remarkGfm]}
                 rehypePlugins={[rehypeHighlight]}
               >
-                {dailyContent.bodyText}
+                {dailyContent.bodyText
+                  ?.replace(/\r\n/g, '\n') // \r\n 뒤에 4개 이상의 공백이 있으면 코드 블록으로 인식하기 때문에 공백 제거
+                  .split('\n')
+                  .map((line) => line.trim())
+                  .join('\n')}
               </ReactMarkdown>
             </div>
           </div>
