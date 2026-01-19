@@ -4,6 +4,7 @@ import { BackArrowIcon } from '../../components/icons/BackArrowIcon'
 import { useAuthStore } from '../../store/authStore'
 import { useUIOptionStore } from '@/store/uiOptionStore'
 import apiClient from '../../api/client'
+import { familyAPI } from '../../api/family'
 
 const Members = () => {
   const navigate = useNavigate()
@@ -11,9 +12,31 @@ const Members = () => {
   const [inviteType, setInviteType] = useState('') // 'parent' or 'child'
   const [inviteCode, setInviteCode] = useState('')
   const setShowNavigation = useUIOptionStore((state) => state.setShowNavigation)
+  const [members, setMembers] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  // authStore에서 role 가져오기
+  const role = useAuthStore((state) => state.role)
+
+  // 멤버가 있는지 여부
+  const hasMembers = members.length > 0
 
   useEffect(() => {
     setShowNavigation(false)
+
+    const fetchMembers = async () => {
+      try {
+        setLoading(true)
+        const response = await familyAPI.getMembers()
+        const memberList = response.data?.members || []
+        setMembers(memberList)
+      } catch (error) {
+        console.error('멤버 조회 실패:', error)
+        setMembers([])
+      } finally {
+        setLoading(false)
+      }
+    }
 
     // 초대 코드 미리 받아오기
     const fetchInviteCode = async () => {
@@ -26,21 +49,9 @@ const Members = () => {
       }
     }
 
+    fetchMembers()
     fetchInviteCode()
   }, [])
-
-  // authStore에서 role과 hasMembers 가져오기
-  const role = useAuthStore((state) => state.role)
-  //주석만 hasMembers 상태값 바꿔서 테스트하기(멤버가 없을때)
-  // const hasMembers = useAuthStore((state) => state.hasMembers)
-  const hasMembers = true // 테스트용 임시값(멤버가 있을때)
-
-  // 임시 멤버 데이터 (나중에 API에서 가져오기)
-  const [members, setMembers] = useState([
-    { id: 1, name: '엄마', profileImage: null, role: 'parent' },
-    { id: 2, name: '아빠', profileImage: null, role: 'parent' },
-    { id: 3, name: '철수', profileImage: null, role: 'child' },
-  ])
 
   const handleInviteClick = (type) => {
     setInviteType(type)
@@ -131,14 +142,22 @@ const Members = () => {
               {/* 기존 멤버 카드들 */}
               {members.map((member) => (
                 <div
-                  key={member.id}
+                  key={member.memberId}
                   className='flex flex-col items-center justify-center bg-[#E2EFFF] border-2 border-gray-100 rounded-lg p-4 h-[178px] shadow'
                 >
                   {/* 프로필 이미지 */}
-                  <div className='w-[70px] h-[70px] rounded-full bg-gray-200 mb-[20px]'></div>
+                  <div className='w-[70px] h-[70px] rounded-full bg-gray-200 mb-[20px] overflow-hidden'>
+                    {member.profileImageUrl && (
+                      <img
+                        src={member.profileImageUrl}
+                        alt={member.nickname}
+                        className='w-full h-full object-cover'
+                      />
+                    )}
+                  </div>
                   {/* 이름 */}
                   <p className='text-[18px] font-semibold text-[black] mb-[28px]'>
-                    {member.name}
+                    {member.nickname}
                   </p>
                 </div>
               ))}
