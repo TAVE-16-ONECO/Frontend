@@ -28,9 +28,9 @@ const Details = () => {
   const { id } = useParams()
   const setShowNavigation = useUIOptionStore((state) => state.setShowNavigation)
   const role = useAuthStore((state) => state.role)
-  const userData = useAuthStore((state) => state.userData)
   const [mission, setMission] = useState(null)
   const [nickname, setNickname] = useState('')
+  const [memberId, setMemberId] = useState(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -60,6 +60,9 @@ const Details = () => {
           console.log('멤버 정보 API 응답:', memberInfo)
           if (memberInfo?.data?.nickname) {
             setNickname(memberInfo.data.nickname)
+          }
+          if (memberInfo?.data?.memberId) {
+            setMemberId(memberInfo.data.memberId)
           }
         }
       } catch (error) {
@@ -108,7 +111,11 @@ const Details = () => {
 
   // 미션 상태에 따른 메시지 반환
   const getStatusMessage = (status) => {
-    const name = nickname || '멤버'
+    // 부모일 때는 요청자(자식) 닉네임 사용
+    const name =
+      role === 'PARENT'
+        ? mission?.requesterNickname || '멤버'
+        : nickname || '멤버'
     const messages = {
       APPROVAL_REQUEST: `${name}님이 새로운 미션 승인을 요청했어요`,
       APPROVAL_ACCEPTED: `${name}님의 미션 승인이 수락됐어요`,
@@ -195,19 +202,21 @@ const Details = () => {
               </div>
 
               {/* 미션 제목 및 보상 */}
-              <div className='flex flex-col items-center bg-[#E2EFFF] rounded-2xl p-6 mb-[34px] mt-[10px] ml-[24px] mr-[24px] w-full'>
+              <div className='flex flex-col items-center bg-[#E2EFFF] h-[158px] rounded-2xl p-6 mb-[20px] mt-[10px] ml-[24px] mr-[24px] w-full'>
                 <p className='text-[#404040] mb-[23px]'>
                   {mission.categoryTitle}
                 </p>
                 <p className='text-2xl text-[#404040] font-bold'>
                   {mission.rewardTitle}
                 </p>
-                {mission.message && (
-                  <p className='text-sm text-gray-500 mt-[12px] text-center'>
-                    "{mission.message}"
-                  </p>
-                )}
               </div>
+
+              {/* 보상 메시지 */}
+              {mission.rewardMessage && (
+                <p className='text-sm text-gray-500 text-left px-6 w-full'>
+                  "{mission.rewardMessage}"
+                </p>
+              )}
 
               {/* 날짜 정보 - border-bottom 아래 */}
               <div className='w-full px-6 pb-6 border-t'>
@@ -253,7 +262,7 @@ const Details = () => {
 
       {/* 승인 요청 미션일 때 수락/거절 플로팅 버튼 (수신자만) */}
       {mission.missionStatus === 'APPROVAL_REQUEST' &&
-        userData?.id === mission.recipientId && (
+        memberId === mission.recipientId && (
           <div className='fixed bottom-8 left-1/2 -translate-x-1/2 flex gap-6'>
             <button
               className='bg-gray-400 hover:bg-gray-500 text-white w-[150px] px-4 py-4 rounded-2xl shadow-lg transition-colors font-bold'
