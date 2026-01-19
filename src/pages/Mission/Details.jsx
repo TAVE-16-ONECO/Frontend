@@ -28,6 +28,7 @@ const Details = () => {
   const { id } = useParams()
   const setShowNavigation = useUIOptionStore((state) => state.setShowNavigation)
   const role = useAuthStore((state) => state.role)
+  //const role = 'PARENT' // 테스트용
   const [mission, setMission] = useState(null)
   const [nickname, setNickname] = useState('')
   const [memberId, setMemberId] = useState(null)
@@ -111,11 +112,31 @@ const Details = () => {
 
   // 미션 상태에 따른 메시지 반환
   const getStatusMessage = (status) => {
-    // 부모일 때는 요청자(자식) 닉네임 사용
-    const name =
-      role === 'PARENT'
-        ? mission?.requesterNickname || '멤버'
-        : nickname || '멤버'
+    let name = '멤버'
+
+    // 승인 관련 상태는 요청자 닉네임 사용
+    if (
+      ['APPROVAL_REQUEST', 'APPROVAL_ACCEPTED', 'APPROVAL_REJECTED'].includes(
+        status,
+      )
+    ) {
+      name = mission?.requesterNickname || '멤버'
+    }
+    // 미션 진행/완료 관련 상태는 자녀 닉네임 사용
+    else if (
+      [
+        'MISSION_COMPLETED',
+        'REWARD_REQUESTED',
+        'REWARD_COMPLETED',
+        'MISSION_FAILED',
+      ].includes(status)
+    ) {
+      name = nickname || '멤버'
+    }
+    // 그 외 (IN_PROGRESS 등)
+    else {
+      name = nickname || '멤버'
+    }
     const messages = {
       APPROVAL_REQUEST: `${name}님이 새로운 미션 승인을 요청했어요`,
       APPROVAL_ACCEPTED: `${name}님의 미션 승인이 수락됐어요`,
