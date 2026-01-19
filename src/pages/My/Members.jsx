@@ -4,41 +4,43 @@ import { BackArrowIcon } from '../../components/icons/BackArrowIcon'
 import { useAuthStore } from '../../store/authStore'
 import { useUIOptionStore } from '@/store/uiOptionStore'
 import apiClient from '../../api/client'
-import { familyAPI } from '../../api/family'
 
 const Members = () => {
   const navigate = useNavigate()
   const [showModal, setShowModal] = useState(false)
   const [inviteType, setInviteType] = useState('') // 'parent' or 'child'
+  const [inviteCode, setInviteCode] = useState('')
   const setShowNavigation = useUIOptionStore((state) => state.setShowNavigation)
-  const [members, setMembers] = useState([])
-  const [loading, setLoading] = useState(true)
-
-  // authStore에서 role 가져오기
-  const role = useAuthStore((state) => state.role)
-
-  // 멤버가 있는지 여부
-  const hasMembers = members.length > 0
 
   useEffect(() => {
     setShowNavigation(false)
 
-    const fetchMembers = async () => {
+    // 초대 코드 미리 받아오기
+    const fetchInviteCode = async () => {
       try {
-        setLoading(true)
-        const response = await familyAPI.getMembers()
-        const memberList = response.data?.members || []
-        setMembers(memberList)
-      } catch (error) {
-        console.error('멤버 조회 실패:', error)
-        setMembers([])
-      } finally {
-        setLoading(false)
+        const response = await apiClient.get('/api/family/invitations/code')
+        const code = response.data.data.code
+        setInviteCode(code)
+      } catch (e) {
+        console.error('초대 코드 조회 실패', e)
       }
     }
 
-    fetchMembers()
+    fetchInviteCode()
   }, [])
+
+  // authStore에서 role과 hasMembers 가져오기
+  const role = useAuthStore((state) => state.role)
+  //주석만 hasMembers 상태값 바꿔서 테스트하기(멤버가 없을때)
+  // const hasMembers = useAuthStore((state) => state.hasMembers)
+  const hasMembers = true // 테스트용 임시값(멤버가 있을때)
+
+  // 임시 멤버 데이터 (나중에 API에서 가져오기)
+  const [members, setMembers] = useState([
+    { id: 1, name: '엄마', profileImage: null, role: 'parent' },
+    { id: 2, name: '아빠', profileImage: null, role: 'parent' },
+    { id: 3, name: '철수', profileImage: null, role: 'child' },
+  ])
 
   const handleInviteClick = (type) => {
     setInviteType(type)
@@ -52,9 +54,12 @@ const Members = () => {
 
   const handleCopyLink = async () => {
     // 초대 링크 복사 로직
+    if (!inviteCode) {
+      alert('초대 코드를 불러오는 중입니다. 잠시 후 다시 시도해주세요.')
+      return
+    }
+
     try {
-      const response = await apiClient.get('/api/family/invitations/code')
-      const inviteCode = response.data.data.code
       const inviteLink = `${window.location.origin}/login?inviteCode=${inviteCode}`
       await navigator.clipboard.writeText(inviteLink)
       alert('초대 링크가 복사되었습니다!')
@@ -126,22 +131,14 @@ const Members = () => {
               {/* 기존 멤버 카드들 */}
               {members.map((member) => (
                 <div
-                  key={member.memberId}
+                  key={member.id}
                   className='flex flex-col items-center justify-center bg-[#E2EFFF] border-2 border-gray-100 rounded-lg p-4 h-[178px] shadow'
                 >
                   {/* 프로필 이미지 */}
-                  <div className='w-[70px] h-[70px] rounded-full bg-gray-200 mb-[20px] overflow-hidden'>
-                    {member.profileImageUrl && (
-                      <img
-                        src={member.profileImageUrl}
-                        alt={member.nickname}
-                        className='w-full h-full object-cover'
-                      />
-                    )}
-                  </div>
+                  <div className='w-[70px] h-[70px] rounded-full bg-gray-200 mb-[20px]'></div>
                   {/* 이름 */}
                   <p className='text-[18px] font-semibold text-[black] mb-[28px]'>
-                    {member.nickname}
+                    {member.name}
                   </p>
                 </div>
               ))}
