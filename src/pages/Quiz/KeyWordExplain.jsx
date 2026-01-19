@@ -38,7 +38,6 @@ const KeyWordExplain = () => {
         setDaySequence(data.daySequence)
         setStudyRecordId(data.studyRecordId)
         setQuizProgressStatus(data.quizProgressStatus)
-        console.log(data.dailyContent.bodyText)
       } catch (e) {
         console.log('키워드 본문 불러오기 실패', e)
         setHasError(true)
@@ -49,7 +48,7 @@ const KeyWordExplain = () => {
 
     getKeywordExplain()
     isStudyStarted.current = true
-  }, [])
+  }, [dailyContentId, setDailyContent, setDaySequence, setStudyRecordId])
 
   const handleStudyCompleted = () => {
     navigate('/quiz/test')
