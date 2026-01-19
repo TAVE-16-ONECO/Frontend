@@ -98,7 +98,7 @@ const Result = () => {
             {
               quizResultData.newsUnlocked ?
                 // 뉴스 정보 카드
-                <div className='w-full min-h-[215px] px-[14px] py-[19px] mt-[44px] flex justify-around items-center gap-[20px] bg-[#fdfdfd] rounded-xl'>
+                <div className='w-full min-h-[215px] px-[14px] py-[19px] mt-[44px] flex justify-around items-start gap-[20px] bg-[#fdfdfd] rounded-xl'>
                   <a
                     className='flex-1 flex flex-col items-center gap-[6px]'
                     href={quizResultData.newsItems[0].url}

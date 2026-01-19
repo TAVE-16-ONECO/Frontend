@@ -56,11 +56,12 @@ const Members = () => {
       const response = await apiClient.get('/api/family/invitations/code')
       const inviteCode = response.data.data.code
       const inviteLink = `${window.location.origin}/login?inviteCode=${inviteCode}`
-      navigator.clipboard.writeText(inviteLink)
+      await navigator.clipboard.writeText(inviteLink)
       alert('초대 링크가 복사되었습니다!')
       setShowModal(false)
     } catch (e) {
       console.error('초대 링크 복사 실패', e)
+      alert('초대 링크 복사에 실패했습니다.')
     }
   }
 
