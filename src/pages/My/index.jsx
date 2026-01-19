@@ -5,6 +5,7 @@ import PlusIcon from '../../components/icons/PlusIcon'
 import { missionAPI } from '../../api/mission'
 import { membersAPI } from '../../api/members'
 import { familyAPI } from '../../api/family'
+import { useAuthStore } from '../../store/authStore'
 
 const My = () => {
   const navigate = useNavigate()
@@ -15,6 +16,7 @@ const My = () => {
   const [familyprofile, setfamilyprofile] = useState(null)
 
   const setShowNavigation = useUIOptionStore((state) => state.setShowNavigation)
+  const logout = useAuthStore((state) => state.logout)
 
   useEffect(() => {
     setShowNavigation(true)
@@ -75,6 +77,8 @@ const My = () => {
   const toggleKeywordAlarm = () => {
     setKeywordAlarmEnabled(!keywordAlarmEnabled)
   }
+
+  const handleLogout = () => {}
 
   return (
     <div className='flex flex-col bg-white'>
@@ -189,13 +193,22 @@ const My = () => {
           className='flex flex-col h-[80px] rounded-lg overflow-hidden border-gray-100 border-1 shadow'
         >
           {/* 위 3/5 - 회색 배경 */}
-          <div className='w-full h-3/5 bg-[#EDEDED] flex px-[10px] items-center gap-2'>
-            <p className='text-[14px] text-[#2c2c2c] font-medium text-left'>
-              계정 정보
-            </p>
-            <div className='bg-[#FDEE4B] rounded-full inline-flex px-3 py-1 text-[8px] '>
-              카카오 로그인
+          <div className='w-full h-3/5 bg-[#EDEDED] flex px-[10px] justify-between items-center gap-2'>
+            <div className='flex items-center gap-2'>
+              <p className='text-[14px] text-[#2c2c2c] font-medium text-left'>
+                계정 정보
+              </p>
+              <div className='bg-[#FDEE4B] rounded-full inline-flex px-3 py-1 text-[8px] '>
+                카카오 로그인
+              </div>
             </div>
+
+            <button
+              className='text-[12px] bg-gray-600 text-white rounded-2xl px-2 py-1'
+              onClick={logout}
+            >
+              로그아웃
+            </button>
           </div>
           {/* 아래 2/5 - 하얀색 배경 */}
           <div className='h-2/5 bg-white flex items-center px-[10px]'>
