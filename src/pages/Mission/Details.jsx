@@ -195,19 +195,21 @@ const Details = () => {
               </div>
 
               {/* 미션 제목 및 보상 */}
-              <div className='flex flex-col items-center bg-[#E2EFFF] rounded-2xl p-6 mb-[34px] mt-[10px] ml-[24px] mr-[24px] w-full'>
+              <div className='flex flex-col items-center bg-[#E2EFFF] h-[158px] rounded-2xl p-6 mb-[20px] mt-[10px] ml-[24px] mr-[24px] w-full'>
                 <p className='text-[#404040] mb-[23px]'>
                   {mission.categoryTitle}
                 </p>
                 <p className='text-2xl text-[#404040] font-bold'>
                   {mission.rewardTitle}
                 </p>
-                {mission.message && (
-                  <p className='text-sm text-gray-500 mt-[12px] text-center'>
-                    "{mission.message}"
-                  </p>
-                )}
               </div>
+
+              {/* 보상 메시지 */}
+              {mission.rewardMessage && (
+                <p className='text-sm text-gray-500 text-left px-6 w-full'>
+                  "{mission.rewardMessage}"
+                </p>
+              )}
 
               {/* 날짜 정보 - border-bottom 아래 */}
               <div className='w-full px-6 pb-6 border-t'>
