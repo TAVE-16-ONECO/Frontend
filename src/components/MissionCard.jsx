@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { useQuizStore } from '../store/quizStore'
 import { transformMissionData } from '../utils/missionDataTransformer'
 
-const MissionCard = ({ mission, index }) => {
+const MissionCard = ({ mission }) => {
   const navigate = useNavigate()
   const [currentDate, setCurrentDate] = useState(new Date())
 
@@ -108,15 +108,6 @@ const MissionCard = ({ mission, index }) => {
     return '오늘의 키워드' // 기본값
   }
 
-  // 공부 시작 일차 계산
-  const calculateStudyDay = (startDate) => {
-    const start = new Date(startDate)
-    const today = new Date()
-    const diffTime = today - start
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
-    return diffDays + 1 // 1일차부터 시작
-  }
-
   const handleDateSelect = (dateInfo) => {
     setSelectedDateInfo(dateInfo)
   }
@@ -145,10 +136,7 @@ const MissionCard = ({ mission, index }) => {
             <div className='flex items-center gap-2'>
               <div className='flex-1 relative pt-[10px]'>
                 {/* 80% 지점 마커 */}
-                <div
-                  className='absolute -top-1 bottom-0 flex flex-col items-center pointer-events-none z-10'
-                  style={{ left: '80%', transform: 'translateX(-50%)' }}
-                >
+                <div className='absolute -top-1 flex flex-col items-center z-10 right-0'>
                   {/* 선물 상자 아이콘 */}
                   <img
                     src='/images/PresentBox.png'
