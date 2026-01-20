@@ -113,11 +113,21 @@ const MissionCard = ({ mission }) => {
   }
 
   const handleQuizStart = () => {
-    // 현재 미션에서 날짜를 선택하지 않았으면 기본 dailyContentId 설정
-    if (!selectedDateInfo) {
+    // selectedDateInfo가 있으면 해당 날짜의 dailyContentId 설정
+    if (selectedDateInfo && selectedDateInfo.date) {
+      const dateItem = mission.dateList?.find(
+        (item) => item.date === selectedDateInfo.date,
+      )
+      if (dateItem?.dailyContentId) {
+        setDailyContentId(dateItem.dailyContentId)
+      } else {
+        // dateList에 없으면 기본 dailyContentId 사용
+        setDailyContentId(mission.dailyContent.dailyContentId)
+      }
+    } else {
+      // selectedDateInfo가 없으면 기본 dailyContentId 사용
       setDailyContentId(mission.dailyContent.dailyContentId)
     }
-    // selectedDateInfo가 있으면 이미 store에 dailyContentId가 설정되어 있음
     navigate('/quiz/keyword-explain')
   }
 
