@@ -3,6 +3,7 @@ import { router } from '@/router/index.jsx'
 import { useEffect } from 'react'
 import { usePWAStore } from '@/store/pwaStore'
 import { isIOS } from '@/utils/pwaHelpers'
+import ReloadPrompt from './components/ReloadPrompt'
 
 const App = () => {
   const setDeferredPrompt = usePWAStore((state) => state.setDeferredPrompt)
@@ -30,7 +31,12 @@ const App = () => {
     }
   }, [setDeferredPrompt, setIsIOSPlatform])
 
-  return <RouterProvider router={router} />
+  return (
+    <>
+      <RouterProvider router={router} />
+      <ReloadPrompt />
+    </>
+  )
 }
 
 export default App

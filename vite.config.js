@@ -9,9 +9,8 @@ export default defineConfig({
     react(),
     tailwindcss(),
     VitePWA({
-      registerType: 'autoUpdate',
+      registerType: 'prompt',
       includeAssets: ['vite.svg', 'images/**/*'],
-
       manifest: {
         name: 'ONECO',
         short_name: 'ONECO',
@@ -46,6 +45,7 @@ export default defineConfig({
 
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2}'],
+        navigateFallback: '/index.html', // navigate 실패시 index.html을 보여주도록 설정(잘못된 url 접속 또는 오프라인 상태에서 새로고침 등)
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/cdn\.jsdelivr\.net\/.*/i,
