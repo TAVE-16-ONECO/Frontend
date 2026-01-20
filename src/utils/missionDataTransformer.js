@@ -41,6 +41,7 @@ const convertDateListToDailyRecords = (dateList) => {
     if (item.studyStatus !== 'NOT_AVAILABLE') {
       acc[item.date] = {
         studyStatus: statusMap[item.studyStatus],
+        dailyContentId: item.dailyContentId,
       }
     }
     return acc

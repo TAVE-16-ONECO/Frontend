@@ -10,7 +10,7 @@ import { create } from 'zustand'
 }
 */
 
-export const useQuizStore = create((set, get) => ({
+export const useQuizStore = create((set) => ({
   studyRecordId: null,
   dailyContentId: null,
   dailyContent: null,
@@ -24,6 +24,12 @@ export const useQuizStore = create((set, get) => ({
   },
   setDailyContent: (dailyContent) => {
     set({ dailyContent })
+  },
+  updateDailyContentIdAndKeyword: (dailyContentId, keyword) => {
+    set((state) => {
+      const newDailyContent = { ...state.dailyContent, keyword }
+      return { dailyContentId, dailyContent: newDailyContent }
+    })
   },
   setDaySequence: (daySequence) => {
     set({ daySequence })
