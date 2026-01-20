@@ -1,15 +1,22 @@
 import clsx from 'clsx'
 import { useMemo, useState, useRef, useEffect } from 'react'
 import { useUIOptionStore } from '../store/uiOptionStore'
+import apiClient from '../api/client'
+import { useQuizStore } from '../store/quizStore'
 
 const Calendar = ({
   studyPeriod,
   calendarData,
   currentDate,
   setCurrentDate,
+  onDateSelect,
+  selectedDate,
 }) => {
   const isMonthView = useUIOptionStore((state) => state.isMonthView)
   const setIsMonthView = useUIOptionStore((state) => state.setIsMonthView)
+  const updateDailyContentIdAndKeyword = useQuizStore(
+    (state) => state.updateDailyContentIdAndKeyword,
+  )
   const [height, setHeight] = useState('auto')
   const contentRef = useRef(null)
   const prevIsMonthViewRef = useRef(isMonthView)
@@ -119,12 +126,6 @@ const Calendar = ({
     return compareDate >= startDate && compareDate <= endDate
   }
 
-  // 공부 상태 가져오기
-  const getStudyStatus = (date) => {
-    const dateStr = formatDate(date)
-    return calendarData?.dailyRecords?.[dateStr]?.studyStatus || null
-  }
-
   // 빈 이전/다음 달 주 필터링 (월간 뷰 전용)
   const filteredMonthDates = useMemo(() => {
     if (!isMonthView) {
@@ -198,11 +199,52 @@ const Calendar = ({
   // 헤더 정보 (항상 월만 표시)
   const headerInfo = getMonthInfo()
 
+  // 선택된 날짜 문자열
+  const selectedDateStr = selectedDate?.date || null
+
   const dayNames = ['월', '화', '수', '목', '금']
 
   // 뷰 전환 함수
   const toggleView = () => {
     setIsMonthView(!isMonthView)
+  }
+
+  // 날짜 클릭시 해당 일자 키워드 정보 불러오는 함수
+  const handleDateClick = async (date) => {
+    if (!isInStudyPeriod(date)) {
+      return
+    }
+
+    // 오늘을 포함 이전 날짜여야 조회 가능
+    if (isFutureDate(date)) return
+
+    // 해당 일자 키워드의 dailyContentId 가져오기
+    const dateStr = formatDate(date)
+    const dailyContentId =
+      calendarData?.dailyRecords?.[dateStr]?.dailyContentId || null
+    if (!dailyContentId) return
+
+    try {
+      const res = await apiClient.get(
+        `/api/home/keyword?dailyContentId=${dailyContentId}`,
+      )
+      const keyword = res.data.data.keyword
+      updateDailyContentIdAndKeyword(dailyContentId, keyword)
+
+      // 선택된 날짜 정보를 부모에게 전달
+      const dateInfo = {
+        date: dateStr,
+        month: date.getMonth() + 1,
+        day: date.getDate(),
+      }
+      if (onDateSelect) {
+        onDateSelect(dateInfo)
+      }
+
+      console.log('키워드 개별 정보 조회 성공')
+    } catch (e) {
+      console.log('키워드 개별 정보를 불러오는 중 에러 발생', e)
+    }
   }
 
   // 높이 측정 및 애니메이션
@@ -298,7 +340,6 @@ const Calendar = ({
       {/* 캘린더 - 파란 배경 안 + 높이 애니메이션 */}
       <div
         ref={contentRef}
-        onClick={toggleView}
         className='bg-[#fdfdfd] rounded-2xl pt-4 pb-2 transition-all duration-100 ease-in-out overflow-hidden [box-shadow:0px_1px_5px_0px_rgba(0,0,0,0.15)]'
         style={{
           height: height,
@@ -318,27 +359,31 @@ const Calendar = ({
                 </span>
 
                 {columnDates.map((date, dateIdx) => {
+                  const dateStr = formatDate(date)
                   const inStudyPeriod = isInStudyPeriod(date)
-                  const studyStatus = getStudyStatus(date)
+                  const studyStatus =
+                    calendarData?.dailyRecords?.[dateStr]?.studyStatus || null
                   const todayHighlight = isToday(date)
                   const isFuture = isFutureDate(date)
                   const inCurrentMonth = isCurrentMonth(date)
+                  const isSelected = selectedDateStr === dateStr
 
                   return (
                     <button
                       key={dateIdx}
                       className={clsx(
                         'flex flex-col items-center w-full mt-[13px] pb-2',
-                        todayHighlight &&
+                        isSelected &&
                           'w-full max-w-[34px] bg-[#f4f4f4] rounded-xl',
                       )}
+                      onClick={() => handleDateClick(date)}
                     >
                       <span
-                        className={`w-[18px] h-[18px] text-[10px] font-semibold flex items-center justify-center ${
+                        className={`w-[18px] h-[18px] text-[10px] flex items-center justify-center ${
                           !inCurrentMonth && isMonthView ?
                             'border-transparent opacity-30'
-                          : todayHighlight ? 'text-[#404040]'
-                          : 'border-transparent text-[#919191]'
+                          : todayHighlight ? 'font-bold text-[#404040]'
+                          : 'font-semibold border-transparent text-[#919191]'
                         }`}
                       >
                         {date.getDate()}
@@ -387,7 +432,10 @@ const Calendar = ({
         </div>
         {/* 인디케이터 바 */}
         <div className='flex justify-center mt-3'>
-          <div className='w-[67px] h-[3px] rounded-[2px] bg-[#bababa]' />
+          <button
+            className='w-[67px] h-[3px] rounded-[2px] bg-[#bababa]'
+            onClick={toggleView}
+          />
         </div>
       </div>
     </div>

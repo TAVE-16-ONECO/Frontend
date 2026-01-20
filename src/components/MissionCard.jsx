@@ -8,6 +8,51 @@ const MissionCard = ({ mission, index }) => {
   const navigate = useNavigate()
   const [currentDate, setCurrentDate] = useState(new Date())
 
+  // 오늘 날짜(또는 가장 가까운 평일) 계산
+  const getDefaultDate = () => {
+    if (!mission.dateList || mission.dateList.length === 0) return null
+
+    let targetDate = new Date()
+    targetDate.setHours(0, 0, 0, 0)
+    const dayOfWeek = targetDate.getDay()
+
+    if (dayOfWeek === 0) {
+      targetDate.setDate(targetDate.getDate() - 2)
+    } else if (dayOfWeek === 6) {
+      targetDate.setDate(targetDate.getDate() - 1)
+    }
+
+    // dateList에서 가장 가까운 날짜 찾기
+    let closestItem = null
+    let minDiff = Infinity
+
+    mission.dateList.forEach((item) => {
+      const itemDate = new Date(item.date)
+      itemDate.setHours(0, 0, 0, 0)
+      const diff = Math.abs(itemDate - targetDate)
+
+      if (diff < minDiff) {
+        minDiff = diff
+        closestItem = item
+      }
+    })
+
+    if (closestItem) {
+      const date = new Date(closestItem.date)
+      return {
+        date: closestItem.date,
+        month: date.getMonth() + 1,
+        day: date.getDate(),
+      }
+    }
+    return null
+  }
+
+  const [selectedDateInfo, setSelectedDateInfo] = useState(() =>
+    getDefaultDate(),
+  )
+
+  const storeKeyword = useQuizStore((state) => state.dailyContent?.keyword)
   const setDailyContentId = useQuizStore((state) => state.setDailyContentId)
 
   // 원본 API 데이터를 컴포넌트에서 사용할 형식으로 변환
@@ -15,6 +60,11 @@ const MissionCard = ({ mission, index }) => {
 
   // 오늘 날짜에서 가장 가까운 평일의 키워드 찾기
   const getInProgressDate = () => {
+    // 선택된 날짜가 있으면 그것을 표시
+    if (selectedDateInfo) {
+      return `${selectedDateInfo.month}월 ${selectedDateInfo.day}일 키워드`
+    }
+
     if (!mission.dateList || mission.dateList.length === 0) {
       return '오늘의 키워드' // 기본값
     }
@@ -67,9 +117,16 @@ const MissionCard = ({ mission, index }) => {
     return diffDays + 1 // 1일차부터 시작
   }
 
+  const handleDateSelect = (dateInfo) => {
+    setSelectedDateInfo(dateInfo)
+  }
+
   const handleQuizStart = () => {
-    const dailyContentId = mission.dailyContent.dailyContentId
-    setDailyContentId(dailyContentId)
+    // 현재 미션에서 날짜를 선택하지 않았으면 기본 dailyContentId 설정
+    if (!selectedDateInfo) {
+      setDailyContentId(mission.dailyContent.dailyContentId)
+    }
+    // selectedDateInfo가 있으면 이미 store에 dailyContentId가 설정되어 있음
     navigate('/quiz/keyword-explain')
   }
 
@@ -128,7 +185,10 @@ const MissionCard = ({ mission, index }) => {
               {/* 키워드 및 디데이 */}
               <div className='flex items-center mb-[10px]'>
                 <p className='text-[16px] text-[#000000] font-medium'>
-                  {missionData.missionTheme}: {missionData.keyword}
+                  {missionData.missionTheme}:{' '}
+                  {selectedDateInfo && storeKeyword ?
+                    storeKeyword
+                  : missionData.keyword}
                 </p>
               </div>
 
@@ -149,6 +209,8 @@ const MissionCard = ({ mission, index }) => {
             calendarData={missionData.calendarData}
             currentDate={currentDate}
             setCurrentDate={setCurrentDate}
+            onDateSelect={handleDateSelect}
+            selectedDate={selectedDateInfo}
           />
         </div>
       </div>
