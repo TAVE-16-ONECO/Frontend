@@ -28,7 +28,6 @@ const Details = () => {
   const { id } = useParams()
   const setShowNavigation = useUIOptionStore((state) => state.setShowNavigation)
   const role = useAuthStore((state) => state.role)
-  //const role = 'PARENT' // 테스트용
   const [mission, setMission] = useState(null)
   const [nickname, setNickname] = useState('')
   const [memberId, setMemberId] = useState(null)
