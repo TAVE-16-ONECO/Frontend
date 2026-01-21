@@ -1,10 +1,24 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { studyRecordsAPI } from '@/api/studyRecords'
+import { useQuizStore } from '@/store/quizStore'
 
-const HistoryCard = ({ studyRecordId, title, date, text, items, isBookmarked: initialBookmarked = false, showBookmark = true }) => {
+const HistoryCard = ({
+  studyRecordId,
+  dailyContentId,
+  title,
+  date,
+  text,
+  items,
+  isBookmarked: initialBookmarked = false,
+  showBookmark = true,
+}) => {
+  const navigate = useNavigate()
+  const setDailyContentId = useQuizStore((state) => state.setDailyContentId)
   const [isBookmarked, setIsBookmarked] = useState(initialBookmarked)
 
-  const handleBookmarkClick = async () => {
+  const handleBookmarkClick = async (e) => {
+    e.stopPropagation() // 카드 클릭 이벤트 전파 방지
     const newBookmarkState = !isBookmarked
     setIsBookmarked(newBookmarkState)
 
@@ -13,6 +27,16 @@ const HistoryCard = ({ studyRecordId, title, date, text, items, isBookmarked: in
     } catch (error) {
       // 실패 시 원래 상태로 롤백
       setIsBookmarked(isBookmarked)
+    }
+  }
+
+  const handleCardClick = () => {
+    // dailyContentId가 유효한 숫자인지 확인 (빈 배열이나 null 등 방어)
+    if (dailyContentId && typeof dailyContentId === 'number') {
+      setDailyContentId(dailyContentId)
+      navigate('/quiz/keyword-explain')
+    } else {
+      console.warn('유효하지 않은 dailyContentId:', dailyContentId)
     }
   }
 
@@ -25,9 +49,14 @@ const HistoryCard = ({ studyRecordId, title, date, text, items, isBookmarked: in
         {/* 제목 + 날짜 + 저장/공유 */}
         <div className='flex flex-col gap-[13px] w-full pr-[18px]'>
           <div className='flex justify-between items-center w-full'>
-            <div className='flex items-center gap-[8px]'>
+            <div
+              className='flex items-center gap-[8px] cursor-pointer'
+              onClick={handleCardClick}
+            >
               <p className='text-black text-[16px] font-[700]'>{title}</p>
-              <p className='text-[#BABABA] text-[12px] font-[600]'>{formattedDate}</p>
+              <p className='text-[#BABABA] text-[12px] font-[600]'>
+                {formattedDate}
+              </p>
             </div>
 
             <div className='flex items-center gap-[24px]'>
@@ -77,7 +106,7 @@ const HistoryCard = ({ studyRecordId, title, date, text, items, isBookmarked: in
         </div>
 
         {/* 가로 카드 스크롤 영역 */}
-        <div className='flex gap-[11px] w-full overflow-x-scroll scrollbar-hide pr-[18px]'>
+        <div className='flex gap-[11px] w-full overflow-x-auto scrollbar-hide pr-[18px]'>
           {items?.map((item, idx) => (
             <a
               key={idx}
