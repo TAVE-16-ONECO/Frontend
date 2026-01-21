@@ -14,12 +14,16 @@ const History = () => {
   // 자식: viewMode (ALL/BOOKMARKED), 부모: selectedChildId
   const [viewMode, setViewMode] = useState('ALL')
   const [selectedChildId, setSelectedChildId] = useState(null)
+  const isInitializedRef = useRef(false)
+  const hasLoadedRef = useRef(false)
+  const lastChildIdRef = useRef(null)
 
   const loaderRef = useRef(null)
   const setShowNavigation = useUIOptionStore((state) => state.setShowNavigation)
   const role = useAuthStore((state) => state.role)
+  const hasHydrated = useAuthStore((state) => state._hasHydrated)
 
-  const isParent = role === 'PARENT'
+  const isParent = role?.toUpperCase() === 'PARENT'
 
   // 데이터 불러오기
   const fetchHistory = useCallback(
@@ -42,15 +46,48 @@ const History = () => {
         // 멤버 목록 저장 (부모용)
         if (data.memberItems?.length > 0) {
           setMemberItems(data.memberItems)
+
           // 첫 로드 시 선택된 자녀가 없으면 첫 번째 자녀 선택
-          if (isInitial && selectedChildId === null) {
-            setSelectedChildId(data.memberItems[0].memberId)
+          if (!isInitializedRef.current && selectedChildId === null) {
+            // historyItems가 함께 왔다면 바로 설정하고 종료
+            if (data.historyItems?.length > 0) {
+              setHistoryItems(data.historyItems)
+              setSelectedChildId(data.memberItems[0].memberId)
+              lastChildIdRef.current = data.memberItems[0].memberId // 중복 호출 방지
+              isInitializedRef.current = true
+              setCursor({
+                nextId: data.nextId,
+                nextSubmittedDate: data.nextSubmittedDate,
+              })
+              setHasNext(data.hasNext)
+              return
+            } else {
+              // 빈 히스토리로 초기화 (UI 업데이트 보장)
+              setHistoryItems([])
+              setSelectedChildId(data.memberItems[0].memberId)
+              return // 선택만 하고 리턴 (selectedChildId 변경으로 재호출됨)
+            }
           }
         }
 
         // 히스토리 아이템 추가
         if (isInitial) {
-          setHistoryItems(data.historyItems || [])
+          console.log('[Debug] 받은 historyItems:', data.historyItems)
+          console.log('[Debug] 정렬 전 순서:', data.historyItems?.map(item => ({ id: item.studyRecordId, date: item.quizAttemptDate })))
+
+          // 날짜 기준 내림차순 정렬 (최신 → 과거)
+          const sortedItems = [...(data.historyItems || [])].sort((a, b) => {
+            // null 날짜는 맨 아래로
+            if (!a.quizAttemptDate) return 1
+            if (!b.quizAttemptDate) return -1
+            // 날짜 비교 (최신이 위로)
+            return new Date(b.quizAttemptDate) - new Date(a.quizAttemptDate)
+          })
+
+          console.log('[Debug] 정렬 후 순서:', sortedItems.map(item => ({ id: item.studyRecordId, date: item.quizAttemptDate })))
+          setHistoryItems(sortedItems)
+          // 초기 로드 완료 표시 (자식/부모 모두)
+          isInitializedRef.current = true
         } else {
           setHistoryItems((prev) => [...prev, ...(data.historyItems || [])])
         }
@@ -67,18 +104,25 @@ const History = () => {
         setIsLoading(false)
       }
     },
-    [isLoading, hasNext, cursor, viewMode, selectedChildId, isParent],
+    [isLoading, hasNext, cursor.nextId, cursor.nextSubmittedDate, viewMode, selectedChildId, isParent],
   )
 
   // 초기 로드
   useEffect(() => {
+    // hydration 완료될 때까지 대기
+    if (!hasHydrated) return
+
+    if (hasLoadedRef.current) return
+    hasLoadedRef.current = true
+
     setShowNavigation(true)
     fetchHistory(true)
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasHydrated])
 
   // viewMode 변경 시 커서 초기화 후 재조회 (자식용)
   useEffect(() => {
-    if (!isParent) {
+    if (!isParent && isInitializedRef.current) {
       setHistoryItems([])
       setCursor({ nextId: null, nextSubmittedDate: null })
       setHasNext(true)
@@ -88,7 +132,10 @@ const History = () => {
 
   // 선택된 자녀 변경 시 커서 초기화 후 재조회 (부모용)
   useEffect(() => {
-    if (isParent && selectedChildId !== null) {
+    // 같은 자녀로 중복 호출 방지 (Strict Mode 대응)
+    if (isParent && selectedChildId !== null && selectedChildId !== lastChildIdRef.current) {
+      lastChildIdRef.current = selectedChildId
+
       setHistoryItems([])
       setCursor({ nextId: null, nextSubmittedDate: null })
       setHasNext(true)
@@ -100,7 +147,8 @@ const History = () => {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && hasNext && !isLoading) {
+        // 초기 로드 완료 후에만 무한 스크롤 활성화
+        if (entries[0].isIntersecting && hasNext && !isLoading && isInitializedRef.current) {
           fetchHistory(false)
         }
       },
@@ -201,7 +249,7 @@ const ChildSelectButtons = ({ members, selectedChildId, onSelect }) => {
           className={`px-[16px] h-[35px] rounded-[30px] text-[13px] font-bold flex items-center justify-center
             ${selectedChildId === member.memberId ? 'bg-[#5188FB] text-white' : 'bg-white border'}`}
         >
-          {member.name}
+          {member.name || member.nickname || `자녀 ${member.memberId}`}
         </button>
       ))}
     </>
