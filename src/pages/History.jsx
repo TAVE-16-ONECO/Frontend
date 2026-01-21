@@ -9,7 +9,10 @@ const History = () => {
   const [memberItems, setMemberItems] = useState([])
   const [hasNext, setHasNext] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
-  const [cursor, setCursor] = useState({ nextId: null, nextSubmittedDate: null })
+  const [cursor, setCursor] = useState({
+    nextId: null,
+    nextSubmittedDate: null,
+  })
 
   // 자식: viewMode (ALL/BOOKMARKED), 부모: selectedChildId
   const [viewMode, setViewMode] = useState('ALL')
@@ -77,7 +80,13 @@ const History = () => {
         // 히스토리 아이템 추가
         if (isInitial) {
           console.log('[Debug] 받은 historyItems:', data.historyItems)
-          console.log('[Debug] 정렬 전 순서:', data.historyItems?.map(item => ({ id: item.studyRecordId, date: item.quizAttemptDate })))
+          console.log(
+            '[Debug] 정렬 전 순서:',
+            data.historyItems?.map((item) => ({
+              id: item.studyRecordId,
+              date: item.quizAttemptDate,
+            })),
+          )
 
           // 날짜 기준 내림차순 정렬 (최신 → 과거)
           const sortedItems = [...(data.historyItems || [])].sort((a, b) => {
@@ -88,7 +97,13 @@ const History = () => {
             return new Date(b.quizAttemptDate) - new Date(a.quizAttemptDate)
           })
 
-          console.log('[Debug] 정렬 후 순서:', sortedItems.map(item => ({ id: item.studyRecordId, date: item.quizAttemptDate })))
+          console.log(
+            '[Debug] 정렬 후 순서:',
+            sortedItems.map((item) => ({
+              id: item.studyRecordId,
+              date: item.quizAttemptDate,
+            })),
+          )
           setHistoryItems(sortedItems)
           // 초기 로드 완료 표시 (자식/부모 모두)
           isInitializedRef.current = true
@@ -108,7 +123,15 @@ const History = () => {
         setIsLoading(false)
       }
     },
-    [isLoading, hasNext, cursor.nextId, cursor.nextSubmittedDate, viewMode, selectedChildId, isParent],
+    [
+      isLoading,
+      hasNext,
+      cursor.nextId,
+      cursor.nextSubmittedDate,
+      viewMode,
+      selectedChildId,
+      isParent,
+    ],
   )
 
   // 초기 로드
@@ -137,7 +160,11 @@ const History = () => {
   // 선택된 자녀 변경 시 커서 초기화 후 재조회 (부모용)
   useEffect(() => {
     // 같은 자녀로 중복 호출 방지 (Strict Mode 대응)
-    if (isParent && selectedChildId !== null && selectedChildId !== lastChildIdRef.current) {
+    if (
+      isParent &&
+      selectedChildId !== null &&
+      selectedChildId !== lastChildIdRef.current
+    ) {
       lastChildIdRef.current = selectedChildId
 
       setHistoryItems([])
@@ -152,7 +179,12 @@ const History = () => {
     const observer = new IntersectionObserver(
       (entries) => {
         // 초기 로드 완료 후에만 무한 스크롤 활성화
-        if (entries[0].isIntersecting && hasNext && !isLoading && isInitializedRef.current) {
+        if (
+          entries[0].isIntersecting &&
+          hasNext &&
+          !isLoading &&
+          isInitializedRef.current
+        ) {
           fetchHistory(false)
         }
       },
@@ -168,18 +200,17 @@ const History = () => {
     <div className='flex flex-col h-screen'>
       {/* 필터 버튼 UI */}
       <div className='shrink-0 flex flex-row items-center w-full h-[57px] border-b-[0.7px] border-[#D9D9D9] px-[18px] gap-[5px]'>
-        {isParent ? (
+        {isParent ?
           <ChildSelectButtons
             members={memberItems}
             selectedChildId={selectedChildId}
             onSelect={setSelectedChildId}
           />
-        ) : (
-          <FilterButtons
+        : <FilterButtons
             viewMode={viewMode}
             onChangeViewMode={setViewMode}
           />
-        )}
+        }
       </div>
       <div className='w-full bg-white flex-1 overflow-y-auto'>
         {/* 카드 리스트 */}
@@ -187,16 +218,19 @@ const History = () => {
           <HistoryCard
             key={item.studyRecordId}
             studyRecordId={item.studyRecordId}
+            dailyContentId={item.dailyContentSummary?.dailyContentId}
             title={item.dailyContentSummary?.title}
             date={item.quizAttemptDate}
             text={item.dailyContentSummary?.summary}
             isBookmarked={item.isBookmarked}
             showBookmark={!isParent}
-            items={item.dailyContentSummary?.newsItemSummaryList?.map((news) => ({
-              img: news.imageUrl,
-              text: news.title,
-              url: news.url,
-            }))}
+            items={item.dailyContentSummary?.newsItemSummaryList?.map(
+              (news) => ({
+                img: news.imageUrl,
+                text: news.title,
+                url: news.url,
+              }),
+            )}
           />
         ))}
 
