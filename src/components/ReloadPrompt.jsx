@@ -1,4 +1,5 @@
 import { useRegisterSW } from 'virtual:pwa-register/react'
+import { useEffect } from 'react'
 
 function ReloadPrompt() {
   // useRegisterSW 훅을 사용하여 업데이트 상태를 관리
@@ -13,6 +14,18 @@ function ReloadPrompt() {
       console.log('SW registration error', error)
     },
   })
+
+  // 컴포넌트 마운트 시 이미 waiting 중인 SW가 있는지 체크
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistration().then((reg) => {
+        if (reg?.waiting) {
+          console.log('Found waiting SW on mount!')
+          setNeedRefresh(true)
+        }
+      })
+    }
+  }, [setNeedRefresh])
 
   const close = () => {
     setNeedRefresh(false)
