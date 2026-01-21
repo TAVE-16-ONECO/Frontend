@@ -51,8 +51,8 @@ const MissionCard = ({ mission }) => {
   const [selectedDateInfo, setSelectedDateInfo] = useState(() =>
     getDefaultDate(),
   )
+  const [selectedKeyword, setSelectedKeyword] = useState(null)
 
-  const storeKeyword = useQuizStore((state) => state.dailyContent?.keyword)
   const setDailyContentId = useQuizStore((state) => state.setDailyContentId)
 
   // 원본 API 데이터를 컴포넌트에서 사용할 형식으로 변환
@@ -108,26 +108,36 @@ const MissionCard = ({ mission }) => {
     return '오늘의 키워드' // 기본값
   }
 
-  const handleDateSelect = (dateInfo) => {
+  const handleDateSelect = (dateInfo, keyword) => {
     setSelectedDateInfo(dateInfo)
+    setSelectedKeyword(keyword)
   }
 
   const handleQuizStart = () => {
-    // selectedDateInfo가 있으면 해당 날짜의 dailyContentId 설정
+    // 1. dailyContentId 계산
+    let dailyContentId
     if (selectedDateInfo && selectedDateInfo.date) {
       const dateItem = mission.dateList?.find(
         (item) => item.date === selectedDateInfo.date,
       )
-      if (dateItem?.dailyContentId) {
-        setDailyContentId(dateItem.dailyContentId)
-      } else {
-        // dateList에 없으면 기본 dailyContentId 사용
-        setDailyContentId(mission.dailyContent.dailyContentId)
-      }
+      dailyContentId =
+        dateItem?.dailyContentId || mission.dailyContent.dailyContentId
     } else {
-      // selectedDateInfo가 없으면 기본 dailyContentId 사용
-      setDailyContentId(mission.dailyContent.dailyContentId)
+      dailyContentId = mission.dailyContent.dailyContentId
     }
+
+    // 2. 전역 store에 동기화 (중요: dailyContentId와 keyword 모두 설정)
+    if (selectedKeyword) {
+      // 선택된 키워드가 있으면 dailyContentId와 keyword 모두 업데이트
+      const updateDailyContentIdAndKeyword =
+        useQuizStore.getState().updateDailyContentIdAndKeyword
+      updateDailyContentIdAndKeyword(dailyContentId, selectedKeyword)
+    } else {
+      // 선택된 키워드가 없으면 dailyContentId만 설정
+      setDailyContentId(dailyContentId)
+    }
+
+    // 3. 퀴즈 플로우로 이동
     navigate('/quiz/keyword-explain')
   }
 
@@ -184,9 +194,7 @@ const MissionCard = ({ mission }) => {
               <div className='flex items-center mb-[10px]'>
                 <p className='text-[16px] text-[#000000] font-medium'>
                   {missionData.missionTheme}:{' '}
-                  {selectedDateInfo && storeKeyword ?
-                    storeKeyword
-                  : missionData.keyword}
+                  {selectedKeyword || missionData.keyword}
                 </p>
               </div>
 

@@ -2,7 +2,6 @@ import clsx from 'clsx'
 import { useMemo, useState, useRef, useEffect } from 'react'
 import { useUIOptionStore } from '../store/uiOptionStore'
 import apiClient from '../api/client'
-import { useQuizStore } from '../store/quizStore'
 
 const Calendar = ({
   studyPeriod,
@@ -14,9 +13,6 @@ const Calendar = ({
 }) => {
   const isMonthView = useUIOptionStore((state) => state.isMonthView)
   const setIsMonthView = useUIOptionStore((state) => state.setIsMonthView)
-  const updateDailyContentIdAndKeyword = useQuizStore(
-    (state) => state.updateDailyContentIdAndKeyword,
-  )
   const [height, setHeight] = useState('auto')
   const contentRef = useRef(null)
   const prevIsMonthViewRef = useRef(isMonthView)
@@ -229,7 +225,6 @@ const Calendar = ({
         `/api/home/keyword?dailyContentId=${dailyContentId}`,
       )
       const keyword = res.data.data.keyword
-      updateDailyContentIdAndKeyword(dailyContentId, keyword)
 
       // 선택된 날짜 정보를 부모에게 전달
       const dateInfo = {
@@ -238,7 +233,7 @@ const Calendar = ({
         day: date.getDate(),
       }
       if (onDateSelect) {
-        onDateSelect(dateInfo)
+        onDateSelect(dateInfo, keyword)
       }
 
       console.log('키워드 개별 정보 조회 성공')
