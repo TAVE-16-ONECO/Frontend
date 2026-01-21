@@ -1,17 +1,33 @@
 import { useNavigate } from 'react-router-dom'
 import { useQuizStore } from '../../store/quizStore'
 import { BackArrowIcon } from '../../components/icons/BackArrowIcon'
+import apiClient from '../../api/client'
+import { useState } from 'react'
 
 const Result = () => {
   const navigate = useNavigate()
+  const [isBookMarked, setIsBookMarked] = useState(false)
 
   const quizResultData = useQuizStore((state) => state.quizResultData)
   const dailyContent = useQuizStore((state) => state.dailyContent)
+  const studyRecordId = useQuizStore((state) => state.studyRecordId)
 
   const handleBack = () => {
     const response = confirm('홈으로 돌아가시겠습니까?')
     if (response) {
       navigate('/')
+    }
+  }
+
+  const handleBookMarkBtnClick = async () => {
+    try {
+      await apiClient.patch(`/api/study-records/${studyRecordId}/bookmark`, {
+        isBookmarked: !isBookMarked,
+      })
+      console.log('북마크 추가 성공')
+      setIsBookMarked((prev) => !prev)
+    } catch (e) {
+      console.log('북마크 추가 중 오류 발생', e)
     }
   }
 
@@ -43,11 +59,20 @@ const Result = () => {
           미션 마스터하기
         </p>
         <div className='flex items-center absolute right-4'>
-          <img
-            src='/images/Bookmark-before.png'
-            alt='북마크 버튼'
-            className='w-[12px] h-[16px] mr-6 mt-1'
-          />
+          <button onClick={handleBookMarkBtnClick}>
+            {isBookMarked ?
+              <img
+                src='/images/Bookmark-after.png'
+                alt='북마크 버튼'
+                className='w-[12px] h-[16px] mr-6 mt-1'
+              />
+            : <img
+                src='/images/Bookmark-before.png'
+                alt='북마크 버튼'
+                className='w-[12px] h-[16px] mr-6 mt-1'
+              />
+            }
+          </button>
           <img
             src='/images/Share.png'
             alt='공유 버튼'
