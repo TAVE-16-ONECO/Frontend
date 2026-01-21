@@ -22,7 +22,7 @@ function ReloadPrompt() {
   if (!needRefresh) return null
 
   return (
-    <div className='fixed top-5 left-1/2 -translate-x-1/2 z-50 p-4 bg-white border border-gray-200 rounded-lg shadow-lg flex flex-col gap-2 max-w-sm'>
+    <div className='w-[300px] fixed top-5 left-1/2 -translate-x-1/2 z-50 p-4 bg-white border border-gray-200 rounded-lg shadow-lg flex flex-col gap-2'>
       <div className='flex flex-col'>
         <p className='font-bold text-gray-900'>업데이트 알림</p>
         <p className='text-sm text-gray-600 mt-1'>새로운 버전이 출시되었구나</p>
