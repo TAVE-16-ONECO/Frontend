@@ -30,8 +30,13 @@ const Alarm = () => {
           알림
         </p>
       </div>
+      <div className='w-full h-full flex justify-center items-center'>
+        <p className='text-[14px] leading-[130%] opacity-[36%]'>
+          알림이 없습니다.
+        </p>
+      </div>
       {/* 오늘 받은 알림 */}
-      <div className='mt-3'>
+      {/* <div className='mt-3'>
         <p className='text-[#2c2c2c] font-semibold ms-5'>오늘 받은 알림</p>
         <div className='mt-2'>
           <AlarmInfo
@@ -47,9 +52,9 @@ const Alarm = () => {
             highlighted={true}
           />
         </div>
-      </div>
+      </div> */}
       {/* 이전 알림 */}
-      <div>
+      {/* <div>
         <p className='text-[#2c2c2c] font-semibold ms-5 mt-6'>이전 알림</p>
         <div className='mt-2'>
           <AlarmInfo
@@ -75,7 +80,7 @@ const Alarm = () => {
             time={'10:03'}
           />
         </div>
-      </div>
+      </div> */}
     </>
   )
 }
