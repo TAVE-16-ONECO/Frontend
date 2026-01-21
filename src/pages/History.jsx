@@ -49,24 +49,28 @@ const History = () => {
 
           // 첫 로드 시 선택된 자녀가 없으면 첫 번째 자녀 선택
           if (!isInitializedRef.current && selectedChildId === null) {
-            // historyItems가 함께 왔다면 바로 설정하고 종료
-            if (data.historyItems?.length > 0) {
-              setHistoryItems(data.historyItems)
-              setSelectedChildId(data.memberItems[0].memberId)
-              lastChildIdRef.current = data.memberItems[0].memberId // 중복 호출 방지
-              isInitializedRef.current = true
-              setCursor({
-                nextId: data.nextId,
-                nextSubmittedDate: data.nextSubmittedDate,
-              })
-              setHasNext(data.hasNext)
-              return
-            } else {
-              // 빈 히스토리로 초기화 (UI 업데이트 보장)
-              setHistoryItems([])
-              setSelectedChildId(data.memberItems[0].memberId)
-              return // 선택만 하고 리턴 (selectedChildId 변경으로 재호출됨)
-            }
+            const firstChildId = data.memberItems[0].memberId
+
+            // 중복 호출 방지를 위해 ref를 먼저 설정
+            lastChildIdRef.current = firstChildId
+            isInitializedRef.current = true
+
+            setSelectedChildId(firstChildId)
+
+            // historyItems 설정 (있든 없든 서버 응답 그대로 사용)
+            const items = data.historyItems || []
+            const sortedItems = [...items].sort((a, b) => {
+              if (!a.quizAttemptDate) return 1
+              if (!b.quizAttemptDate) return -1
+              return new Date(b.quizAttemptDate) - new Date(a.quizAttemptDate)
+            })
+            setHistoryItems(sortedItems)
+            setCursor({
+              nextId: data.nextId,
+              nextSubmittedDate: data.nextSubmittedDate,
+            })
+            setHasNext(data.hasNext)
+            return
           }
         }
 
