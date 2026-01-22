@@ -114,22 +114,19 @@ const Details = () => {
         status,
       )
     ) {
-      if (role === 'PARENT') {
+      if (role?.toUpperCase() === 'PARENT') {
         // 부모일 때
-        const isRequester = memberId === mission?.requesterId
+        const isRequester = mission?.memberId === mission?.requesterId
         if (isRequester) {
           // 내가 요청자 → 본인 이름
           name = nickname || '멤버'
         } else {
-          // 자녀가 요청자 → requesterId로 자녀 찾기
-          const child = familyMembers.find(
-            (member) => member.memberId === mission.requesterId,
-          )
-          name = child?.nickname || '멤버'
+          // 자녀가 요청자 → requesterNickname 사용
+          name = mission?.requesterNickname || '멤버'
         }
       } else {
         // 자녀일 때
-        const isRequester = memberId === mission?.requesterId
+        const isRequester = mission?.memberId === mission?.requesterId
         if (isRequester) {
           // 내가 요청자 → 본인 이름
           name = nickname || '멤버'
@@ -141,22 +138,17 @@ const Details = () => {
     }
     // 진행/완료 관련 상태: 미션 수행자(자녀)의 이름 표시
     else {
-      if (role === 'PARENT') {
-        // 부모일 때: 누가 요청자인지에 따라 자녀 찾기
-        const isRequester = memberId === mission?.requesterId
+      if (role?.toUpperCase() === 'PARENT') {
+        // 부모일 때: 누가 요청자인지에 따라 자녀(미션 수행자) 찾기
+        // mission.memberId는 API 응답에 포함된 현재 사용자의 ID
+        const isRequester = mission?.memberId === mission?.requesterId
 
-        if (isRequester && mission?.recipientId) {
-          // 내가 자녀에게 미션을 보낸 경우 → recipientId가 자녀
-          const child = familyMembers.find(
-            (member) => member.memberId === mission.recipientId,
-          )
-          name = child?.nickname || '멤버'
-        } else if (!isRequester && mission?.requesterId) {
-          // 자녀가 나에게 미션 승인 요청한 경우 → requesterId가 자녀
-          const child = familyMembers.find(
-            (member) => member.memberId === mission.requesterId,
-          )
-          name = child?.nickname || '멤버'
+        if (isRequester) {
+          // 내가 자녀에게 미션을 보낸 경우 → recipient가 자녀 (미션 수행자)
+          name = mission?.recipientNickname || '멤버'
+        } else {
+          // 자녀가 나에게 미션 승인 요청한 경우 → requester가 자녀 (미션 수행자)
+          name = mission?.requesterNickname || '멤버'
         }
       } else {
         // 자녀일 때: 본인 이름
