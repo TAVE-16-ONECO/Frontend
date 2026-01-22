@@ -28,11 +28,11 @@ const Details = () => {
   const { id } = useParams()
   const setShowNavigation = useUIOptionStore((state) => state.setShowNavigation)
   const role = useAuthStore((state) => state.role)
-  //const role = 'PARENT' // 테스트용
   const [mission, setMission] = useState(null)
   const [nickname, setNickname] = useState('')
   const [memberId, setMemberId] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [familyMembers, setFamilyMembers] = useState([])
 
   useEffect(() => {
     setShowNavigation(false)
@@ -45,26 +45,20 @@ const Details = () => {
         console.log('미션 상세 data:', missionResponse.data)
         setMission(missionResponse.data)
 
-        // 부모일 때는 가족 멤버에서 자녀 닉네임 가져오기
-        if (role === 'PARENT') {
-          const familyResponse = await familyAPI.getMembers()
-          console.log('가족 멤버 API 응답:', familyResponse)
-          const members = familyResponse.data?.members || []
-          // 자녀 멤버의 닉네임 사용 (첫 번째 자녀)
-          const childMember = members.find((m) => m.role === 'CHILD')
-          if (childMember?.nickname) {
-            setNickname(childMember.nickname)
-          }
-        } else {
-          // 자녀일 때는 본인 정보 가져오기
-          const memberInfo = await membersAPI.getMemberInfo()
-          console.log('멤버 정보 API 응답:', memberInfo)
-          if (memberInfo?.data?.nickname) {
-            setNickname(memberInfo.data.nickname)
-          }
-          if (memberInfo?.data?.memberId) {
-            setMemberId(memberInfo.data.memberId)
-          }
+        // 가족 멤버 목록 가져오기 (부모/자녀 공통)
+        const familyResponse = await familyAPI.getMembers()
+        console.log('가족 멤버 API 응답:', familyResponse)
+        const members = familyResponse.data?.members || []
+        setFamilyMembers(members)
+
+        // 본인 정보 가져오기 (부모/자녀 공통)
+        const memberInfo = await membersAPI.getMemberInfo()
+        console.log('멤버 정보 API 응답:', memberInfo)
+        if (memberInfo?.data?.nickname) {
+          setNickname(memberInfo.data.nickname)
+        }
+        if (memberInfo?.data?.memberId) {
+          setMemberId(memberInfo.data.memberId)
         }
       } catch (error) {
         console.error('데이터 조회 실패:', error)
@@ -114,29 +108,54 @@ const Details = () => {
   const getStatusMessage = (status) => {
     let name = '멤버'
 
-    // 승인 관련 상태는 요청자 닉네임 사용
+    // 승인 관련 상태: 요청자(requester)의 이름 표시
     if (
       ['APPROVAL_REQUEST', 'APPROVAL_ACCEPTED', 'APPROVAL_REJECTED'].includes(
         status,
       )
     ) {
-      name = mission?.requesterNickname || '멤버'
+      if (role?.toUpperCase() === 'PARENT') {
+        // 부모일 때
+        const isRequester = mission?.memberId === mission?.requesterId
+        if (isRequester) {
+          // 내가 요청자 → 본인 이름
+          name = nickname || '멤버'
+        } else {
+          // 자녀가 요청자 → requesterNickname 사용
+          name = mission?.requesterNickname || '멤버'
+        }
+      } else {
+        // 자녀일 때
+        const isRequester = mission?.memberId === mission?.requesterId
+        if (isRequester) {
+          // 내가 요청자 → 본인 이름
+          name = nickname || '멤버'
+        } else {
+          // 부모가 요청자 → requesterNickname 사용
+          name = mission?.requesterNickname || '멤버'
+        }
+      }
     }
-    // 미션 진행/완료 관련 상태는 자녀 닉네임 사용
-    else if (
-      [
-        'MISSION_COMPLETED',
-        'REWARD_REQUESTED',
-        'REWARD_COMPLETED',
-        'MISSION_FAILED',
-      ].includes(status)
-    ) {
-      name = nickname || '멤버'
-    }
-    // 그 외 (IN_PROGRESS 등)
+    // 진행/완료 관련 상태: 미션 수행자(자녀)의 이름 표시
     else {
-      name = nickname || '멤버'
+      if (role?.toUpperCase() === 'PARENT') {
+        // 부모일 때: 누가 요청자인지에 따라 자녀(미션 수행자) 찾기
+        // mission.memberId는 API 응답에 포함된 현재 사용자의 ID
+        const isRequester = mission?.memberId === mission?.requesterId
+
+        if (isRequester) {
+          // 내가 자녀에게 미션을 보낸 경우 → recipient가 자녀 (미션 수행자)
+          name = mission?.recipientNickname || '멤버'
+        } else {
+          // 자녀가 나에게 미션 승인 요청한 경우 → requester가 자녀 (미션 수행자)
+          name = mission?.requesterNickname || '멤버'
+        }
+      } else {
+        // 자녀일 때: 본인 이름
+        name = nickname || '멤버'
+      }
     }
+
     const messages = {
       APPROVAL_REQUEST: `${name}님이 새로운 미션 승인을 요청했어요`,
       APPROVAL_ACCEPTED: `${name}님의 미션 승인이 수락됐어요`,
@@ -244,7 +263,7 @@ const Details = () => {
                 <div className='flex flex-col gap-2 mt-4'>
                   {mission.startDate && (
                     <div className='flex justify-between'>
-                      <span className='text-sm text-gray-600 font-medium'>
+                      <span className='text-sm text-[#404040] font-medium'>
                         시작일
                       </span>
                       <span className='text-sm text-[#404040]'>

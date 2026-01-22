@@ -385,7 +385,7 @@ const Make = () => {
       return (
         <div
           key={`${year}-${month}`}
-          className={!isLast ? 'mb-[80px]' : ''}
+          className={`max-w-[310px] mx-auto ${!isLast ? 'mb-[80px]' : ''}`}
         >
           {/* 요일 헤더 (첫 번째 캘린더에만 표시) */}
           {isFirst && (
@@ -507,13 +507,14 @@ const Make = () => {
                           <>
                             {/* 시작일 원형 */}
                             <div className='absolute z-10 w-[38px] h-[38px] rounded-full bg-[#5188FB]' />
-                            {/* 시작일 오른쪽 연결 배경 (마지막 열이 아닐 때만) */}
-                            {!isEnd && !isLastColumn && (
+                            {/* 시작일 오른쪽 연결 배경 */}
+                            {!isEnd && (
                               <div
                                 className='absolute h-[38px] bg-[#B2D6FF] z-0'
                                 style={{
                                   left: '19px',
-                                  width: 'calc(100% + 30px)',
+                                  width:
+                                    isLastColumn ? '19px' : 'calc(100% + 30px)',
                                   top: '50%',
                                   transform: 'translateY(-50%)',
                                 }}
@@ -532,7 +533,10 @@ const Make = () => {
                                 className='absolute h-[38px] bg-[#B2D6FF] z-0'
                                 style={{
                                   right: '19px',
-                                  width: 'calc(100% + 30px)',
+                                  width:
+                                    isFirstColumn ? '19px' : (
+                                      'calc(100% + 30px)'
+                                    ),
                                   top: '50%',
                                   transform: 'translateY(-50%)',
                                 }}
@@ -580,11 +584,13 @@ const Make = () => {
         {/* 캘린더 컨테이너 - 하나의 박스로 */}
 
         <div
-          className='relative bg-[#E2EFFF] rounded-2xl p-4 overflow-y-auto overflow-x-visible mx-[6px]'
+          className='relative bg-[#E2EFFF] rounded-2xl p-4 overflow-y-auto overflow-x-visible mx-[6px] [&::-webkit-scrollbar]:hidden'
           style={{
             height: '611px',
             touchAction: 'pan-y',
             WebkitOverflowScrolling: 'touch',
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
             maskImage:
               'linear-gradient(to bottom, black 85%, transparent 100%)',
             WebkitMaskImage:
@@ -926,7 +932,11 @@ const Make = () => {
           (currentStep === 4 && selectedMembers.length === 0) ||
           (currentStep === 5 && !message.trim() && !noMessage)
         }
-        className={`h-[56px] px-13 py-3 mx-[20px] mb-[46px] rounded-2xl shadow-lg text-[18px] font-medium transition-all z-50 ${
+        className={`h-[56px] px-13 py-3 rounded-2xl shadow-lg text-[18px] font-medium z-50 ${
+          currentStep === 2 ?
+            'fixed bottom-[46px] left-1/2 -translate-x-1/2 w-[calc(100%-40px)] max-w-[500px]'
+          : 'mx-[20px] mb-[46px]'
+        } ${
           (
             (currentStep === 1 && !selectedMission) ||
             (currentStep === 3 && !reward.trim()) ||
