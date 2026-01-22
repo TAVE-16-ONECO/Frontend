@@ -507,13 +507,14 @@ const Make = () => {
                           <>
                             {/* 시작일 원형 */}
                             <div className='absolute z-10 w-[38px] h-[38px] rounded-full bg-[#5188FB]' />
-                            {/* 시작일 오른쪽 연결 배경 (마지막 열이 아닐 때만) */}
-                            {!isEnd && !isLastColumn && (
+                            {/* 시작일 오른쪽 연결 배경 */}
+                            {!isEnd && (
                               <div
                                 className='absolute h-[38px] bg-[#B2D6FF] z-0'
                                 style={{
                                   left: '19px',
-                                  width: 'calc(100% + 30px)',
+                                  width:
+                                    isLastColumn ? '19px' : 'calc(100% + 30px)',
                                   top: '50%',
                                   transform: 'translateY(-50%)',
                                 }}
@@ -532,7 +533,10 @@ const Make = () => {
                                 className='absolute h-[38px] bg-[#B2D6FF] z-0'
                                 style={{
                                   right: '19px',
-                                  width: 'calc(100% + 30px)',
+                                  width:
+                                    isFirstColumn ? '19px' : (
+                                      'calc(100% + 30px)'
+                                    ),
                                   top: '50%',
                                   transform: 'translateY(-50%)',
                                 }}
@@ -928,8 +932,10 @@ const Make = () => {
           (currentStep === 4 && selectedMembers.length === 0) ||
           (currentStep === 5 && !message.trim() && !noMessage)
         }
-        className={`h-[56px] px-13 py-3 rounded-2xl shadow-lg text-[18px] font-medium transition-all z-50 ${
-          currentStep === 2 ? 'fixed bottom-[46px] left-1/2 -translate-x-1/2 w-[calc(100%-40px)] max-w-[600px]' : 'mx-[20px] mb-[46px]'
+        className={`h-[56px] px-13 py-3 rounded-2xl shadow-lg text-[18px] font-medium z-50 ${
+          currentStep === 2 ?
+            'fixed bottom-[46px] left-1/2 -translate-x-1/2 w-[calc(100%-40px)] max-w-[500px]'
+          : 'mx-[20px] mb-[46px]'
         } ${
           (
             (currentStep === 1 && !selectedMission) ||
