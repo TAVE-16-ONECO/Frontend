@@ -263,7 +263,7 @@ const Details = () => {
                 <div className='flex flex-col gap-2 mt-4'>
                   {mission.startDate && (
                     <div className='flex justify-between'>
-                      <span className='text-sm text-gray-600 font-medium'>
+                      <span className='text-sm text-[#404040] font-medium'>
                         시작일
                       </span>
                       <span className='text-sm text-[#404040]'>
