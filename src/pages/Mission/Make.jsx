@@ -385,7 +385,7 @@ const Make = () => {
       return (
         <div
           key={`${year}-${month}`}
-          className={!isLast ? 'mb-[80px]' : ''}
+          className={`max-w-[310px] mx-auto ${!isLast ? 'mb-[80px]' : ''}`}
         >
           {/* 요일 헤더 (첫 번째 캘린더에만 표시) */}
           {isFirst && (
@@ -580,11 +580,13 @@ const Make = () => {
         {/* 캘린더 컨테이너 - 하나의 박스로 */}
 
         <div
-          className='relative bg-[#E2EFFF] rounded-2xl p-4 overflow-y-auto overflow-x-visible mx-[6px]'
+          className='relative bg-[#E2EFFF] rounded-2xl p-4 overflow-y-auto overflow-x-visible mx-[6px] [&::-webkit-scrollbar]:hidden'
           style={{
             height: '611px',
             touchAction: 'pan-y',
             WebkitOverflowScrolling: 'touch',
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
             maskImage:
               'linear-gradient(to bottom, black 85%, transparent 100%)',
             WebkitMaskImage:
