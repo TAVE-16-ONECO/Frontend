@@ -425,7 +425,7 @@ const Make = () => {
                 )}
 
                 {/* 날짜 그리드 */}
-                <div className='grid grid-cols-5 gap-x-[30px] gap-y-[14px] px-[1px]'>
+                <div className='grid grid-cols-5 gap-x-[30px] gap-y-[14px] px-[2px]'>
                   {group.days.map((day, index) => {
                     const isStart = isSameDate(day.fullDate, dates.startDate)
                     const isEnd = isSameDate(day.fullDate, dates.endDate)
@@ -486,7 +486,7 @@ const Make = () => {
                       <button
                         key={index}
                         onClick={() => handleDateClick(day.fullDate)}
-                        className='w-[38px] h-[38px] flex items-center justify-center text-sm relative hover:opacity-80 transition-opacity cursor-pointer'
+                        className='w-[38px] h-[38px] flex items-center justify-center text-sm relative hover:opacity-80 transition-opacity cursor-pointer overflow-visible'
                         style={{ gridColumn: gridColumn || 'auto' }}
                       >
                         {/* 1. 범위 내 배경 (연결 바) - 시작일/종료일이 아닐 때만 */}
@@ -584,7 +584,7 @@ const Make = () => {
         {/* 캘린더 컨테이너 - 하나의 박스로 */}
 
         <div
-          className='relative bg-[#E2EFFF] rounded-2xl p-4 overflow-y-auto overflow-x-visible mx-[6px] [&::-webkit-scrollbar]:hidden'
+          className='relative bg-[#E2EFFF] rounded-2xl py-4 px-5 overflow-y-auto overflow-x-visible mx-[6px] [&::-webkit-scrollbar]:hidden'
           style={{
             height: '611px',
             touchAction: 'pan-y',
